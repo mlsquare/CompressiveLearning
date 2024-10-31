@@ -1,0 +1,47 @@
+project:
+  type: book
+  output-dir: docs
+
+navbar:
+    background: primary
+    search: true
+    left:
+      - text: "Home"
+        href: index.qmd
+      - text: "Preface"
+        href: preface.qmd
+book:
+  title: "Compressive Learning"
+  subtitle: "Train models in bit space"
+  reader-mode: true
+
+  page-footer:
+    left: |
+      methods under prep.
+    right: |
+      This material was built with <a href="https://quarto.org/">Quarto</a> with <a href="https://github.com/hadley/r4ds">r4ds</a> theme.
+  
+  cover-image: logo.jpg
+  favicon: logo.jpg
+  site-url: https://mlsquare.github.io/CompressiveLearning
+  repo-url: https://github.com/mlsquare/CompressiveLearning
+  repo-branch: main
+  repo-actions: [edit, issue]
+  
+  chapters:
+  - preface.qmd
+  - index.qmd
+  - part: Notebooks
+    chapters:
+      - ./bolt/notebooks/dev.ipynb
+      
+format:
+  html:
+    theme:
+    - pulse
+    - mlops.scss
+    code-link: true
+    author-meta: "mlsquare"
+    callout-appearance: simple
+    number-sections: false
+editor: visual
