@@ -35,18 +35,18 @@ We are taking extremely large networks (LLMs) and then quantizing them to 1-bit 
 
 - How do we train such 1-bit models to begin with? If `autograd` and `backprop` made possible the training (with non-trivial enablers like data, compute and massive engineering data center scale feats) - are there efficient learning algos to train 1-bit LLMs?
 
-    Boolean Logic Deep Learning [(BOLD)](https://arxiv.org/abs/2405.16339) introduced some new mathematical objects with defined gradients on Boolean variables, and a corresponding chain rule to go with. 
+    Boolean Logic Deep Learning [(BOLD)](https://arxiv.org/abs/2405.16339) introduced some Variational Theory to define gradients on Boolean variables, and a corresponding chain rule to go with. 
 
-    The implication is that - we can compute the gradients on mixed data types effectively for any computational DAG (all nueral networks are such graphs) via a same `backprop` algo. But will it work at scale? 
+    The implication is that - we can compute the gradients on mixed data types effectively for any computational DAG (all neural networks are such graphs) via `backprop` algo. But will it work at scale? 
 
 ### Kernel Machines
 
-Can Kernels unify the digital (Boolean Networks) and the analog (current  full precision LLMs) divide? 
+Can Kernels bridge the digital (Boolean Networks) and the analog (current  full precision LLMs) divide? 
 
 Before Deep Learning took-off circa 2012, most successful models were Kernel Machines. It was a well researched area, and probably well understood as well, relative to Deep Learning. Some evidence that they can.
 
 
-- Trees are Kernels Machines: Some might argue what about Trees and Ensembles? They are not Kernel Machines. Under the hood, Random Forests are also Kernel Machines. In an obscure paper [Some infinity theory for predictor ensembles](https://www.stat.berkeley.edu/~breiman/some_theory2000.pdf), Leo Brieman shows that Random Forests implicitly learn a Laplacian Kernel, asymptotically. 
+- Trees are Kernels Machines: Some might argue - what about Trees and Ensembles? They are not Kernel Machines. Under the hood, Random Forests are also Kernel Machines. In an obscure paper [Some infinity theory for predictor ensembles](https://www.stat.berkeley.edu/~breiman/some_theory2000.pdf), Leo Brieman shows that Random Forests implicitly learn a Laplacian Kernel, asymptotically. 
 
 - Transformers are Kernel Machines: In another insightful work, Prof. [Rich B](https://richb.rice.edu/) who did pioneering work in signal processing in general, and [compressive sensing](https://dsp.rice.edu/cs/) in particular (the 1-pixel camera project, for example), re-derived Transformers like Prof. Yi Ma's group, but using a different route - by looking at Transformers as Kernel Machines. In [A Primal-Dual Framework for Transformers and Neural Networks](https://arxiv.org/abs/2406.13781), an explicit construction of a polynomial kernel was given, whose dual form gives raise to the self-attention block of Transformers. _Perhaps_ this can explain why Transformers were not very competitive to Trees (due to the different inductive biases encoded by their respective Kernels. Not all Kernels are equal).
 
