@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.55">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="mlsquare">
+
+<title>Compressive Learning – Compressive Learning</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./index.html" rel="next">
+<link href="./logo.jpg" rel="icon" type="image/jpeg">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preface.html"><span class="chapter-title">Compressive Learning</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Compressive Learning</a> 
+        <div class="sidebar-tools-main">
+    <a href="https://github.com/mlsquare/CompressiveLearning" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./preface.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Compressive Learning</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Compressive Learning</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Notebooks</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./bolt/notebooks/dev.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Boolean Variation</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link active" data-scroll-target="#analysis">Analysis</a></li>
+  <li><a href="#build-develop" id="toc-build-develop" class="nav-link" data-scroll-target="#build-develop">Build &amp; Develop</a></li>
+  <li><a href="#kernel-machines" id="toc-kernel-machines" class="nav-link" data-scroll-target="#kernel-machines">Kernel Machines</a></li>
+  <li><a href="#axiomatic-notions-of-intelligence" id="toc-axiomatic-notions-of-intelligence" class="nav-link" data-scroll-target="#axiomatic-notions-of-intelligence">Axiomatic Notions of Intelligence</a></li>
+  <li><a href="#axiomatic-notions-of-perception-and-processing" id="toc-axiomatic-notions-of-perception-and-processing" class="nav-link" data-scroll-target="#axiomatic-notions-of-perception-and-processing">Axiomatic Notions of Perception and Processing</a></li>
+  <li><a href="#compressive-learning" id="toc-compressive-learning" class="nav-link" data-scroll-target="#compressive-learning">Compressive Learning</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/preface.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">Compressive Learning</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Observation</strong>:</p>
+<p>We are taking extremely large networks (LLMs) and then quantizing them to 1-bit precision. Effectively turning them to Boolean Networks and yet notice that performance does not degrade as much. It begets new questions. See <a href="https://arxiv.org/abs/2402.17764">1-bit LLMs</a> paper for recent results. We can put the questions into few broad categories.</p>
+<section id="analysis" class="level3">
+<h3 class="anchored" data-anchor-id="analysis">Analysis</h3>
+<ul>
+<li><p>The Lottery Ticket Hypothesis</p>
+<p>Lottery Ticket Hypothesis<a href="https://arxiv.org/abs/1803.03635">(LTH)</a> conjectured that some sub networks are as good as the full network and remaining ones can be completely pruned-off without incurring lot of degradation in performance.</p>
+<p>In the <a href="https://arxiv.org/abs/2402.17764">1-bit LLMs</a> paper, authors showed that, all weights can just come from <span class="math inline">\(\{ -1,0,1\}\)</span>. It is the extreme form of quantization and pruning combined. We see such extreme form of quantization of many modern LLMs. This is done for computational efficiency (also energy efficiency) at inference time.</p>
+<p>LTH authors observed that initialization mattered though, in the sense that, same network retrained from a different initialization did not achieve the same performance the sub network achieved with the the original initialization. I suspect that it is an artefact of the training (learning) algorithm (and not due to the initialization itself).</p>
+<p>What role are the prune-able sub networks playing? Is that about redundancy (serving some other important function such as a error control coding) or they are just plain useless - is not clear unless we investigate in that direction. The LTH paper did not study the brittleness after pruning (AFIK).</p></li>
+<li><p>Are the pruned networks acting like “error control codes” in the functional space? Not having them is ok from a prediction (accuracy) point of view , but not ok from robustness (sensitivity) point of view.</p></li>
+<li><p>How we do study generalization ability of such binary networks? and from a <em>build</em> point of view, what is needed to generalize. I hypothesize that <em>smoothness</em> of the functions is central to generalization. So, how we do define and later enforce such smoothness of Boolean Networks.</p></li>
+<li><p>A related question - what is the equivalent notion of robustness for Boolean maps?</p></li>
+<li><p>How do we analyze (and develop the theory to analyze) such Boolean functions which map n-dimensional inputs bit streams to m-dimensional output bit streams? Will the theories of error control codes based on groups and fields help?</p></li>
+</ul>
+</section>
+<section id="build-develop" class="level3">
+<h3 class="anchored" data-anchor-id="build-develop">Build &amp; Develop</h3>
+<ul>
+<li><p>Do we need to go through the route of <em>Train large models with full precision and quantize</em> or can we <em>Learn in the 1-bit space</em> itself. Drawing inspiration from compressive sensing, can we do <strong>Compressive Learning</strong>?.</p></li>
+<li><p>How do we train such 1-bit models to begin with? If <code>autograd</code> and <code>backprop</code> made possible the training (with non-trivial enablers like data, compute and massive engineering data center scale feats) - are there efficient learning algos to train 1-bit LLMs?</p>
+<p>Boolean Logic Deep Learning <a href="https://arxiv.org/abs/2405.16339">(BOLD)</a> introduced some new mathematical objects with defined gradients on Boolean variables, and a corresponding chain rule to go with.</p>
+<p>The implication is that - we can compute the gradients on mixed data types effectively for any computational DAG (all nueral networks are such graphs) via a same <code>backprop</code> algo. But will it work at scale?</p></li>
+</ul>
+</section>
+<section id="kernel-machines" class="level3">
+<h3 class="anchored" data-anchor-id="kernel-machines">Kernel Machines</h3>
+<p>Can Kernels unify the digital (Boolean Networks) and the analog (current full precision LLMs) divide?</p>
+<p>Before Deep Learning took-off circa 2012, most successful models were Kernel Machines. It was a well researched area, and probably well understood as well, relative to Deep Learning. Some evidence that they can.</p>
+<ul>
+<li><p>Trees are Kernels Machines: Some might argue what about Trees and Ensembles? They are not Kernel Machines. Under the hood, Random Forests are also Kernel Machines. In an obscure paper <a href="https://www.stat.berkeley.edu/~breiman/some_theory2000.pdf">Some infinity theory for predictor ensembles</a>, Leo Brieman shows that Random Forests implicitly learn a Laplacian Kernel, asymptotically.</p></li>
+<li><p>Transformers are Kernel Machines: In another insightful work, Prof.&nbsp;<a href="https://richb.rice.edu/">Rich B</a> who did pioneering work in signal processing in general, and <a href="https://dsp.rice.edu/cs/">compressive sensing</a> in particular (the 1-pixel camera project, for example), re-derived Transformers like Prof.&nbsp;Yi Ma’s group, but using a different route - by looking at Transformers as Kernel Machines. In <a href="https://arxiv.org/abs/2406.13781">A Primal-Dual Framework for Transformers and Neural Networks</a>, an explicit construction of a polynomial kernel was given, whose dual form gives raise to the self-attention block of Transformers. <em>Perhaps</em> this can explain why Transformers were not very competitive to Trees (due to the different inductive biases encoded by their respective Kernels. Not all Kernels are equal).</p></li>
+<li><p>SGD is a Kernel Machine Learner: In this <a href="https://arxiv.org/abs/2012.00152v1">paper</a>, Prof.&nbsp;Pedro Domingos shows that every model learned by Gradient Descent is approximately a Kernel Machine. The Kernel happens to be Neural Tangent Kernel (NTK), which seems to be main analytical device to study the behavior of Deep Neural Networks (See <a href="https://arxiv.org/abs/1806.07572">this</a> for example).</p></li>
+<li><p>Random Features are Large Scale Kernel Machines: In a <a href="https://eecs.berkeley.edu/news/ben-recht-wins-nips-test-time-award/">time-tested</a> paper, Ali and Ben, show that linear models on random features are Kernel Machines, and they are extremely competitive and simple (to implement and model), at the same time.</p></li>
+<li><p>Separability in High Dimensional Feature space: The conventional wisdom in ML is, transform low dim input to very high (non linear) features space, where modeling becomes easier. Kernels provide that kind of Statistical Machinery to both compute and theorize the development of new models (architectures) and learning algorithms.</p></li>
+</ul>
+<p>But what about Boolean functions, i.e, functions that map n-dimensional Boolean inputs to m-dimensional Boolean outputs? In this beautiful paper <a href="https://dl.acm.org/doi/abs/10.5555/647719.735941">Learning of Boolean Functions Using Support Vector Machines</a>, publised in 2001, Ken Sadohara develops DNF Kernels to be applied along side SVMs. The connection between DNF (Disjunctive Normal Form) and Boolean circuits are rather straightforward to see. Any truth table (coding a Boolean function) can be represented either in Sum-of-Products (SOP) or Product-of-Sum (POS) form, and DNF corresponds to the SOP form. So, if we can construct a model and learn algorithms to go with, such model becomes a universal learner (of any Boolean function). This is the constructionist approach to model(architecture) design.</p>
+<p>So the thesis is - All modern, empirically proven architectures are a <em>Composition of Learnable Kernel Machines</em> and perhaps we can extend this to Deep Binary Neural Networks as well.</p>
+</section>
+<section id="axiomatic-notions-of-intelligence" class="level3">
+<h3 class="anchored" data-anchor-id="axiomatic-notions-of-intelligence">Axiomatic Notions of Intelligence</h3>
+<ul>
+<li><p>Principle of Parsimony and Self-Consistency: In a series of papers, based on decades of work, Prof.&nbsp;<a href="https://people.eecs.berkeley.edu/~yima/">Yi Ma</a> and colleagues argued that for intelligence to emerge, certain aspects must be considered such as representations must be parsimonious (not exactly sparse) and they must be self-consistent (to recover the original signal).</p></li>
+<li><p><strong>Compression</strong>: A key point Prof.&nbsp;Yi Ma emphasizes is that <strong>Compression</strong> is at the heart of intelligence. Using rate-reduction theory (widely used in communication theory), his group was able to re-derive Transformers, ConvNets, the empirically proven architectures from first principles.</p></li>
+<li><p>Ability to learn based on few examples: Intelligent systems should be able to learn based on the feedback loop (error control) with few examples.</p></li>
+<li><p>Recollection is not a sign of intelligence: By that account, taking a cue from Prof.&nbsp;<a href="https://rakaposhi.eas.asu.edu/">Subbarao Khambampati</a>, LLMs are approximate retrieval machines, which do not have any reasoning ability, unless specifically equipped to do so, as the recent works seem to suggest.</p></li>
+</ul>
+</section>
+<section id="axiomatic-notions-of-perception-and-processing" class="level3">
+<h3 class="anchored" data-anchor-id="axiomatic-notions-of-perception-and-processing">Axiomatic Notions of Perception and Processing</h3>
+<ul>
+<li>Perceive in low dimensions but with high precision (fidelity).</li>
+<li>Project them on to very high dimensional, parsimonious, self-consistent representations but in low precision (1 bit for eg)</li>
+<li>Process them in the bit space (energy efficient)</li>
+</ul>
+<p>What it means is, the interface between the external world and the processor (reasoner or model) is like an A/D Convertor (Analog to Digital converter) and the processor (model) only performs bitwise operations and we can convert the Binary signals back to Analog (D/A converter) for external communication.</p>
+<p>Putting it all together,</p>
+</section>
+<section id="compressive-learning" class="level3">
+<h3 class="anchored" data-anchor-id="compressive-learning">Compressive Learning</h3>
+<p>is to study and develop</p>
+<ul>
+<li>Computational Training Stack
+<ul>
+<li>define <code>gradients</code> on Boolean variables, and a chain rule to go with</li>
+<li>develop <code>backprop</code> to scale to large computational DAGs</li>
+<li>Perhaps, use Genetic Algorithms to augment the training</li>
+</ul></li>
+<li>Kernels
+<ul>
+<li>Learnable DNF Kernels to learn Boolean features or other Universal Learners of Boolean N/Ws in SOP or POS form</li>
+<li>Compose the Kernels depth-wise to retain the expressivity of modern Deep Learning models.</li>
+</ul></li>
+<li>Issues
+<ul>
+<li>Can they be trained? Or do they just rote learn?</li>
+<li>Can they generalize?</li>
+<li>Can they be distilled?</li>
+<li>Can they be analyzed?</li>
+</ul></li>
+</ul>
+<p>If successful, an optimistic outlook for these Deep Binary Neural Networks is, they are:</p>
+<ul>
+<li>Interpretable: since we can recover the DNF forms</li>
+<li>Energy-efficient: require bit-wise operations, not needing giant matrix multiplications (so no GPUs)</li>
+<li>ASIC-friendly: we may be able compile PyTorch models directly into HDL languages and burn the models on silicon. Like 3D printing, forge your model on silicon.</li>
+<li>SLA-friendly: with high token throughput and low latency</li>
+<li>Edge-friendly: with low memory footprint, can be deployed on edge devices</li>
+<li>End-to-End trainable: no need for train-large-then-quantize paradigm - train in the compressed domain itself.</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/mlsquare\.github\.io\/CompressiveLearning");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./index.html" class="pagination-link" aria-label="Compressive Learning">
+        <span class="nav-page-text"><span class="chapter-title">Compressive Learning</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>methods under prep.</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/preface.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>This material was built with <a href="https://quarto.org/">Quarto</a> with <a href="https://github.com/hadley/r4ds">r4ds</a> theme.</p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
