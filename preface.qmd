@@ -1,4 +1,7 @@
-### Compressive Learning
+### Motivation
+
+**Why Compressive Learning?**
+
 
 **Observation**:
 
