@@ -5,7 +5,7 @@
 
 **Observation**:
 
-We are taking extremely large networks (LLMs) and then quantizing them to 1-bit precision. Effectively turning them to Boolean Networks and yet notice that performance does not degrade as much. It begets new questions. See [1-bit LLMs](https://arxiv.org/abs/2402.17764) paper for recent results. We can put the questions into few broad categories.
+We are taking extremely large pre-trained networks (LLMs) and then quantizing them to 1-bit precision. Effectively turning them to Boolean Networks and yet notice that performance does not degrade as much. See [1-bit LLMs](https://arxiv.org/abs/2402.17764) paper for recent results. It begets new questions like _Can we not train them in the quantized space itself_? Answering it requires revising and revisiting many things we learnt over last few decades. We can put the topics into few broad categories.
 
 
 ### Analysis
@@ -16,13 +16,13 @@ We are taking extremely large networks (LLMs) and then quantizing them to 1-bit 
 
     In the [1-bit LLMs](https://arxiv.org/abs/2402.17764) paper, authors showed that, all weights can just come from $\{ -1,0,1\}$. It is the extreme form of quantization and pruning combined. We see such extreme form of quantization of many modern LLMs. This is done for computational efficiency (also energy efficiency) at inference time.
     
-    LTH authors observed that initialization mattered though, in the sense that, same network retrained from a different initialization did not achieve the same performance the sub network achieved with the the original initialization. I suspect that it is an artefact of the training (learning) algorithm (and not due to the initialization itself).  
+    LTH authors observed that initialization mattered though, in the sense that, same winning/retained sub network retrained from a different initialization did not achieve the same performance the sub network achieved with the the original initialization. I suspect that it is an artefact of the training (learning) algorithm (and not due to the initialization itself).  
     
-    What role are the prune-able sub networks playing? Is that about redundancy (serving some other important function such as a error control coding) or they are just plain useless - is not clear unless we investigate in that direction.  The LTH paper did not study the brittleness after pruning (AFIK). 
+    What role are the prune-able sub networks playing? Is that about redundancy (serving some other important function such as a error control coding) or they are just plain useless. It is not clear unless we investigate in that direction.  The LTH paper did not study the brittleness after pruning (AFIK). 
     
 - Are the pruned networks acting like "error control codes" in the functional space? Not having them is ok from a prediction (accuracy) point of view , but not ok from robustness (sensitivity) point of view.
 
-- How we do study generalization ability of such binary networks? and from a _build_ point of view, what is needed to generalize. I hypothesize that _smoothness_ of the functions is central to generalization. So, how we do define and later enforce such smoothness of Boolean Networks. 
+- How we do study generalization ability of such binary networks? and from a _build_ point of view, what is needed to generalize? I hypothesize that _smoothness_ of the functions is central to generalization. So, how do we define and later enforce such smoothness of Boolean Networks. 
 
 - A related question - what is the equivalent notion of robustness for Boolean maps?
 
@@ -33,11 +33,11 @@ We are taking extremely large networks (LLMs) and then quantizing them to 1-bit 
 
 - Do we need to go through the route of _Train large models with full precision and quantize_ or can we _Learn in the 1-bit space_ itself. Drawing inspiration from compressive sensing, can we do **Compressive Learning**?. 
 
-- How do we train such 1-bit models to begin with? If `autograd` and `backprop` made possible the training (with non-trivial enablers like data, compute and massive engineering data center scale feats) - are there efficient learning algos to train 1-bit LLMs?
+- How do we train such 1-bit models to begin with? If `autograd` and `backprop` made possible the training (with non-trivial enablers like data, compute and massive engineering feats at data center scale) - are there efficient learning algos to train 1-bit LLMs?
 
     Boolean Logic Deep Learning [(BOLD)](https://arxiv.org/abs/2405.16339) introduced some Variational Theory to define gradients on Boolean variables, and a corresponding chain rule to go with. 
 
-    The implication is that - we can compute the gradients on mixed data types effectively for any computational DAG (all neural networks are such graphs) via `backprop` algo. But will it work at scale? 
+    The implication is that - we can compute the gradients on mixed data types on any computational DAG (all neural networks are instances of such graphs) via `backprop` algo. But will it work at scale? 
 
 ### Kernel Machines
 
@@ -48,7 +48,7 @@ Before Deep Learning took-off circa 2012, most successful models were Kernel Mac
 
 - Trees are Kernels Machines: Some might argue - what about Trees and Ensembles? They are not Kernel Machines. Under the hood, Random Forests are also Kernel Machines. In an obscure paper [Some infinity theory for predictor ensembles](https://www.stat.berkeley.edu/~breiman/some_theory2000.pdf), Leo Brieman shows that Random Forests implicitly learn a Laplacian Kernel, asymptotically. 
 
-- Transformers are Kernel Machines: In another insightful work, Prof. [Rich B](https://richb.rice.edu/) who did pioneering work in signal processing in general, and [compressive sensing](https://dsp.rice.edu/cs/) in particular (the 1-pixel camera project, for example), re-derived Transformers like Prof. Yi Ma's group, but using a different route - by looking at Transformers as Kernel Machines. In [A Primal-Dual Framework for Transformers and Neural Networks](https://arxiv.org/abs/2406.13781), an explicit construction of a polynomial kernel was given, whose dual form gives raise to the self-attention block of Transformers. _Perhaps_ this can explain why Transformers were not very competitive to Trees (due to the different inductive biases encoded by their respective Kernels. Not all Kernels are equal).
+- Transformers are Kernel Machines: In another insightful work, Prof. [Rich B](https://richb.rice.edu/) who did pioneering work in signal processing in general, and [compressive sensing](https://dsp.rice.edu/cs/) in particular (the 1-pixel camera project, for example), re-derived Transformers, like Prof. Yi Ma's group, but using a different route - by looking at Transformers as Kernel Machines. In [A Primal-Dual Framework for Transformers and Neural Networks](https://arxiv.org/abs/2406.13781), an explicit construction of a polynomial kernel was given, whose dual form gives raise to the self-attention block of Transformers. _Perhaps_ this can explain why Transformers were not very competitive to Trees (due to the different inductive biases encoded by their respective Kernels. Not all Kernels are equal).
 
 - SGD is a Kernel Machine Learner: In this [paper](https://arxiv.org/abs/2012.00152v1), Prof. Pedro Domingos shows that every model learned by Gradient Descent is approximately a Kernel Machine. The Kernel happens to be Neural Tangent Kernel (NTK), which seems to be main analytical device to study the behavior of Deep Neural Networks (See [this](https://arxiv.org/abs/1806.07572) for example).
 
@@ -107,6 +107,7 @@ is to study and develop
 If successful, an optimistic outlook for these Deep Binary Neural Networks is, they are:
 
 - Interpretable: since we can recover the DNF forms
+- Modulo-LLM-ready: since symbols can be mined explicitly, can augment symbolic reasoning, making the LLMs [modulo-LLMs](https://arxiv.org/abs/2402.01817)
 - Energy-efficient: require bit-wise operations, not needing giant matrix multiplications (so no GPUs)
 - ASIC-friendly: we may be able compile PyTorch models directly into HDL languages and burn the models on silicon. Like 3D printing, forge your model on silicon.
 - SLA-friendly: with high token throughput and low latency
