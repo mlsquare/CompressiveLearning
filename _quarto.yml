@@ -31,6 +31,8 @@ book:
   chapters:
   - preface.qmd
   - index.qmd
+  - bold.qmd
+  - bolt.qmd
   - part: Notebooks
     chapters:
       - ./bolt/notebooks/dev.ipynb
