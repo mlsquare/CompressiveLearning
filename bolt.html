@@ -8,7 +8,7 @@
 
 <meta name="author" content="mlsquare">
 
-<title>Compressive Learning</title>
+<title>BNN Layer – Compressive Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,8 +31,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./bold.html" rel="next">
-<link href="./preface.html" rel="prev">
+<link href="./bolt/notebooks/dev.html" rel="next">
+<link href="./bold.html" rel="prev">
 <link href="./logo.jpg" rel="icon" type="image/jpeg">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -71,10 +71,39 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
-<body class="nav-sidebar floating fullcontent">
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -83,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-title">Compressive Learning</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./bolt.html"><span class="chapter-title">BNN Layer</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -123,7 +152,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Compressive Learning</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Compressive Learning</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -133,7 +162,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bolt.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">BNN Layer</span></a>
+  <a href="./bolt.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">BNN Layer</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -157,14 +186,24 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sum-of-product-networks" id="toc-sum-of-product-networks" class="nav-link active" data-scroll-target="#sum-of-product-networks">Sum of Product Networks</a></li>
+  <li><a href="#prodtron" id="toc-prodtron" class="nav-link" data-scroll-target="#prodtron">ProdTron</a></li>
+  <li><a href="#sumtron" id="toc-sumtron" class="nav-link" data-scroll-target="#sumtron">SumTron</a></li>
+  <li><a href="#bnn-layer" id="toc-bnn-layer" class="nav-link" data-scroll-target="#bnn-layer">BNN Layer</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/bolt.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Compressive Learning</h1>
-<p class="subtitle lead">Train models in bit space</p>
+<h1 class="title"><span class="chapter-title">BNN Layer</span></h1>
 </div>
 
 
@@ -181,11 +220,404 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><img src="logo.jpg" title="Compressive Learning" class="quarto-cover-image img-fluid"></p>
-<p>Methods and tools for Compressive Learning.</p>
-<p>Check <a href="https://github.com/mlsquare/boolgrad">BoolGrad</a>, a proof-of-concept implementation of BackProp on Boolean Network, based on <a href="https://arxiv.org/abs/2405.16339">BOLD</a> paper, and <a href="https://github.com/karpathy/micrograd">micrograd</a> from Andrej Karpathy. It is a work in progress and lot of testing is needed.</p>
+<section id="sum-of-product-networks" class="level2">
+<h2 class="anchored" data-anchor-id="sum-of-product-networks">Sum of Product Networks</h2>
+<p>Consider a three variable multi-valued Truth table.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(x_1\)</span></th>
+<th><span class="math inline">\(x_2\)</span></th>
+<th><span class="math inline">\(x_3\)</span></th>
+<th><span class="math inline">\(y_1\)</span></th>
+<th><span class="math inline">\(y_2\)</span></th>
+<th><span class="math inline">\(y_3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr class="odd">
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+</tr>
+</tbody>
+</table>
+<p>For an n-variable Boolean function, the Truth Table will have <span class="math inline">\(2^n\)</span> unique rows, and the size of all Boolean functions is <span class="math inline">\(2^{2^n}\)</span>. Above, we considered <span class="math inline">\(y_1, y_2, y_3\)</span> for illustration.</p>
+<p>We can model <span class="math display">\[
+\begin{array}{left}
+y_1 &amp;=&amp; \neg x_1 \neg x_2 \neg x_3 \lor \neg x_1 \neg x_2 x_3\\
+y_2 &amp;=&amp; \neg x_1 \neg x_2 x_3 \lor  \neg x_1 x_2 \neg x_3 \lor x_1 \neg x_2 \neg x_3 \lor x_1 x_2 x_3\\
+y_3 &amp;=&amp;  x_1 x_2 x_3
+\end{array}
+\]</span></p>
+<p>We notice any Truth Table (<span class="math inline">\(y_1\)</span>, for example) can be expressed in Sum-of-Products form. The innards are the product terms which are to be OR-ed.</p>
+<p>Generally speaking, we model the Truth Tables via learnable gates of n-variables as follows:</p>
+<p><span class="math display">\[
+\begin{array}{left}
+h_j &amp;=&amp; \land_{i=1}^{n} x_i \oplus w_i^j \\
+y_k &amp;=&amp; \uplus_{j=1}^{m} \alpha_{j}^{k} \odot h_j \text{ where } \alpha_{j}^{k} \in \{0,1\} \text{ and } \exists j \text{ s.t }  \alpha_{j}^{k} = 1 \forall k
+\end{array}
+\]</span> Above, <span class="math inline">\(\alpha_j^k\)</span> is a selection gate. When all of them are cold (off), model will be in an <span class="math inline">\(Ignore\)</span> state. The Truth Table for the selection gate <span class="math inline">\(h_j \otimes \alpha_j\)</span> is:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\alpha_j\)</span></th>
+<th><span class="math inline">\(h_j\)</span></th>
+<th><span class="math inline">\(\alpha_j \odot h_j\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>And, <span class="math inline">\(\uplus(.)\)</span> is an modified OR gate works like regular OR gate when at least one of the inputs is not in <span class="math inline">\(Ignore\)</span> state, which is different from the OR gate we have defined <a href="./bold.html">earlier</a>. The Truth Table for an N-ary SelectOR gate is defined as follows:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(a\)</span></th>
+<th><span class="math inline">\(x\)</span></th>
+<th><span class="math inline">\(\uplus(x,a)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>0</td>
+<td>T</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>0</td>
+<td>F</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore, <span class="math display">\[
+\begin{array}{left}
+\uplus(x,a) &amp;=&amp; x \text{ if }  a=0 \\
+&amp;=&amp;  a \text{ if }  x=0 \\
+&amp;=&amp;  \lor (x,a) \text{ o.w }
+\end{array}
+\]</span></p>
+<p>Further, <span class="math display">\[
+\begin{array}{left}
+x \oplus w &amp;=&amp; \neg x \text{ if } w = T \\
+&amp;=&amp;  x \text{  o.w }
+\end{array}
+\]</span> In effect, we are using XOR gate to complement the inputs, which is essential to create the product terms and using the SelectOR gate to select the prod terms and OR them.</p>
+</section>
+<section id="prodtron" class="level2">
+<h2 class="anchored" data-anchor-id="prodtron">ProdTron</h2>
+<p>We want to realize a module which takes n-inputs and creates a product term, i.e., we want to realize <span class="math display">\[
+\begin{array}{left}
+h(x,w) &amp;=&amp; \land_{i=1}^{n} x_i \oplus w_i
+\end{array}
+\]</span></p>
+<p>For convenience, we write them recursively, to ease up the derivation, <span class="math inline">\(h= \land(x_i \oplus w_i, h_{-i})\)</span>, where <span class="math inline">\(h_{-i} = \land_{k \neq i} x_k \oplus w_k\)</span></p>
+<p>We obtain the partial derivatives as: <span class="math display">\[
+\begin{array}{left}
+\frac{\partial{h(x,w)}}{\partial{x_i}} &amp;=&amp; w_i \text{ if } h_{-i} = T\\
+&amp;=&amp; 0 \text{ o.w } \\
+\frac{\partial{h(x,w)}}{\partial{w_i}} &amp;=&amp; x_i \text{ if } h_{-i} = T\\
+&amp;=&amp; 0 \text{ o.w } \\
+\end{array}
+\]</span></p>
+<p>It can be implemented with Heavyside function as follows: <span class="math display">\[
+\begin{array}{left}
+\frac{\partial{h(x,w)}}{\partial{x_i}} &amp;=&amp;  w_i H(h_{-i}) \\
+\frac{\partial{h(x,w)}}{\partial{w_i}} &amp;=&amp; x_i H(h_{-i})
+\end{array}
+\]</span> where <span class="math inline">\(\epsilon\)</span> is a small positive constant.</p>
+</section>
+<section id="sumtron" class="level2">
+<h2 class="anchored" data-anchor-id="sumtron">SumTron</h2>
+<p>We want to realize a module which takes m-inputs, selects some of the m-inputs, and OR’s them. <span class="math display">\[
+\begin{array}{left}
+y(\alpha, h) &amp;=&amp; \uplus_{j=1}^{m} \alpha_j \odot h_j
+\end{array}
+\]</span> For convenience, we write them recursively, to ease up the derivation, <span class="math inline">\(y = \uplus(\alpha_j \odot h_j, y_{-j})\)</span>, where <span class="math inline">\(y_{-j} = \uplus_{k=1, \neq j  }^{m} \alpha_k \odot h_k\)</span>. We can see that <span class="math inline">\(y = y_{-j} \text { if } \alpha_j = F\)</span></p>
+<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{y(\alpha,h)}}{\partial{h_i}}\)</span> as follows:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\alpha_j\)</span></th>
+<th><span class="math inline">\(h_j\)</span></th>
+<th><span class="math inline">\(y_{-j}\)</span></th>
+<th><span class="math inline">\(y\)</span></th>
+<th><span class="math inline">\(y(\neg h_j)\)</span></th>
+<th><span class="math inline">\(\delta y\)</span></th>
+<th><span class="math inline">\(\delta h_j\)</span></th>
+<th><span class="math inline">\(y'\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T/F/0</td>
+<td>T</td>
+<td>T/F/F</td>
+<td>0/F/F</td>
+<td>F</td>
+<td>0/T/T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T/F/0</td>
+<td>T/F/F</td>
+<td>T</td>
+<td>0/T/T</td>
+<td>T</td>
+<td>0/T/T</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T/F/0</td>
+<td>T/F/0</td>
+<td>T/F/0</td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T/F/0</td>
+<td>T/F/0</td>
+<td>T/F/0</td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_i}} &amp;=&amp;  T \text{ if } \alpha_j = T\, \&amp; \, y_{-j} = F/0 \\
+&amp;=&amp; 0 \text{ o.w } \\
+\end{array}
+\]</span> It can be implemented with Heavyside function as follows: <span class="math display">\[
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_j}} &amp;=&amp;  H( \alpha_j)H(-y_{-j} + \epsilon)
+\end{array}
+\]</span> where <span class="math inline">\(\epsilon\)</span> is a small positive constant.</p>
+<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{y(\alpha,h)}}{\partial{\alpha_i}}\)</span> as follows:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\alpha_j\)</span></th>
+<th><span class="math inline">\(h_j\)</span></th>
+<th><span class="math inline">\(y_{-j}\)</span></th>
+<th><span class="math inline">\(y\)</span></th>
+<th><span class="math inline">\(y(\neg \alpha_j)\)</span></th>
+<th><span class="math inline">\(\delta y\)</span></th>
+<th><span class="math inline">\(\delta \alpha_j\)</span></th>
+<th><span class="math inline">\(y'\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T/F/0</td>
+<td>T</td>
+<td><span class="math inline">\(y_{-j}\)</span></td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T/F/0</td>
+<td>T/F/F</td>
+<td><span class="math inline">\(y_{-j}\)</span></td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T/F/0</td>
+<td><span class="math inline">\(y_{-j}\)</span></td>
+<td>T</td>
+<td>0/T/0</td>
+<td>T</td>
+<td>0/T/0</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T/F/0</td>
+<td><span class="math inline">\(y_{-j}\)</span></td>
+<td>T/F/F</td>
+<td>0/0/0</td>
+<td>T</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{\alpha_j}} &amp;=&amp;  T \text{ if } \alpha_j = F\, \&amp; \, y_{-j} = F \, \&amp;  \, h_j = T \\
+&amp;=&amp; 0 \text{ o.w } \\
+\end{array}
+\]</span> It can be implemented with Heavyside function as follows: <span class="math display">\[
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_i}} &amp;=&amp;  H(\alpha_j)H(-y_{-j})H(h_{j})
+\end{array}
+\]</span> where <span class="math inline">\(\epsilon\)</span> is a small positive constant.</p>
+<p>Finally, we can put it all together</p>
+</section>
+<section id="bnn-layer" class="level2">
+<h2 class="anchored" data-anchor-id="bnn-layer">BNN Layer</h2>
+<p>A BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter <span class="math inline">\(H\)</span> that controls the layer complexity, resulting in a total of <span class="math inline">\(H(N+K)\)</span> learnable Boolean weights.</p>
+<p><span class="math display">\[
+\begin{array}{left}
+y_{k} &amp;=&amp; \uplus_{j=1}^{m} \alpha_{j}^{k} \odot \left( h_j \equiv \land_{i=1}^{n} x_i \oplus w_i^j \right)
+\end{array}
+\]</span> where <span class="math inline">\(n=1,\dots,N\)</span>, <span class="math inline">\(j=1,\dots,H\)</span> <span class="math inline">\(k=1,\dots,K\)</span>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -610,12 +1042,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./preface.html" class="pagination-link" aria-label="Motivation">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Motivation</span></span>
+      <a href="./bold.html" class="pagination-link" aria-label="Boolean Variation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Boolean Variation</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./bold.html" class="pagination-link" aria-label="Boolean Variation">
+      <a href="./bolt/notebooks/dev.html" class="pagination-link" aria-label="Boolean Variation">
         <span class="nav-page-text"><span class="chapter-title">Boolean Variation</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -628,7 +1060,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/bolt.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This material was built with <a href="https://quarto.org/">Quarto</a> with <a href="https://github.com/hadley/r4ds">r4ds</a> theme.</p>
 </div>

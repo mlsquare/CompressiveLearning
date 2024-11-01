@@ -8,7 +8,7 @@
 
 <meta name="author" content="mlsquare">
 
-<title>Compressive Learning</title>
+<title>Boolean Variation – Compressive Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,8 +31,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./bold.html" rel="next">
-<link href="./preface.html" rel="prev">
+<link href="./bolt.html" rel="next">
+<link href="./index.html" rel="prev">
 <link href="./logo.jpg" rel="icon" type="image/jpeg">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -71,10 +71,39 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
-<body class="nav-sidebar floating fullcontent">
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -83,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-title">Compressive Learning</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./bold.html"><span class="chapter-title">Boolean Variation</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -123,12 +152,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Compressive Learning</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Compressive Learning</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bold.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Boolean Variation</span></a>
+  <a href="./bold.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Boolean Variation</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -157,14 +186,35 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#definition" id="toc-definition" class="nav-link active" data-scroll-target="#definition">Definition</a>
+  <ul class="collapse">
+  <li><a href="#three-value-and-mixed-logic" id="toc-three-value-and-mixed-logic" class="nav-link" data-scroll-target="#three-value-and-mixed-logic">Three-value and Mixed logic</a></li>
+  <li><a href="#calculus" id="toc-calculus" class="nav-link" data-scroll-target="#calculus">Calculus</a></li>
+  </ul></li>
+  <li><a href="#truth-tables-for-basic-gates" id="toc-truth-tables-for-basic-gates" class="nav-link" data-scroll-target="#truth-tables-for-basic-gates">Truth Tables for basic gates</a></li>
+  <li><a href="#derivatives" id="toc-derivatives" class="nav-link" data-scroll-target="#derivatives">Derivatives</a>
+  <ul class="collapse">
+  <li><a href="#and-gate" id="toc-and-gate" class="nav-link" data-scroll-target="#and-gate">AND Gate</a></li>
+  <li><a href="#or-gate" id="toc-or-gate" class="nav-link" data-scroll-target="#or-gate">OR Gate</a></li>
+  <li><a href="#xor-gate" id="toc-xor-gate" class="nav-link" data-scroll-target="#xor-gate">XOR Gate</a></li>
+  <li><a href="#xnor-gate" id="toc-xnor-gate" class="nav-link" data-scroll-target="#xnor-gate">XNOR Gate</a></li>
+  </ul></li>
+  <li><a href="#compositions" id="toc-compositions" class="nav-link" data-scroll-target="#compositions">Compositions</a></li>
+  <li><a href="#n-ary-gates" id="toc-n-ary-gates" class="nav-link" data-scroll-target="#n-ary-gates">N-ary gates</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/bold.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Compressive Learning</h1>
-<p class="subtitle lead">Train models in bit space</p>
+<h1 class="title"><span class="chapter-title">Boolean Variation</span></h1>
 </div>
 
 
@@ -181,11 +231,425 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><img src="logo.jpg" title="Compressive Learning" class="quarto-cover-image img-fluid"></p>
-<p>Methods and tools for Compressive Learning.</p>
-<p>Check <a href="https://github.com/mlsquare/boolgrad">BoolGrad</a>, a proof-of-concept implementation of BackProp on Boolean Network, based on <a href="https://arxiv.org/abs/2405.16339">BOLD</a> paper, and <a href="https://github.com/karpathy/micrograd">micrograd</a> from Andrej Karpathy. It is a work in progress and lot of testing is needed.</p>
+<p><a href="https://arxiv.org/pdf/2405.16339">BOLD: Boolean Logic Deep Learning</a> introduced a mathematical theory to calculate gradients on Boolean Variables. Below are some essentials to realize the truth tables, define a Boolean Deep Learning model, and train the network using Backprop. See the paper for details. The following are taken from the paper.</p>
+<section id="definition" class="level2">
+<h2 class="anchored" data-anchor-id="definition">Definition</h2>
+<section id="three-value-and-mixed-logic" class="level3">
+<h3 class="anchored" data-anchor-id="three-value-and-mixed-logic">Three-value and Mixed logic</h3>
+<ol type="1">
+<li>Define <span class="math inline">\(\mathcal{M} \equiv \mathcal{B} \cup \{0\}\)</span> with logic connectives defined according to those of Boolean logic as follows.
+<ul>
+<li>First, the negation is: <span class="math inline">\(\neg True = False\)</span>, <span class="math inline">\(\neg False = True\)</span>, and <span class="math inline">\(\neg 0 = 0\)</span>.</li>
+<li>Second, let <span class="math inline">\(\mathcal{L}\)</span> be a logic connective, denote by <span class="math inline">\(\mathcal{L}_{\mathcal{M}}\)</span> and <span class="math inline">\(\mathcal{L}_{\mathcal{B}}\)</span> when it is in <span class="math inline">\(\mathcal{M}\)</span> and in <span class="math inline">\(\mathcal{B}\)</span>, respectively, then <span class="math inline">\(\mathcal{L}_{\mathcal{Mb}}(a,b) = \mathcal{L}_{\mathcal{Bb}}(a,b)\)</span> for <span class="math inline">\(a, b \in \mathcal{B}\)</span> and <span class="math inline">\(\mathcal{L}_{\mathcal{M}}(a,b) = 0\)</span> otherwise.</li>
+</ul></li>
+<li>Denote by <span class="math inline">\(\mathcal{L}\)</span> a logic set (e.g., <span class="math inline">\(\mathcal{B}\)</span> or <span class="math inline">\(\mathcal{M}\)</span>), <span class="math inline">\(\mathcal{R}\)</span> the real set, <span class="math inline">\(\mathcal{Z}\)</span> the set of integers, <span class="math inline">\(\mathcal{N}\)</span> a numeric set (e.g., <span class="math inline">\(\mathcal{R}\)</span> or <span class="math inline">\(\mathcal{Z}\)</span>), and <span class="math inline">\(\mathcal{D}\)</span> a certain set of <span class="math inline">\(\mathcal{L}\)</span> or <span class="math inline">\(\mathcal{N}\)</span>.</li>
+<li>For <span class="math inline">\(x \in \mathcal{N}\)</span>, its logic value denoted by <span class="math inline">\(x_{logic}\)</span> is given as <span class="math inline">\(x_{logic} = True \Leftrightarrow x &gt; 0\)</span>, <span class="math inline">\(x_{logic} = False \Leftrightarrow x &lt; 0\)</span>, and <span class="math inline">\(x_{logic} = 0 \Leftrightarrow x = 0\)</span>.</li>
+<li>The magnitude of a variable <span class="math inline">\(x\)</span>, denoted <span class="math inline">\(|x|\)</span>, is defined as its usual absolute value if <span class="math inline">\(x \in \mathcal{N}\)</span>. And for <span class="math inline">\(x \in \mathcal{L}\)</span>: <span class="math inline">\(|x| = 0\)</span> if <span class="math inline">\(x = 0\)</span>, and <span class="math inline">\(|x| = 1\)</span> otherwise.</li>
+<li>For <span class="math inline">\(\mathcal{L}\)</span> a logic connective of <span class="math inline">\(\mathcal{L}\)</span> and variables <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, operation <span class="math inline">\(c = \mathcal{L}(a, b)\)</span> is defined such that <span class="math inline">\(|c| = |a||b|\)</span> and <span class="math inline">\(c_{logic} = \mathcal{L}(a_{logic}, b_{logic})\)</span>.</li>
+</ol>
+</section>
+<section id="calculus" class="level3">
+<h3 class="anchored" data-anchor-id="calculus">Calculus</h3>
+<ol type="1">
+<li>A variable x is (extended) Boolean variable with the following encoding <span class="math inline">\(x \in \{-1,0,1\}\)</span> where <span class="math inline">\(-1\)</span> represents logical <span class="math inline">\(False\)</span>, <span class="math inline">\(+1\)</span> represents logical <span class="math inline">\(True\)</span>, and <span class="math inline">\(0\)</span> represents <span class="math inline">\(Ignore\)</span>. We can call this extended Boolean domain.</li>
+<li>Order relations <span class="math inline">\(&lt;\)</span> and <span class="math inline">\(&gt;\)</span> in <span class="math inline">\(\mathcal{B}\)</span> are defined as follows: <span class="math inline">\(False &lt; True\)</span>, and <span class="math inline">\(True &gt; False\)</span>.</li>
+<li>For <span class="math inline">\(a, b \in \mathcal{B}\)</span>, the variation from <span class="math inline">\(a\)</span> to <span class="math inline">\(b\)</span>, denoted <span class="math inline">\(\delta(a \to b)\)</span>, is defined as: <span class="math inline">\(\delta(a \to b) \equiv True\)</span> if <span class="math inline">\(b &gt; a\)</span>, <span class="math inline">\(\equiv 0\)</span> if <span class="math inline">\(b = a\)</span>, and <span class="math inline">\(\equiv False\)</span> if <span class="math inline">\(b &lt; a\)</span>.</li>
+<li>For <span class="math inline">\(f \in \mathcal{F}(\mathcal{B}, \mathcal{D})\)</span>, <span class="math inline">\(\forall x \in \mathcal{B}\)</span>, write <span class="math inline">\(\delta f(x \to \neg x) := \delta(f(x) \to f(\neg x))\)</span>. The variation of <span class="math inline">\(f\)</span> w.r.t <span class="math inline">\(x\)</span>, denoted <span class="math inline">\(f'(x)\)</span>, is defined as: <span class="math inline">\(f'(x) \equiv \text{xnor}(\delta(x \to \neg x), \delta f(x \to \neg x))\)</span>.</li>
+</ol>
+<p>For simplicity, we will write <span class="math inline">\(\delta f\)</span> to denote <span class="math inline">\(\delta f(x \to \neg x)\)</span>. Similarly, <span class="math inline">\(\delta x\)</span> to denote <span class="math inline">\(\delta (x \to \neg x)\)</span></p>
+<p>For details see, Section 3.2 of <a href="https://arxiv.org/pdf/2405.16339">BOLD: Boolean Logic Deep Learning</a></p>
+</section>
+</section>
+<section id="truth-tables-for-basic-gates" class="level2">
+<h2 class="anchored" data-anchor-id="truth-tables-for-basic-gates">Truth Tables for basic gates</h2>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(x_1\)</span></th>
+<th><span class="math inline">\(x_2\)</span></th>
+<th><span class="math inline">\(y_{AND}\)</span></th>
+<th><span class="math inline">\(y_{OR}\)</span></th>
+<th><span class="math inline">\(y_{XOR}\)</span></th>
+<th><span class="math inline">\(y_{XNOR}\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+</tr>
+</tbody>
+</table>
+<p>For any gate, if any of the inputs is <span class="math inline">\(Ignore\)</span>, its output is also <span class="math inline">\(Ignore\)</span>, by definition.</p>
+</section>
+<section id="derivatives" class="level2">
+<h2 class="anchored" data-anchor-id="derivatives">Derivatives</h2>
+<p>Recall:</p>
+<ol type="1">
+<li><span class="math inline">\(\delta(a \to b) \equiv True\)</span> if <span class="math inline">\(b &gt; a\)</span>, <span class="math inline">\(\equiv 0\)</span> if <span class="math inline">\(b = a\)</span>, and <span class="math inline">\(\equiv False\)</span> if <span class="math inline">\(b &lt; a\)</span>.</li>
+<li><span class="math inline">\(f'(x) \equiv \text{xnor}(\delta(x \to \neg x), \delta f(x \to \neg x))\)</span>.</li>
+</ol>
+<section id="and-gate" class="level3">
+<h3 class="anchored" data-anchor-id="and-gate">AND Gate</h3>
+<p>The Truth Table for <span class="math inline">\(f'(x) = f'_a(x)\)</span> for <span class="math inline">\(f_a(x) = AND(x,a)\)</span> is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(a\)</span></th>
+<th><span class="math inline">\(x\)</span></th>
+<th><span class="math inline">\(\neg x\)</span></th>
+<th><span class="math inline">\(\delta x\)</span></th>
+<th><span class="math inline">\(f(x)\)</span></th>
+<th><span class="math inline">\(f(\neg x)\)</span></th>
+<th><span class="math inline">\(\delta f\)</span></th>
+<th><span class="math inline">\(f'\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>0</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore, <span class="math inline">\(f'_{a}(x) = \text{T} \text{ iff } a=T, 0 \text{ o.w}\)</span></p>
+</section>
+<section id="or-gate" class="level3">
+<h3 class="anchored" data-anchor-id="or-gate">OR Gate</h3>
+<p>The Truth Table for <span class="math inline">\(f'(x) = f'_a(x)\)</span> for <span class="math inline">\(f_a(x) = OR(x,a)\)</span> is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(a\)</span></th>
+<th><span class="math inline">\(x\)</span></th>
+<th><span class="math inline">\(\neg x\)</span></th>
+<th><span class="math inline">\(\delta x\)</span></th>
+<th><span class="math inline">\(f(x)\)</span></th>
+<th><span class="math inline">\(f(\neg x)\)</span></th>
+<th><span class="math inline">\(\delta f\)</span></th>
+<th><span class="math inline">\(f'\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore, <span class="math inline">\(f'_{a}(x) = \text{F} \text{ iff } a=F, 0 \text{ o.w}\)</span></p>
+</section>
+<section id="xor-gate" class="level3">
+<h3 class="anchored" data-anchor-id="xor-gate">XOR Gate</h3>
+<p>The Truth Table for <span class="math inline">\(f'(x) = f'_a(x)\)</span> for <span class="math inline">\(f_a(x) = XOR(x,a)\)</span> is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(a\)</span></th>
+<th><span class="math inline">\(x\)</span></th>
+<th><span class="math inline">\(\neg x\)</span></th>
+<th><span class="math inline">\(\delta x\)</span></th>
+<th><span class="math inline">\(f(x)\)</span></th>
+<th><span class="math inline">\(f(\neg x)\)</span></th>
+<th><span class="math inline">\(\delta f\)</span></th>
+<th><span class="math inline">\(f'\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore, <span class="math inline">\(f'_{a}(x) = \neg a\)</span></p>
+</section>
+<section id="xnor-gate" class="level3">
+<h3 class="anchored" data-anchor-id="xnor-gate">XNOR Gate</h3>
+<p>The Truth Table for <span class="math inline">\(f'(x) = f'_a(x)\)</span> for <span class="math inline">\(f_a(x) = XNOR(x,a)\)</span> is:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(a\)</span></th>
+<th><span class="math inline">\(x\)</span></th>
+<th><span class="math inline">\(\neg x\)</span></th>
+<th><span class="math inline">\(\delta x\)</span></th>
+<th><span class="math inline">\(f(x)\)</span></th>
+<th><span class="math inline">\(f(\neg x)\)</span></th>
+<th><span class="math inline">\(\delta f\)</span></th>
+<th><span class="math inline">\(f'\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore, <span class="math inline">\(f'_{a}(x) = a\)</span></p>
+</section>
+</section>
+<section id="compositions" class="level2">
+<h2 class="anchored" data-anchor-id="compositions">Compositions</h2>
+<p><strong>Chain Rule</strong></p>
+<p>For <span class="math inline">\(\mathcal{B} \overset{f}{\to} \mathcal{B} \overset{g}{\to} \mathcal{D}\)</span>: <span class="math inline">\((g \circ f)'(x) = \text{xnor}(g'(f(x)), f'(x))\)</span>, <span class="math inline">\(\forall x \in \mathcal{B}\)</span>.</p>
+<p><strong>Multivariate Chain Rule</strong></p>
+<ol type="1">
+<li><p>For <span class="math inline">\(x = (x_1, \ldots, x_n) \in \mathcal{B}^n\)</span>, denote <span class="math inline">\(x_{\neg i} := (x_1, \ldots, x_{i-1}, \neg x_i, x_{i+1}, \ldots, x_n)\)</span> for <span class="math inline">\(n \ge 1\)</span> and <span class="math inline">\(1 \leq i \leq n\)</span>.</p></li>
+<li><p>For <span class="math inline">\(f \in \mathcal{F}(\mathcal{B}^n, \mathcal{B})\)</span>, the (partial) variation of <span class="math inline">\(f\)</span> wrt <span class="math inline">\(x_i\)</span>, denoted <span class="math inline">\(f'_{i}(x)\)</span> or <span class="math inline">\(\delta f(x)/\delta x_i\)</span>, is defined as: <span class="math inline">\(f'_{i}(x) \equiv \delta f(x)/\delta x_i \equiv \text{xnor}(\delta(x_i \to \neg x_i), \delta f(x \to x_{\neg i}))\)</span>.</p></li>
+<li><p>Let <span class="math inline">\(f \in \mathcal{F}(\mathcal{B}^n, \mathcal{B})\)</span>, <span class="math inline">\(n \geq 1\)</span>, and <span class="math inline">\(g \in \mathcal{F}(\mathcal{B}, \mathcal{B})\)</span>. For <span class="math inline">\(1 \le i \le n\)</span>,</p></li>
+</ol>
+<p><span class="math display">\[(g \circ f)'_i(x) = \text{xnor}(g'(f(x)), f'_i(x)), \quad \forall x \in \mathcal{B}^n\]</span></p>
+</section>
+<section id="n-ary-gates" class="level2">
+<h2 class="anchored" data-anchor-id="n-ary-gates">N-ary gates</h2>
+<p>We will represent <span class="math inline">\(f(x)\)</span> to represent multivariate Boolean function, and <span class="math inline">\(f(x_{-i})\)</span> to mean, compute the function by excluding the i-th variable. Let <span class="math inline">\(H(.)\)</span> represent the Heavyside step function, defined as <span class="math inline">\(H(x)= 1\)</span> if <span class="math inline">\(x &gt; 0\)</span> and 0 otherwise.</p>
+<p><strong>N-ary AND gate</strong> <span class="math display">\[
+\begin{array}{left}
+f(x) &amp;=&amp; \land_{j=1}^{n} x_j \\
+f'_{x_{-i}}(x_i) &amp;=&amp; T \text{ if } f(x_{-i})=T \\
+&amp;=&amp; 0 \text{ o.w }
+\end{array}
+\]</span> Therefore</p>
+<p><span class="math inline">\(\frac{\partial{f(x)}}{\partial{x_i}} = H(f(x_{-i}))\)</span>.</p>
+<p><strong>N-ary OR gate</strong> <span class="math display">\[
+\begin{array}{left}
+f(x) &amp;=&amp; \lor_{j=1}^{n} x_j \\
+f'_{x_{-i}}(x_i) &amp;=&amp; F \text{ if } f(x_{-i})=F \\
+&amp;=&amp; 0 \text{ o.w }
+\end{array}
+\]</span> Therefore</p>
+<p><span class="math inline">\(\frac{\partial{f(x)}}{\partial{x_i}} = -H(-f(x_{-i}))\)</span>.</p>
+<p><strong>N-ary XOR gate</strong> <span class="math display">\[
+\begin{array}{left}
+f(x) &amp;=&amp; \oplus_{j=1}^{n} x_j \\
+f'_{x_{-i}}(x_i) &amp;=&amp; \neg f(x_{-i})
+\end{array}
+\]</span> Therefore</p>
+<p><span class="math inline">\(\frac{\partial{f(x)}}{\partial{x_i}} = -f(x_{-i})\)</span>.</p>
+<p><strong>N-ary XNOR gate</strong> <span class="math display">\[
+\begin{array}{left}
+f(x) &amp;=&amp; \ominus_{j=1}^{n} x_j \\
+f'_{x_{-i}}(x_i) &amp;=&amp; f(x_{-i})
+\end{array}
+\]</span> Therefore</p>
+<p><span class="math inline">\(\frac{\partial{f(x)}}{\partial{x_i}} = f(x_{-i})\)</span>.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -610,13 +1074,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./preface.html" class="pagination-link" aria-label="Motivation">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Motivation</span></span>
+      <a href="./index.html" class="pagination-link" aria-label="Compressive Learning">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Compressive Learning</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./bold.html" class="pagination-link" aria-label="Boolean Variation">
-        <span class="nav-page-text"><span class="chapter-title">Boolean Variation</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./bolt.html" class="pagination-link" aria-label="BNN Layer">
+        <span class="nav-page-text"><span class="chapter-title">BNN Layer</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -628,7 +1092,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/bold.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This material was built with <a href="https://quarto.org/">Quarto</a> with <a href="https://github.com/hadley/r4ds">r4ds</a> theme.</p>
 </div>
