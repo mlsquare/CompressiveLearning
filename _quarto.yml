@@ -32,7 +32,7 @@ book:
   - preface.qmd
   - index.qmd
   - bold.qmd
-  - bolt.qmd
+  - bnn_layer.qmd
   - part: Notebooks
     chapters:
       - ./bolt/notebooks/dev.ipynb
