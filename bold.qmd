@@ -1,0 +1,169 @@
+# Boolean Variation
+
+[BOLD: Boolean Logic Deep Learning](https://arxiv.org/pdf/2405.16339) introduced a mathematical theory to calculate gradients on Boolean Variables. Below are some essentials to realize the truth tables, define a Boolean Deep Learning model, and train the network using Backprop. See the paper for details. The following are taken from the paper.
+
+## Definition
+
+### Three-value and Mixed logic
+
+1. Define $\mathcal{M} \equiv \mathcal{B} \cup \{0\}$ with logic connectives defined according to those of Boolean logic as follows. 
+    - First, the negation is: $\neg True = False$, $\neg False = True$, and $\neg 0 = 0$. 
+    - Second, let $\mathcal{L}$ be a logic connective, denote by $\mathcal{L}_{\mathcal{M}}$ and $\mathcal{L}_{\mathcal{B}}$ when it is in $\mathcal{M}$ and in $\mathcal{B}$, respectively, then $\mathcal{L}_{\mathcal{Mb}}(a,b) = \mathcal{L}_{\mathcal{Bb}}(a,b)$ for $a, b \in \mathcal{B}$ and $\mathcal{L}_{\mathcal{M}}(a,b) = 0$ otherwise.
+2. Denote by $\mathcal{L}$ a logic set (e.g., $\mathcal{B}$ or $\mathcal{M}$), $\mathcal{R}$ the real set, $\mathcal{Z}$ the set of integers, $\mathcal{N}$ a numeric set (e.g., $\mathcal{R}$ or $\mathcal{Z}$), and $\mathcal{D}$ a certain set of $\mathcal{L}$ or $\mathcal{N}$.
+3. For $x \in \mathcal{N}$, its logic value denoted by $x_{logic}$ is given as $x_{logic} = True \Leftrightarrow x > 0$, $x_{logic} = False \Leftrightarrow x < 0$, and $x_{logic} = 0 \Leftrightarrow x = 0$.
+4. The magnitude of a variable $x$, denoted $|x|$, is defined as its usual absolute value if $x \in \mathcal{N}$. And for $x \in \mathcal{L}$: $|x| = 0$ if $x = 0$, and $|x| = 1$ otherwise.
+5. For $\mathcal{L}$ a logic connective of $\mathcal{L}$ and variables $a$, $b$, operation $c = \mathcal{L}(a, b)$ is defined such that $|c| = |a||b|$ and $c_{logic} = \mathcal{L}(a_{logic}, b_{logic})$. 
+
+
+### Calculus
+1. A variable x is (extended) Boolean variable with the following encoding $x \in \{-1,0,1\}$ where $-1$ represents logical $False$, $+1$ represents logical $True$, and $0$ represents $Ignore$. We can call this extended Boolean domain.
+2. Order relations $<$ and $>$ in $\mathcal{B}$ are defined as follows: $False < True$, and $True > False$.
+3. For $a, b \in \mathcal{B}$, the variation from $a$ to $b$, denoted $\delta(a \to b)$, is defined as: $\delta(a \to b) \equiv True$ if $b > a$, $\equiv 0$ if $b = a$, and $\equiv False$ if $b < a$.
+4. For $f \in \mathcal{F}(\mathcal{B}, \mathcal{D})$, $\forall x \in \mathcal{B}$, write $\delta f(x \to \neg x) := \delta(f(x) \to f(\neg x))$. The variation of $f$ w.r.t $x$, denoted $f'(x)$, is defined as: $f'(x) \equiv \text{xnor}(\delta(x \to \neg x), \delta f(x \to \neg x))$.
+
+For simplicity, we will write $\delta f$ to denote $\delta f(x \to \neg x)$. Similarly, $\delta x$ to denote $\delta (x \to \neg x)$ 
+
+
+For details see, Section 3.2 of [BOLD: Boolean Logic Deep Learning](https://arxiv.org/pdf/2405.16339)
+
+
+## Truth Tables for basic gates
+
+| $x_1$ | $x_2$ | $y_{AND}$ | $y_{OR}$ | $y_{XOR}$ |$y_{XNOR}$ | 
+|-----|-----|-----|-----|-----|-----|
+T| T | T | T | F | T | 
+T| F | F | T | T | F |
+F| T | F | T | T | F | 
+F| F | F | F | F | T | 
+
+For any gate, if any of the inputs is $Ignore$, its output is also $Ignore$, by definition.
+
+## Derivatives
+
+Recall:
+
+1. $\delta(a \to b) \equiv True$ if $b > a$, $\equiv 0$ if $b = a$, and $\equiv False$ if $b < a$.
+2. $f'(x) \equiv \text{xnor}(\delta(x \to \neg x), \delta f(x \to \neg x))$.
+
+
+### AND Gate
+
+The Truth Table for $f'(x) = f'_a(x)$ for $f_a(x) = AND(x,a)$ is:
+
+| $a$ | $x$ | $\neg x$ | $\delta x$ | $f(x)$ |$f(\neg x)$ |  $\delta f$ | $f'$ 
+|-----|-----|-----|-----| -----| -----|-----|-----|
+T| T | F | F | T | F | F | T | 
+T| F | T | T | F | T | T | T | 
+F| T | F | F | F | F | 0 | 0 |
+F| F | T | T | F | F | 0 | 0 |
+
+Therefore, $f'_{a}(x) = \text{T} \text{ iff } a=T, 0 \text{ o.w}$
+
+
+### OR Gate
+
+The Truth Table for $f'(x) = f'_a(x)$ for $f_a(x) = OR(x,a)$ is:
+
+| $a$ | $x$ | $\neg x$ | $\delta x$ | $f(x)$ |$f(\neg x)$ |  $\delta f$ | $f'$ 
+|-----|-----|-----|-----| -----| -----|-----|-----|
+T| T | F | F | T | T | 0 | 0 | 
+T| F | T | T | T | T | 0 | 0 | 
+F| T | F | F | T | F | F | F |
+F| F | T | T | F | T | T | F |
+
+Therefore, $f'_{a}(x) = \text{F} \text{ iff } a=F, 0 \text{ o.w}$
+
+### XOR Gate
+
+The Truth Table for $f'(x) = f'_a(x)$ for $f_a(x) = XOR(x,a)$ is:
+
+| $a$ | $x$ | $\neg x$ | $\delta x$ | $f(x)$ |$f(\neg x)$ |  $\delta f$ | $f'$ 
+|-----|-----|-----|-----| -----| -----|-----|-----|
+T| T | F | F | F | T | T | F | 
+T| F | T | T | T | F | F | F | 
+F| T | F | F | T | F | F | T |
+F| F | T | T | F | T | T | T |
+
+Therefore, $f'_{a}(x) = \neg a$
+
+### XNOR Gate
+
+The Truth Table for $f'(x) = f'_a(x)$ for $f_a(x) = XNOR(x,a)$ is:
+
+| $a$ | $x$ | $\neg x$ | $\delta x$ | $f(x)$ |$f(\neg x)$ |  $\delta f$ | $f'$ 
+|-----|-----|-----|-----| -----| -----|-----|-----|
+T| T | F | F | T | F | F | T | 
+T| F | T | T | F | T | T | T | 
+F| T | F | F | F | T | T | F |
+F| F | T | T | T | F | F | F |
+
+Therefore, $f'_{a}(x) = a$
+
+
+## Compositions
+
+
+**Chain Rule**
+
+For $\mathcal{B} \overset{f}{\to} \mathcal{B} \overset{g}{\to} \mathcal{D}$: $(g \circ f)'(x) = \text{xnor}(g'(f(x)), f'(x))$, $\forall x \in \mathcal{B}$.
+
+**Multivariate Chain Rule**
+
+1. For $x = (x_1, \ldots, x_n) \in \mathcal{B}^n$, denote $x_{\neg i} := (x_1, \ldots, x_{i-1}, \neg x_i, x_{i+1}, \ldots, x_n)$ for $n \ge 1$ and $1 \leq i \leq n$.
+
+2. For $f \in \mathcal{F}(\mathcal{B}^n, \mathcal{B})$, the (partial) variation of $f$ wrt $x_i$, denoted $f'_{i}(x)$ or $\delta f(x)/\delta x_i$, is defined as: $f'_{i}(x) \equiv \delta f(x)/\delta x_i \equiv \text{xnor}(\delta(x_i \to \neg x_i), \delta f(x \to x_{\neg i}))$.
+
+3.  Let $f \in \mathcal{F}(\mathcal{B}^n, \mathcal{B})$, $n \geq 1$, and $g \in \mathcal{F}(\mathcal{B}, \mathcal{B})$. For $1 \le i \le n$,
+
+$$(g \circ f)'_i(x) = \text{xnor}(g'(f(x)), f'_i(x)), \quad \forall x \in \mathcal{B}^n$$
+
+
+## N-ary gates
+We will represent $f(x)$ to represent multivariate Boolean function, and $f(x_{-i})$ to mean, compute the function by excluding the i-th variable. Let $H(.)$ represent the Heavyside step function, defined as $H(x)= 1$ if $x > 0$  and 0 otherwise.
+
+
+**N-ary AND gate**
+$$
+\begin{array}{left}
+f(x) &=& \land_{j=1}^{n} x_j \\
+f'_{x_{-i}}(x_i) &=& T \text{ if } f(x_{-i})=T \\
+&=& 0 \text{ o.w }
+\end{array}
+$$
+Therefore
+
+$\frac{\partial{f(x)}}{\partial{x_i}} = H(f(x_{-i}))$.
+
+**N-ary OR gate**
+$$
+\begin{array}{left}
+f(x) &=& \lor_{j=1}^{n} x_j \\
+f'_{x_{-i}}(x_i) &=& F \text{ if } f(x_{-i})=F \\
+&=& 0 \text{ o.w }
+\end{array}
+$$
+Therefore
+
+$\frac{\partial{f(x)}}{\partial{x_i}} = -H(-f(x_{-i}))$.
+
+**N-ary XOR gate**
+$$
+\begin{array}{left}
+f(x) &=& \oplus_{j=1}^{n} x_j \\
+f'_{x_{-i}}(x_i) &=& \neg f(x_{-i})
+\end{array}
+$$
+Therefore
+
+$\frac{\partial{f(x)}}{\partial{x_i}} = -f(x_{-i})$. 
+
+**N-ary XNOR gate**
+$$
+\begin{array}{left}
+f(x) &=& \ominus_{j=1}^{n} x_j \\
+f'_{x_{-i}}(x_i) &=& f(x_{-i})
+\end{array}
+$$
+Therefore
+
+$\frac{\partial{f(x)}}{\partial{x_i}} = f(x_{-i})$. 

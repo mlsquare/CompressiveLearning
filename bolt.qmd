@@ -1,0 +1,191 @@
+## BNN Layer
+
+## Sum of Product Networks
+
+Consider a three variable multi-valued Truth table.
+
+| $x_1$ | $x_2$ | $x_3$ | $y_1$ | $y_2$ | $y_3$ |
+|-----|-----|-----|-----|-----|-----|
+F | F | F | T | F | F |
+F | F | T | T | T | F |
+F | T | F | F | T | F |
+F | T | T | F | F | T |
+T | F | F | F | T | F |
+T | F | T | F | F | F |
+T | T | F | F | F | F |
+T | T | T | F | T | T |
+
+For an n-variable Boolean function, the Truth Table will have $2^n$ unique rows, and the size of all Boolean functions is $2^{2^n}$. Above, we considered $y_1, y_2, y_3$ for illustration.
+
+We can model 
+$$
+\begin{array}{left}
+y_1 &=& \neg x_1 \neg x_2 \neg x_3 \lor \neg x_1 \neg x_2 x_3\\
+y_2 &=& \neg x_1 \neg x_2 x_3 \lor  \neg x_1 x_2 \neg x_3 \lor x_1 \neg x_2 \neg x_3 \lor x_1 x_2 x_3\\
+y_3 &=&  x_1 x_2 x_3
+\end{array}
+$$
+
+We notice any Truth Table ($y_1$, for example) can be expressed in Sum-of-Products form. The innards are the product terms which are to be OR-ed.
+
+Generally speaking, we model the Truth Tables via learnable gates of n-variables as follows:
+
+$$
+\begin{array}{left}
+h_j &=& \land_{i=1}^{n} x_i \oplus w_i^j \\
+y_k &=& \uplus_{j=1}^{m} \alpha_{j}^{k} \odot h_j \text{ where } \alpha_{j}^{k} \in \{0,1\} \text{ and } \exists j \text{ s.t }  \alpha_{j}^{k} = 1 \forall k
+\end{array}
+$$
+Above, $\alpha_j^k$ is a selection gate. When all of them are cold (off), model will be in an $Ignore$ state. The Truth Table for the selection gate $h_j \otimes \alpha_j$ is:
+
+| $\alpha_j$ | $h_j$  | $\alpha_j \odot h_j$ | 
+|-----|-----|-----|
+T| T | T | 
+T| F | F | 
+F| T | 0 | 
+F| F | 0 |
+
+And, $\uplus(.)$ is an modified OR gate works like regular OR gate when at least one of the inputs is not in $Ignore$ state, which is different from the OR gate we have defined [earlier](./bold.qmd). The Truth Table for an N-ary SelectOR gate is defined as follows:
+
+| $a$ | $x$  | $\uplus(x,a)$ | 
+|-----|-----|-----|
+T | T | T | 
+T | F | T | 
+F | T | T | 
+F | F | F | 
+0 | T | T | 
+0 | F | F | 
+0 | 0 | 0 | 
+T | 0 | T | 
+F | 0 | F | 
+
+Therefore, 
+$$
+\begin{array}{left}
+\uplus(x,a) &=& x \text{ if }  a=0 \\
+&=&  a \text{ if }  x=0 \\
+&=&  \lor (x,a) \text{ o.w }
+\end{array}
+$$
+
+Further,
+$$
+\begin{array}{left}
+x \oplus w &=& \neg x \text{ if } w = T \\ 
+ &=&  x \text{  o.w }
+\end{array}
+$$
+In effect, we are using XOR gate to complement the inputs, which is essential to create the product terms and using the SelectOR gate to select the prod terms and OR them.
+
+
+## ProdTron
+We want to realize a module which takes n-inputs and creates a product term, i.e., we want to realize
+$$
+\begin{array}{left}
+h(x,w) &=& \land_{i=1}^{n} x_i \oplus w_i
+\end{array}
+$$
+
+For convenience, we write them recursively, to ease up the derivation, $h= \land(x_i \oplus w_i, h_{-i})$, where
+$h_{-i} = \land_{k \neq i} x_k \oplus w_k$ 
+
+
+
+We obtain the partial derivatives as:
+$$
+\begin{array}{left}
+\frac{\partial{h(x,w)}}{\partial{x_i}} &=& w_i \text{ if } h_{-i} = T\\
+&=& 0 \text{ o.w } \\
+\frac{\partial{h(x,w)}}{\partial{w_i}} &=& x_i \text{ if } h_{-i} = T\\
+&=& 0 \text{ o.w } \\
+\end{array}
+$$
+
+It can be implemented with Heavyside function as follows:
+$$
+\begin{array}{left}
+\frac{\partial{h(x,w)}}{\partial{x_i}} &=&  w_i H(h_{-i}) \\
+\frac{\partial{h(x,w)}}{\partial{w_i}} &=& x_i H(h_{-i})
+\end{array}
+$$
+where $\epsilon$ is a small positive constant.
+
+
+## SumTron
+We want to realize a module which takes m-inputs, selects some of the m-inputs, and OR's them.
+$$
+\begin{array}{left}
+y(\alpha, h) &=& \uplus_{j=1}^{m} \alpha_j \odot h_j
+\end{array}
+$$
+For convenience, we write them recursively, to ease up the derivation, $y = \uplus(\alpha_j \odot h_j, y_{-j})$, where $y_{-j} = \uplus_{k=1, \neq j  }^{m} \alpha_k \odot h_k$. We can see that $y = y_{-j} \text { if } \alpha_j = F$
+
+We obtain the partial derivatives by observing the Truth Table to get $\frac{\partial{y(\alpha,h)}}{\partial{h_i}}$ as follows:
+
+
+| $\alpha_j$ | $h_j$ | $y_{-j}$ | $y$ | $y(\neg h_j)$ | $\delta y$ | $\delta h_j$ | $y'$ |
+|-----|-----|-----|-----| -----| -----|-----|-----|
+T| T | T/F/0 | T | T/F/F |  0/F/F | F | 0/T/T | 
+T| F | T/F/0 | T/F/F | T |  0/T/T | T | 0/T/T | 
+F| T | T/F/0 | T/F/0 | T/F/0 | 0  | F | 0 |
+F| F | T/F/0 | T/F/0 | T/F/0 | 0  | F | 0 | 
+
+
+Therefore,
+
+$$
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_i}} &=&  T \text{ if } \alpha_j = T\, \& \, y_{-j} = F/0 \\
+&=& 0 \text{ o.w } \\
+\end{array}
+$$
+It can be implemented with Heavyside function as follows:
+$$
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_j}} &=&  H( \alpha_j)H(-y_{-j} + \epsilon)
+\end{array}
+$$
+where $\epsilon$ is a small positive constant.
+
+
+
+We obtain the partial derivatives by observing the Truth Table to get $\frac{\partial{y(\alpha,h)}}{\partial{\alpha_i}}$ as follows:
+
+
+| $\alpha_j$ | $h_j$ | $y_{-j}$ | $y$ | $y(\neg \alpha_j)$ | $\delta y$ | $\delta \alpha_j$ | $y'$ |
+|-----|-----|-----|-----| -----| -----|-----|-----|
+T| T | T/F/0 | T | $y_{-j}$ | 0  | F | 0 | 
+T| F | T/F/0 | T/F/F | $y_{-j}$ | 0  | F | 0 | 
+F| T | T/F/0 | $y_{-j}$ | T |  0/T/0 | T | 0/T/0 |
+F| F | T/F/0 | $y_{-j}$ |  T/F/F| 0/0/0  | T | 0 | 
+
+
+Therefore,
+
+$$
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{\alpha_j}} &=&  T \text{ if } \alpha_j = F\, \& \, y_{-j} = F \, \&  \, h_j = T \\
+&=& 0 \text{ o.w } \\
+\end{array}
+$$
+It can be implemented with Heavyside function as follows:
+$$
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_i}} &=&  H(\alpha_j)H(-y_{-j})H(h_{j}) 
+\end{array}
+$$
+where $\epsilon$ is a small positive constant.
+
+
+Finally, we can put it all together
+
+## BNN Layer
+
+A BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter $H$ that controls the layer complexity, resulting in a total of $H(N+K)$ learnable Boolean weights.
+
+$$
+\begin{array}{left}
+y_{k} &=& \uplus_{j=1}^{m} \alpha_{j}^{k} \odot \left( h_j \equiv \land_{i=1}^{n} x_i \oplus w_i^j \right) 
+\end{array}
+$$
+where $n=1,\dots,N$, $j=1,\dots,H$ $k=1,\dots,K$.

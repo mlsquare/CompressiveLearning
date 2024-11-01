@@ -3,3 +3,5 @@ title: "Compressive Learning"
 ---
 
 Methods and tools for Compressive Learning.
+
+Check [BoolGrad](https://github.com/mlsquare/boolgrad), a proof-of-concept implementation of BackProp on Boolean Network, based on [BOLD](https://arxiv.org/abs/2405.16339) paper, and [micrograd](https://github.com/karpathy/micrograd) from Andrej Karpathy. It is a work in progress and lot of testing is needed.
