@@ -146,8 +146,8 @@
     ]
   },
   {
-    "objectID": "bolt.html",
-    "href": "bolt.html",
+    "objectID": "bnn_layer.html",
+    "href": "bnn_layer.html",
     "title": "BNN Layer",
     "section": "",
     "text": "Sum of Product Networks\nConsider a three variable multi-valued Truth table.\nFor an n-variable Boolean function, the Truth Table will have \\(2^n\\) unique rows, and the size of all Boolean functions is \\(2^{2^n}\\). Above, we considered \\(y_1, y_2, y_3\\) for illustration.\nWe can model \\[\n\\begin{array}{left}\ny_1 &=& \\neg x_1 \\neg x_2 \\neg x_3 \\lor \\neg x_1 \\neg x_2 x_3\\\\\ny_2 &=& \\neg x_1 \\neg x_2 x_3 \\lor  \\neg x_1 x_2 \\neg x_3 \\lor x_1 \\neg x_2 \\neg x_3 \\lor x_1 x_2 x_3\\\\\ny_3 &=&  x_1 x_2 x_3\n\\end{array}\n\\]\nWe notice any Truth Table (\\(y_1\\), for example) can be expressed in Sum-of-Products form. The innards are the product terms which are to be OR-ed.\nGenerally speaking, we model the Truth Tables via learnable gates of n-variables as follows:\n\\[\n\\begin{array}{left}\nh_j &=& \\land_{i=1}^{n} x_i \\oplus w_i^j \\\\\ny_k &=& \\uplus_{j=1}^{m} \\alpha_{j}^{k} \\odot h_j \\text{ where } \\alpha_{j}^{k} \\in \\{0,1\\} \\text{ and } \\exists j \\text{ s.t }  \\alpha_{j}^{k} = 1 \\forall k\n\\end{array}\n\\] Above, \\(\\alpha_j^k\\) is a selection gate. When all of them are cold (off), model will be in an \\(Ignore\\) state. The Truth Table for the selection gate \\(h_j \\otimes \\alpha_j\\) is:\nAnd, \\(\\uplus(.)\\) is an modified OR gate works like regular OR gate when at least one of the inputs is not in \\(Ignore\\) state, which is different from the OR gate we have defined earlier. The Truth Table for an N-ary SelectOR gate is defined as follows:\nTherefore, \\[\n\\begin{array}{left}\n\\uplus(x,a) &=& x \\text{ if }  a=0 \\\\\n&=&  a \\text{ if }  x=0 \\\\\n&=&  \\lor (x,a) \\text{ o.w }\n\\end{array}\n\\]\nFurther, \\[\n\\begin{array}{left}\nx \\oplus w &=& \\neg x \\text{ if } w = T \\\\\n&=&  x \\text{  o.w }\n\\end{array}\n\\] In effect, we are using XOR gate to complement the inputs, which is essential to create the product terms and using the SelectOR gate to select the prod terms and OR them.",
@@ -156,8 +156,8 @@
     ]
   },
   {
-    "objectID": "bolt.html#sum-of-product-networks",
-    "href": "bolt.html#sum-of-product-networks",
+    "objectID": "bnn_layer.html#sum-of-product-networks",
+    "href": "bnn_layer.html#sum-of-product-networks",
     "title": "BNN Layer",
     "section": "",
     "text": "\\(x_1\\)\n\\(x_2\\)\n\\(x_3\\)\n\\(y_1\\)\n\\(y_2\\)\n\\(y_3\\)\n\n\n\n\nF\nF\nF\nT\nF\nF\n\n\nF\nF\nT\nT\nT\nF\n\n\nF\nT\nF\nF\nT\nF\n\n\nF\nT\nT\nF\nF\nT\n\n\nT\nF\nF\nF\nT\nF\n\n\nT\nF\nT\nF\nF\nF\n\n\nT\nT\nF\nF\nF\nF\n\n\nT\nT\nT\nF\nT\nT\n\n\n\n\n\n\n\n\n\n\n\n\\(\\alpha_j\\)\n\\(h_j\\)\n\\(\\alpha_j \\odot h_j\\)\n\n\n\n\nT\nT\nT\n\n\nT\nF\nF\n\n\nF\nT\n0\n\n\nF\nF\n0\n\n\n\n\n\n\n\n\\(a\\)\n\\(x\\)\n\\(\\uplus(x,a)\\)\n\n\n\n\nT\nT\nT\n\n\nT\nF\nT\n\n\nF\nT\nT\n\n\nF\nF\nF\n\n\n0\nT\nT\n\n\n0\nF\nF\n\n\n0\n0\n0\n\n\nT\n0\nT\n\n\nF\n0\nF",
@@ -166,8 +166,8 @@
     ]
   },
   {
-    "objectID": "bolt.html#prodtron",
-    "href": "bolt.html#prodtron",
+    "objectID": "bnn_layer.html#prodtron",
+    "href": "bnn_layer.html#prodtron",
     "title": "BNN Layer",
     "section": "ProdTron",
     "text": "ProdTron\nWe want to realize a module which takes n-inputs and creates a product term, i.e., we want to realize \\[\n\\begin{array}{left}\nh(x,w) &=& \\land_{i=1}^{n} x_i \\oplus w_i\n\\end{array}\n\\]\nFor convenience, we write them recursively, to ease up the derivation, \\(h= \\land(x_i \\oplus w_i, h_{-i})\\), where \\(h_{-i} = \\land_{k \\neq i} x_k \\oplus w_k\\)\nWe obtain the partial derivatives as: \\[\n\\begin{array}{left}\n\\frac{\\partial{h(x,w)}}{\\partial{x_i}} &=& w_i \\text{ if } h_{-i} = T\\\\\n&=& 0 \\text{ o.w } \\\\\n\\frac{\\partial{h(x,w)}}{\\partial{w_i}} &=& x_i \\text{ if } h_{-i} = T\\\\\n&=& 0 \\text{ o.w } \\\\\n\\end{array}\n\\]\nIt can be implemented with Heavyside function as follows: \\[\n\\begin{array}{left}\n\\frac{\\partial{h(x,w)}}{\\partial{x_i}} &=&  w_i H(h_{-i}) \\\\\n\\frac{\\partial{h(x,w)}}{\\partial{w_i}} &=& x_i H(h_{-i})\n\\end{array}\n\\] where \\(\\epsilon\\) is a small positive constant.",
@@ -176,8 +176,8 @@
     ]
   },
   {
-    "objectID": "bolt.html#sumtron",
-    "href": "bolt.html#sumtron",
+    "objectID": "bnn_layer.html#sumtron",
+    "href": "bnn_layer.html#sumtron",
     "title": "BNN Layer",
     "section": "SumTron",
     "text": "SumTron\nWe want to realize a module which takes m-inputs, selects some of the m-inputs, and OR’s them. \\[\n\\begin{array}{left}\ny(\\alpha, h) &=& \\uplus_{j=1}^{m} \\alpha_j \\odot h_j\n\\end{array}\n\\] For convenience, we write them recursively, to ease up the derivation, \\(y = \\uplus(\\alpha_j \\odot h_j, y_{-j})\\), where \\(y_{-j} = \\uplus_{k=1, \\neq j  }^{m} \\alpha_k \\odot h_k\\). We can see that \\(y = y_{-j} \\text { if } \\alpha_j = F\\)\nWe obtain the partial derivatives by observing the Truth Table to get \\(\\frac{\\partial{y(\\alpha,h)}}{\\partial{h_i}}\\) as follows:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\alpha_j\\)\n\\(h_j\\)\n\\(y_{-j}\\)\n\\(y\\)\n\\(y(\\neg h_j)\\)\n\\(\\delta y\\)\n\\(\\delta h_j\\)\n\\(y'\\)\n\n\n\n\nT\nT\nT/F/0\nT\nT/F/F\n0/F/F\nF\n0/T/T\n\n\nT\nF\nT/F/0\nT/F/F\nT\n0/T/T\nT\n0/T/T\n\n\nF\nT\nT/F/0\nT/F/0\nT/F/0\n0\nF\n0\n\n\nF\nF\nT/F/0\nT/F/0\nT/F/0\n0\nF\n0\n\n\n\nTherefore,\n\\[\n\\begin{array}{left}\n\\frac{\\partial{y(\\alpha,h)}}{\\partial{h_i}} &=&  T \\text{ if } \\alpha_j = T\\, \\& \\, y_{-j} = F/0 \\\\\n&=& 0 \\text{ o.w } \\\\\n\\end{array}\n\\] It can be implemented with Heavyside function as follows: \\[\n\\begin{array}{left}\n\\frac{\\partial{y(\\alpha,h)}}{\\partial{h_j}} &=&  H( \\alpha_j)H(-y_{-j} + \\epsilon)\n\\end{array}\n\\] where \\(\\epsilon\\) is a small positive constant.\nWe obtain the partial derivatives by observing the Truth Table to get \\(\\frac{\\partial{y(\\alpha,h)}}{\\partial{\\alpha_i}}\\) as follows:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\alpha_j\\)\n\\(h_j\\)\n\\(y_{-j}\\)\n\\(y\\)\n\\(y(\\neg \\alpha_j)\\)\n\\(\\delta y\\)\n\\(\\delta \\alpha_j\\)\n\\(y'\\)\n\n\n\n\nT\nT\nT/F/0\nT\n\\(y_{-j}\\)\n0\nF\n0\n\n\nT\nF\nT/F/0\nT/F/F\n\\(y_{-j}\\)\n0\nF\n0\n\n\nF\nT\nT/F/0\n\\(y_{-j}\\)\nT\n0/T/0\nT\n0/T/0\n\n\nF\nF\nT/F/0\n\\(y_{-j}\\)\nT/F/F\n0/0/0\nT\n0\n\n\n\nTherefore,\n\\[\n\\begin{array}{left}\n\\frac{\\partial{y(\\alpha,h)}}{\\partial{\\alpha_j}} &=&  T \\text{ if } \\alpha_j = F\\, \\& \\, y_{-j} = F \\, \\&  \\, h_j = T \\\\\n&=& 0 \\text{ o.w } \\\\\n\\end{array}\n\\] It can be implemented with Heavyside function as follows: \\[\n\\begin{array}{left}\n\\frac{\\partial{y(\\alpha,h)}}{\\partial{h_i}} &=&  H(\\alpha_j)H(-y_{-j})H(h_{j})\n\\end{array}\n\\] where \\(\\epsilon\\) is a small positive constant.\nFinally, we can put it all together",
@@ -186,8 +186,8 @@
     ]
   },
   {
-    "objectID": "bolt.html#bnn-layer",
-    "href": "bolt.html#bnn-layer",
+    "objectID": "bnn_layer.html#bnn-layer",
+    "href": "bnn_layer.html#bnn-layer",
     "title": "BNN Layer",
     "section": "BNN Layer",
     "text": "BNN Layer\nA BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter \\(H\\) that controls the layer complexity, resulting in a total of \\(H(N+K)\\) learnable Boolean weights.\n\\[\n\\begin{array}{left}\ny_{k} &=& \\uplus_{j=1}^{m} \\alpha_{j}^{k} \\odot \\left( h_j \\equiv \\land_{i=1}^{n} x_i \\oplus w_i^j \\right)\n\\end{array}\n\\] where \\(n=1,\\dots,N\\), \\(j=1,\\dots,H\\) \\(k=1,\\dots,K\\).",

@@ -8,7 +8,7 @@
 
 <meta name="author" content="mlsquare">
 
-<title>Motivation – Compressive Learning</title>
+<title>BNN Layer – Compressive Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,7 +31,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./index.html" rel="next">
+<link href="./bolt/notebooks/dev.html" rel="next">
+<link href="./bold.html" rel="prev">
 <link href="./logo.jpg" rel="icon" type="image/jpeg">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -111,7 +112,7 @@ window.Quarto = {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./preface.html"><span class="chapter-title">Motivation</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./bnn_layer.html"><span class="chapter-title">BNN Layer</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -146,7 +147,7 @@ window.Quarto = {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./preface.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Motivation</span></a>
+  <a href="./preface.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Motivation</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -161,7 +162,7 @@ window.Quarto = {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bnn_layer.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">BNN Layer</span></a>
+  <a href="./bnn_layer.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">BNN Layer</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -190,21 +191,19 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#analysis" id="toc-analysis" class="nav-link active" data-scroll-target="#analysis">Analysis</a></li>
-  <li><a href="#build-develop" id="toc-build-develop" class="nav-link" data-scroll-target="#build-develop">Build &amp; Develop</a></li>
-  <li><a href="#kernel-machines" id="toc-kernel-machines" class="nav-link" data-scroll-target="#kernel-machines">Kernel Machines</a></li>
-  <li><a href="#axiomatic-notions-of-intelligence" id="toc-axiomatic-notions-of-intelligence" class="nav-link" data-scroll-target="#axiomatic-notions-of-intelligence">Axiomatic Notions of Intelligence</a></li>
-  <li><a href="#axiomatic-notions-of-perception-and-processing" id="toc-axiomatic-notions-of-perception-and-processing" class="nav-link" data-scroll-target="#axiomatic-notions-of-perception-and-processing">Axiomatic Notions of Perception and Processing</a></li>
-  <li><a href="#compressive-learning" id="toc-compressive-learning" class="nav-link" data-scroll-target="#compressive-learning">Compressive Learning</a></li>
+  <li><a href="#sum-of-product-networks" id="toc-sum-of-product-networks" class="nav-link active" data-scroll-target="#sum-of-product-networks">Sum of Product Networks</a></li>
+  <li><a href="#prodtron" id="toc-prodtron" class="nav-link" data-scroll-target="#prodtron">ProdTron</a></li>
+  <li><a href="#sumtron" id="toc-sumtron" class="nav-link" data-scroll-target="#sumtron">SumTron</a></li>
+  <li><a href="#bnn-layer" id="toc-bnn-layer" class="nav-link" data-scroll-target="#bnn-layer">BNN Layer</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/preface.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/bnn_layer.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">Motivation</span></h1>
+<h1 class="title"><span class="chapter-title">BNN Layer</span></h1>
 </div>
 
 
@@ -221,98 +220,401 @@ window.Quarto = {
 </header>
 
 
-<p><strong>Why Compressive Learning?</strong></p>
-<p><strong>Observation</strong>:</p>
-<p>We are taking extremely large pre-trained networks (LLMs) and then quantizing them to 1-bit precision. Effectively turning them to Boolean Networks and yet notice that performance does not degrade as much. See <a href="https://arxiv.org/abs/2402.17764">1-bit LLMs</a> paper for recent results. It begets new questions like <em>Can we not train them in the quantized space itself</em>? Answering it requires revising and revisiting many things we learnt over last few decades. We can put the topics into few broad categories.</p>
-<section id="analysis" class="level3">
-<h3 class="anchored" data-anchor-id="analysis">Analysis</h3>
-<ul>
-<li><p>The Lottery Ticket Hypothesis</p>
-<p>Lottery Ticket Hypothesis<a href="https://arxiv.org/abs/1803.03635">(LTH)</a> conjectured that some sub networks are as good as the full network and remaining ones can be completely pruned-off without incurring lot of degradation in performance.</p>
-<p>In the <a href="https://arxiv.org/abs/2402.17764">1-bit LLMs</a> paper, authors showed that, all weights can just come from <span class="math inline">\(\{ -1,0,1\}\)</span>. It is the extreme form of quantization and pruning combined. We see such extreme form of quantization of many modern LLMs. This is done for computational efficiency (also energy efficiency) at inference time.</p>
-<p>LTH authors observed that initialization mattered though, in the sense that, same winning/retained sub network retrained from a different initialization did not achieve the same performance the sub network achieved with the the original initialization. I suspect that it is an artefact of the training (learning) algorithm (and not due to the initialization itself).</p>
-<p>What role are the prune-able sub networks playing? Is that about redundancy (serving some other important function such as a error control coding) or they are just plain useless. It is not clear unless we investigate in that direction. The LTH paper did not study the brittleness after pruning (AFIK).</p></li>
-<li><p>Are the pruned networks acting like “error control codes” in the functional space? Not having them is ok from a prediction (accuracy) point of view , but not ok from robustness (sensitivity) point of view.</p></li>
-<li><p>How we do study generalization ability of such binary networks? From a <em>build</em> point of view, what is needed to generalize? I hypothesize that <em>smoothness</em> of the functions is central to generalization. So, how do we define and later enforce such smoothness on Boolean Networks.</p></li>
-<li><p>A related question - what is the equivalent notion of robustness for Boolean maps?</p></li>
-<li><p>How do we analyze (and develop the theory to analyze) such Boolean functions which map n-dimensional inputs bit streams to m-dimensional output bit streams? Will the theories of error control codes based on groups and fields help?</p></li>
-</ul>
+<section id="sum-of-product-networks" class="level2">
+<h2 class="anchored" data-anchor-id="sum-of-product-networks">Sum of Product Networks</h2>
+<p>Consider a three variable multi-valued Truth table.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(x_1\)</span></th>
+<th><span class="math inline">\(x_2\)</span></th>
+<th><span class="math inline">\(x_3\)</span></th>
+<th><span class="math inline">\(y_1\)</span></th>
+<th><span class="math inline">\(y_2\)</span></th>
+<th><span class="math inline">\(y_3\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr class="odd">
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>T</td>
+<td>T</td>
+<td>F</td>
+<td>T</td>
+<td>T</td>
+</tr>
+</tbody>
+</table>
+<p>For an n-variable Boolean function, the Truth Table will have <span class="math inline">\(2^n\)</span> unique rows, and the size of all Boolean functions is <span class="math inline">\(2^{2^n}\)</span>. Above, we considered <span class="math inline">\(y_1, y_2, y_3\)</span> for illustration.</p>
+<p>We can model <span class="math display">\[
+\begin{array}{left}
+y_1 &amp;=&amp; \neg x_1 \neg x_2 \neg x_3 \lor \neg x_1 \neg x_2 x_3\\
+y_2 &amp;=&amp; \neg x_1 \neg x_2 x_3 \lor  \neg x_1 x_2 \neg x_3 \lor x_1 \neg x_2 \neg x_3 \lor x_1 x_2 x_3\\
+y_3 &amp;=&amp;  x_1 x_2 x_3
+\end{array}
+\]</span></p>
+<p>We notice any Truth Table (<span class="math inline">\(y_1\)</span>, for example) can be expressed in Sum-of-Products form. The innards are the product terms which are to be OR-ed.</p>
+<p>Generally speaking, we model the Truth Tables via learnable gates of n-variables as follows:</p>
+<p><span class="math display">\[
+\begin{array}{left}
+h_j &amp;=&amp; \land_{i=1}^{n} x_i \oplus w_i^j \\
+y_k &amp;=&amp; \uplus_{j=1}^{m} \alpha_{j}^{k} \odot h_j \text{ where } \alpha_{j}^{k} \in \{0,1\} \text{ and } \exists j \text{ s.t }  \alpha_{j}^{k} = 1 \forall k
+\end{array}
+\]</span> Above, <span class="math inline">\(\alpha_j^k\)</span> is a selection gate. When all of them are cold (off), model will be in an <span class="math inline">\(Ignore\)</span> state. The Truth Table for the selection gate <span class="math inline">\(h_j \otimes \alpha_j\)</span> is:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\alpha_j\)</span></th>
+<th><span class="math inline">\(h_j\)</span></th>
+<th><span class="math inline">\(\alpha_j \odot h_j\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>And, <span class="math inline">\(\uplus(.)\)</span> is an modified OR gate works like regular OR gate when at least one of the inputs is not in <span class="math inline">\(Ignore\)</span> state, which is different from the OR gate we have defined <a href="./bold.html">earlier</a>. The Truth Table for an N-ary SelectOR gate is defined as follows:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th><span class="math inline">\(a\)</span></th>
+<th><span class="math inline">\(x\)</span></th>
+<th><span class="math inline">\(\uplus(x,a)\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td>T</td>
+<td>T</td>
+</tr>
+<tr class="even">
+<td>0</td>
+<td>F</td>
+<td>F</td>
+</tr>
+<tr class="odd">
+<td>0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>0</td>
+<td>T</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>0</td>
+<td>F</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore, <span class="math display">\[
+\begin{array}{left}
+\uplus(x,a) &amp;=&amp; x \text{ if }  a=0 \\
+&amp;=&amp;  a \text{ if }  x=0 \\
+&amp;=&amp;  \lor (x,a) \text{ o.w }
+\end{array}
+\]</span></p>
+<p>Further, <span class="math display">\[
+\begin{array}{left}
+x \oplus w &amp;=&amp; \neg x \text{ if } w = T \\
+&amp;=&amp;  x \text{  o.w }
+\end{array}
+\]</span> In effect, we are using XOR gate to complement the inputs, which is essential to create the product terms and using the SelectOR gate to select the prod terms and OR them.</p>
 </section>
-<section id="build-develop" class="level3">
-<h3 class="anchored" data-anchor-id="build-develop">Build &amp; Develop</h3>
-<ul>
-<li><p>Do we need to go through the route of <em>Train large models with full precision and quantize</em> or can we <em>Learn in the 1-bit space</em> itself. Drawing inspiration from compressive sensing, can we do <strong>Compressive Learning</strong>?.</p></li>
-<li><p>How do we train such 1-bit models to begin with? If <code>autograd</code> and <code>backprop</code> made possible the training (with non-trivial enablers like data, compute and massive engineering feats at data center scale) - are there efficient learning algos to train 1-bit LLMs?</p>
-<p>Boolean Logic Deep Learning <a href="https://arxiv.org/abs/2405.16339">(BOLD)</a> introduced some Variational Theory to define gradients on Boolean variables, and a corresponding chain rule to go with.</p>
-<p>The implication is that - we can compute the gradients on mixed data types on any computational DAG (all neural networks are instances of such graphs) via <code>backprop</code> algo. But will it work at scale?</p></li>
-</ul>
+<section id="prodtron" class="level2">
+<h2 class="anchored" data-anchor-id="prodtron">ProdTron</h2>
+<p>We want to realize a module which takes n-inputs and creates a product term, i.e., we want to realize <span class="math display">\[
+\begin{array}{left}
+h(x,w) &amp;=&amp; \land_{i=1}^{n} x_i \oplus w_i
+\end{array}
+\]</span></p>
+<p>For convenience, we write them recursively, to ease up the derivation, <span class="math inline">\(h= \land(x_i \oplus w_i, h_{-i})\)</span>, where <span class="math inline">\(h_{-i} = \land_{k \neq i} x_k \oplus w_k\)</span></p>
+<p>We obtain the partial derivatives as: <span class="math display">\[
+\begin{array}{left}
+\frac{\partial{h(x,w)}}{\partial{x_i}} &amp;=&amp; w_i \text{ if } h_{-i} = T\\
+&amp;=&amp; 0 \text{ o.w } \\
+\frac{\partial{h(x,w)}}{\partial{w_i}} &amp;=&amp; x_i \text{ if } h_{-i} = T\\
+&amp;=&amp; 0 \text{ o.w } \\
+\end{array}
+\]</span></p>
+<p>It can be implemented with Heavyside function as follows: <span class="math display">\[
+\begin{array}{left}
+\frac{\partial{h(x,w)}}{\partial{x_i}} &amp;=&amp;  w_i H(h_{-i}) \\
+\frac{\partial{h(x,w)}}{\partial{w_i}} &amp;=&amp; x_i H(h_{-i})
+\end{array}
+\]</span> where <span class="math inline">\(\epsilon\)</span> is a small positive constant.</p>
 </section>
-<section id="kernel-machines" class="level3">
-<h3 class="anchored" data-anchor-id="kernel-machines">Kernel Machines</h3>
-<p>Can Kernels bridge the digital (Boolean Networks) and the analog (current full precision LLMs) divide?</p>
-<p>Before Deep Learning took-off circa 2012, most successful models were Kernel Machines. It was a well researched area, and probably well understood as well, relative to Deep Learning. Some evidence that they can.</p>
-<ul>
-<li><p>Trees are Kernels Machines: Some might argue - what about Trees and Ensembles? They are not Kernel Machines. Under the hood, Random Forests are also Kernel Machines. In an obscure paper <a href="https://www.stat.berkeley.edu/~breiman/some_theory2000.pdf">Some infinity theory for predictor ensembles</a>, Leo Brieman shows that Random Forests implicitly learn a Laplacian Kernel, asymptotically.</p></li>
-<li><p>Transformers are Kernel Machines: In another insightful work, Prof.&nbsp;<a href="https://richb.rice.edu/">Rich B</a> who did pioneering work in signal processing in general, and <a href="https://dsp.rice.edu/cs/">compressive sensing</a> in particular (the 1-pixel camera project, for example), re-derived Transformers, like Prof.&nbsp;<a href="https://people.eecs.berkeley.edu/~yima/">Yi Ma</a>’s group, but using a different route - by looking at Transformers as Kernel Machines. In <a href="https://arxiv.org/abs/2406.13781">A Primal-Dual Framework for Transformers and Neural Networks</a>, an explicit construction of a polynomial kernel was given, whose dual form gives raise to the self-attention block of Transformers. <em>Perhaps</em> this can explain why Transformers were not very competitive to Trees (due to the different inductive biases encoded by their respective Kernels. Not all Kernels are equal).</p></li>
-<li><p>SGD is a Kernel Machine Learner: In this <a href="https://arxiv.org/abs/2012.00152v1">paper</a>, Prof.&nbsp;Pedro Domingos shows that every model learned by Gradient Descent is approximately a Kernel Machine. The Kernel happens to be Neural Tangent Kernel (NTK), which seems to be main analytical device to study the behavior of Deep Neural Networks (See <a href="https://arxiv.org/abs/1806.07572">this</a> for example).</p></li>
-<li><p>Random Features are Large Scale Kernel Machines: In a <a href="https://eecs.berkeley.edu/news/ben-recht-wins-nips-test-time-award/">time-tested</a> paper, Ali and Ben, show that linear models on random features are Kernel Machines, and they are extremely competitive and simple (to implement and model), at the same time.</p></li>
-<li><p>Separability in High Dimensional Feature space: The conventional wisdom in ML is, transform low dim input to very high (non linear) features space, where modeling becomes easier. Kernels provide that kind of Statistical Machinery to both compute and theorize the development of new models (architectures) and learning algorithms.</p></li>
-</ul>
-<p>But what about Boolean functions, i.e, functions that map n-dimensional Boolean inputs to m-dimensional Boolean outputs? In this beautiful paper <a href="https://dl.acm.org/doi/abs/10.5555/647719.735941">Learning of Boolean Functions Using Support Vector Machines</a>, publised in 2001, Ken Sadohara develops DNF Kernels to be applied along side SVMs. The connection between DNF (Disjunctive Normal Form) and Boolean circuits are rather straightforward to see. Any truth table (coding a Boolean function) can be represented either in Sum-of-Products (SOP) or Product-of-Sum (POS) form, and DNF corresponds to the SOP form. So, if we can construct a model and learn algorithms to go with, such model becomes a universal learner (of any Boolean function). This is the constructionist approach to model(architecture) design. Using this constructionist approach, we can argue that Boolean SOP circuits are MLPs in the Boolean space, see <a href="https://mlsquare.github.io/intro2dl/lectures/L01.html#universal-approximation">here</a> for discussion.</p>
-<p>So the thesis is - All modern, empirically proven architectures are a <em>Composition of Learnable Kernel Machines</em> and perhaps we can extend this to Deep Binary Neural Networks as well.</p>
+<section id="sumtron" class="level2">
+<h2 class="anchored" data-anchor-id="sumtron">SumTron</h2>
+<p>We want to realize a module which takes m-inputs, selects some of the m-inputs, and OR’s them. <span class="math display">\[
+\begin{array}{left}
+y(\alpha, h) &amp;=&amp; \uplus_{j=1}^{m} \alpha_j \odot h_j
+\end{array}
+\]</span> For convenience, we write them recursively, to ease up the derivation, <span class="math inline">\(y = \uplus(\alpha_j \odot h_j, y_{-j})\)</span>, where <span class="math inline">\(y_{-j} = \uplus_{k=1, \neq j  }^{m} \alpha_k \odot h_k\)</span>. We can see that <span class="math inline">\(y = y_{-j} \text { if } \alpha_j = F\)</span></p>
+<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{y(\alpha,h)}}{\partial{h_i}}\)</span> as follows:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\alpha_j\)</span></th>
+<th><span class="math inline">\(h_j\)</span></th>
+<th><span class="math inline">\(y_{-j}\)</span></th>
+<th><span class="math inline">\(y\)</span></th>
+<th><span class="math inline">\(y(\neg h_j)\)</span></th>
+<th><span class="math inline">\(\delta y\)</span></th>
+<th><span class="math inline">\(\delta h_j\)</span></th>
+<th><span class="math inline">\(y'\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T/F/0</td>
+<td>T</td>
+<td>T/F/F</td>
+<td>0/F/F</td>
+<td>F</td>
+<td>0/T/T</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T/F/0</td>
+<td>T/F/F</td>
+<td>T</td>
+<td>0/T/T</td>
+<td>T</td>
+<td>0/T/T</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T/F/0</td>
+<td>T/F/0</td>
+<td>T/F/0</td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T/F/0</td>
+<td>T/F/0</td>
+<td>T/F/0</td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_i}} &amp;=&amp;  T \text{ if } \alpha_j = T\, \&amp; \, y_{-j} = F/0 \\
+&amp;=&amp; 0 \text{ o.w } \\
+\end{array}
+\]</span> It can be implemented with Heavyside function as follows: <span class="math display">\[
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_j}} &amp;=&amp;  H( \alpha_j)H(-y_{-j} + \epsilon)
+\end{array}
+\]</span> where <span class="math inline">\(\epsilon\)</span> is a small positive constant.</p>
+<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{y(\alpha,h)}}{\partial{\alpha_i}}\)</span> as follows:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\alpha_j\)</span></th>
+<th><span class="math inline">\(h_j\)</span></th>
+<th><span class="math inline">\(y_{-j}\)</span></th>
+<th><span class="math inline">\(y\)</span></th>
+<th><span class="math inline">\(y(\neg \alpha_j)\)</span></th>
+<th><span class="math inline">\(\delta y\)</span></th>
+<th><span class="math inline">\(\delta \alpha_j\)</span></th>
+<th><span class="math inline">\(y'\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T/F/0</td>
+<td>T</td>
+<td><span class="math inline">\(y_{-j}\)</span></td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T/F/0</td>
+<td>T/F/F</td>
+<td><span class="math inline">\(y_{-j}\)</span></td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T/F/0</td>
+<td><span class="math inline">\(y_{-j}\)</span></td>
+<td>T</td>
+<td>0/T/0</td>
+<td>T</td>
+<td>0/T/0</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T/F/0</td>
+<td><span class="math inline">\(y_{-j}\)</span></td>
+<td>T/F/F</td>
+<td>0/0/0</td>
+<td>T</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{\alpha_j}} &amp;=&amp;  T \text{ if } \alpha_j = F\, \&amp; \, y_{-j} = F \, \&amp;  \, h_j = T \\
+&amp;=&amp; 0 \text{ o.w } \\
+\end{array}
+\]</span> It can be implemented with Heavyside function as follows: <span class="math display">\[
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_i}} &amp;=&amp;  H(\alpha_j)H(-y_{-j})H(h_{j})
+\end{array}
+\]</span> where <span class="math inline">\(\epsilon\)</span> is a small positive constant.</p>
+<p>Finally, we can put it all together</p>
 </section>
-<section id="axiomatic-notions-of-intelligence" class="level3">
-<h3 class="anchored" data-anchor-id="axiomatic-notions-of-intelligence">Axiomatic Notions of Intelligence</h3>
-<ul>
-<li><p>Principle of Parsimony and Self-Consistency: In a series of papers, based on decades of work, Prof.&nbsp;<a href="https://people.eecs.berkeley.edu/~yima/">Yi Ma</a> and colleagues argued that for intelligence to emerge, certain aspects must be considered such as representations must be parsimonious (not exactly sparse) and they must be self-consistent (to recover the original signal).</p></li>
-<li><p><strong>Compression</strong>: A key point Prof.&nbsp;Yi Ma emphasizes is that <strong>Compression</strong> is at the heart of intelligence. Using rate-reduction theory (widely used in communication theory), his group was able to re-derive Transformers, ConvNets, the empirically proven architectures from first principles.</p></li>
-<li><p>Ability to learn based on few examples: Intelligent systems should be able to learn based on the feedback loop (error control) with few examples.</p></li>
-<li><p>Recollection is not a sign of intelligence: By that account, taking a cue from Prof.&nbsp;<a href="https://rakaposhi.eas.asu.edu/">Subbarao Khambampati</a>, LLMs are approximate retrieval machines, which do not have any reasoning ability, unless specifically equipped to do so, as the recent works seem to suggest.</p></li>
-</ul>
-</section>
-<section id="axiomatic-notions-of-perception-and-processing" class="level3">
-<h3 class="anchored" data-anchor-id="axiomatic-notions-of-perception-and-processing">Axiomatic Notions of Perception and Processing</h3>
-<ul>
-<li>Perceive in low dimensions but with high precision (fidelity).</li>
-<li>Project them on to very high dimensional, parsimonious, self-consistent representations but in low precision (1 bit for eg)</li>
-<li>Process them in the bit space (energy efficient)</li>
-</ul>
-<p>What it means is, the interface between the external world and the processor (reasoner or model) is like an A/D Convertor (Analog to Digital converter) and the processor (model) only performs bitwise operations and we can convert the Binary signals back to Analog (D/A converter) for external communication.</p>
-<p>Putting it all together,</p>
-</section>
-<section id="compressive-learning" class="level3">
-<h3 class="anchored" data-anchor-id="compressive-learning">Compressive Learning</h3>
-<p>is to study and develop</p>
-<ul>
-<li>Computational Training Stack
-<ul>
-<li>define <code>gradients</code> on Boolean variables, and a chain rule to go with</li>
-<li>develop <code>backprop</code> to scale to large computational DAGs</li>
-<li>Perhaps, use Genetic Algorithms to augment the training</li>
-</ul></li>
-<li>Kernels
-<ul>
-<li>Learnable DNF Kernels to learn Boolean features or other Universal Learners of Boolean N/Ws in SOP or POS form</li>
-<li>Compose the Kernels depth-wise to retain the expressivity of modern Deep Learning models.</li>
-</ul></li>
-<li>Issues
-<ul>
-<li>Can they be trained? Or do they just rote learn?</li>
-<li>Can they generalize?</li>
-<li>Can they be distilled?</li>
-<li>Can they be analyzed?</li>
-</ul></li>
-</ul>
-<p>If successful, an optimistic outlook for these Deep Binary Neural Networks is, they are:</p>
-<ul>
-<li>Interpretable: since we can recover the DNF forms</li>
-<li>Modulo-LLM-ready: since symbols can be mined explicitly, can augment symbolic reasoning, making the LLMs <a href="https://arxiv.org/abs/2402.01817">modulo-LLMs</a></li>
-<li>Energy-efficient: require bit-wise operations, not needing giant matrix multiplications (so no GPUs)</li>
-<li>ASIC-friendly: we may be able compile PyTorch models directly into HDL languages and burn the models on silicon. Like 3D printing, forge your model on silicon.</li>
-<li>SLA-friendly: with high token throughput and low latency</li>
-<li>Edge-friendly: with low memory footprint, can be deployed on edge devices</li>
-<li>End-to-End trainable: no need for train-large-then-quantize paradigm - train in the compressed domain itself.</li>
-</ul>
+<section id="bnn-layer" class="level2">
+<h2 class="anchored" data-anchor-id="bnn-layer">BNN Layer</h2>
+<p>A BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter <span class="math inline">\(H\)</span> that controls the layer complexity, resulting in a total of <span class="math inline">\(H(N+K)\)</span> learnable Boolean weights.</p>
+<p><span class="math display">\[
+\begin{array}{left}
+y_{k} &amp;=&amp; \uplus_{j=1}^{m} \alpha_{j}^{k} \odot \left( h_j \equiv \land_{i=1}^{n} x_i \oplus w_i^j \right)
+\end{array}
+\]</span> where <span class="math inline">\(n=1,\dots,N\)</span>, <span class="math inline">\(j=1,\dots,H\)</span> <span class="math inline">\(k=1,\dots,K\)</span>.</p>
 
 
 </section>
@@ -740,10 +1042,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./bold.html" class="pagination-link" aria-label="Boolean Variation">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Boolean Variation</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./index.html" class="pagination-link" aria-label="Compressive Learning">
-        <span class="nav-page-text"><span class="chapter-title">Compressive Learning</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./bolt/notebooks/dev.html" class="pagination-link" aria-label="Boolean Variation">
+        <span class="nav-page-text"><span class="chapter-title">Boolean Variation</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -755,7 +1060,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/preface.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/bnn_layer.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This material was built with <a href="https://quarto.org/">Quarto</a> with <a href="https://github.com/hadley/r4ds">r4ds</a> theme.</p>
 </div>
