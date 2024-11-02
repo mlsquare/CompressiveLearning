@@ -33,6 +33,7 @@ book:
   - index.qmd
   - bold.qmd
   - bnn_layer.qmd
+  - sparse_bnn_layer.qmd
   - part: Notebooks
     chapters:
       - ./bolt/notebooks/dev.ipynb

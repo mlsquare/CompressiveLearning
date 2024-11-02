@@ -4,16 +4,16 @@
 
 Consider a three variable multi-valued Truth table.
 
-| $x_1$ | $x_2$ | $x_3$ | $y_1$ | $y_2$ | $y_3$ |
-|-----|-----|-----|-----|-----|-----|
-F | F | F | T | F | F |
-F | F | T | T | T | F |
-F | T | F | F | T | F |
-F | T | T | F | F | T |
-T | F | F | F | T | F |
-T | F | T | F | F | F |
-T | T | F | F | F | F |
-T | T | T | F | T | T |
+| $x_1$ | $x_2$ | $x_3$ | $y_1$ | $y_2$ | $y_3$ | Prod Terms |
+|-----|-----|-----|-----|-----|-----|-----|
+F | F | F | T | F | F | $h_1 = \neg x_1 \neg x_2 \neg x_3$  | 
+F | F | T | T | T | F | $h_2 = \neg x_1 \neg x_2 x_3$  |  
+F | T | F | F | T | F | $h_3 = \neg x_1 x_2 \neg x_3$  |  
+F | T | T | F | F | T | $h_4 = \neg x_1 x_2  x_3$  |  
+T | F | F | F | T | F | $h_5 = x_1 \neg x_2 \neg x_3$  | 
+T | F | T | F | F | F | $h_6 = x_1 \neg x_2 x_3$  |  
+T | T | F | F | F | F | $h_7 = x_1 x_2 \neg x_3$  |  
+T | T | T | F | T | T | $h_8 =  x_1 x_2  x_3$|  
 
 For an n-variable Boolean function, the Truth Table will have $2^n$ unique rows, and the size of all Boolean functions is $2^{2^n}$. Above, we considered $y_1, y_2, y_3$ for illustration.
 
@@ -189,3 +189,13 @@ y_{k} &=& \uplus_{j=1}^{m} \alpha_{j}^{k} \odot \left( h_j \equiv \land_{i=1}^{n
 \end{array}
 $$
 where $n=1,\dots,N$, $j=1,\dots,H$ $k=1,\dots,K$.
+
+We can revisit the example again and see that the following weights will realize the respective Truth Values. To model $y_1 = h_1 \lor h_2$, we need 
+
+$$
+\begin{array}{left}
+\alpha_{j}^1 &=& T \text{ for } j = 1,2 \text{  and } F \text{ o.w}\\
+w_{i}^1 &=& T \text{ for } j \in {1,2,3} \text{ corresponding to }  h_1  \\
+w_{i}^2 &=& T  \text{ for } j \in {1,2}  \text{  and } F \text{ o.w corresponding to } h_2
+\end{array}
+$$

@@ -1,0 +1,270 @@
+## Sparse BNN Layer
+
+Many a times, [BNN layer](./bnn_layer.qmd) presented earlier could have been simplified further. For example,  the following SoP expression $\neg x_1 \neg x_2 x_3 \lor \neg x_1 \neg x_2 \neg x_3$ is equivalent to a simpler expression $\neg x_1 \neg x_2$. Such expressions can not modeled by the current layer. Implying, model has more parameters than necessary. In other words, a different functionally equivalent but simpler architecture exists but it can NOT be discovered with current parametrization. To accommodate such models, we introduce a select gate before AND-ing them, very similar to $\uplus$ we saw earlier.
+
+We will build the blocks afresh.
+
+
+## $\oplus$ Flip Block 
+
+### Logic: Flip the inputs
+$$
+x \oplus w = 
+\begin{cases}
+  \neg x & \text{ if } w = T \\ 
+ x & \text{  o.w }
+\end{cases}
+$$
+where $x,w \in \{-1 \equiv F,1 \equiv T\}$. In effect, we are using XOR gate to complement the inputs, which is essential to create the product terms and using the SelectOR gate (defined later) to select the prod terms and OR them.
+
+### Forward Method
+We can compute 2-ary `Flipper` as follows:
+$$
+\begin{array}{left}
+x \oplus w &=& -w x
+\end{array}
+$$
+
+### Backward Method: Local Gradients
+
+In the network, XOR is used to flip the input based on a weight, so it will be a 2-ary. 
+$$
+\begin{array}{left}
+\tilde{x_i} &=& x_i \oplus w_i \\
+\frac{\partial \tilde{x_i}}{\partial x_i} &=& \neg w_i \\
+\frac{\partial \tilde{x_i}}{\partial w_i} &=& \neg x_i
+\end{array}
+$$
+To compute negation, we flip the sign since $w,x \in \{-1,1\}$.
+
+## $\odot$ Select Block 
+
+### Logic: Select a variable, Ignore otherwise
+
+The Truth Table for the Select gate is
+
+| $\beta$ | $x$  | $\beta \odot x$ | 
+|-----|-----|-----|
+T | T | T | 
+T | F | F | 
+F | T | 0 |
+F | F | 0 |
+
+We will embed them into AND and OR gates, and derive their respective Truth Tables and  Gradients. We will not use the Select gate in isolation.
+
+## $\sqcap$ SAND: Select and AND Block 
+
+### Logic: Select and AND the inputs
+
+We want to realize a module which takes n-inputs (some of which are flipped), selects some of the n-inputs, and AND's them.
+$$
+\begin{array}{left}
+h(\beta, \tilde{x}) = \sqcap_{i=1}^{n} \beta_i \odot \tilde{x}_i
+\end{array}
+$$
+
+For convenience, we write them recursively, to ease up the derivation, $h = \sqcap (\beta_i \odot \tilde{x}_i, h_{-i})$, where $h_{-i} = \sqcap_{k=1, \neq i  }^{n} \beta_k \odot \tilde{x}_k$.
+$$
+h(\beta, \tilde{x}) = 
+\begin{cases}
+\land(\tilde{x}_{i}, h_{-i}) & \text{ if }  \beta_i = T \land h_i \in \{T,F\} \\
+\tilde{x}_{i} & \text { if } \beta_i = T \text{ and }  h_{-i} = 0 \\
+h_{-i} & \text { if } \beta_i = F
+\end{cases}
+$$
+This looks much complicated than what it really is trying to say. Rewriting it to get,
+$$
+h(\beta, \tilde{x}) = 
+\begin{cases}
+ 0 & \text{ if } \beta_i = F \,\, \forall i \\
+ \land_k \tilde{x}_{k} & \text{ for }  k \in \{ i \text{ s.t } \beta_i = T\}
+\end{cases}
+$$
+
+### Forward Method
+
+It can be obtained with Heavyside function as follows:
+$$
+h(\beta, \tilde{x}) = H\left(\sum_{i=1}^n 0.5(\beta_i+1) - \epsilon \right) \left(2H\left(\sum_{i=1}^n 0.25(\tilde{x}_i-1)(\beta_i+1) + \epsilon \right)-1 \right) 
+$$
+
+### Backward Method: Local Gradients
+
+We obtain the partial derivatives by observing the Truth Table to get $\frac{\partial{y(\alpha,h)}}{\partial{\alpha_i}}$ as follows:
+
+
+| $\beta_i$ | $\tilde{x}_i$ | $h_{-j}$ | $h$ | $h(\neg \beta_i)$ | $\delta h$ | $\delta \alpha_i$ | $h'$ |
+|-----|-----|-----|-----| -----| -----|-----|-----|
+T | T | T/F/0 | $h_{-i}$ | $h_{-i}$ | 0  | F | 0 |
+T | F | T/F/0 | F | $h_{-i}$ |  T/0/0  | F | F/0/0 | 
+F | T | T/F/0 | $h_{-i}$ | $h_{-i}$ | 0  | T | 0 |
+F | F | T/F/0 | $h_{-i}$ | F |  F/0/0  | T | F/0/0 | 
+
+Therefore,
+
+$$
+\frac{\partial{h(\beta,\tilde{x})}}{\partial{\beta_i}} =
+\begin{cases}
+  F & \text{  when } \tilde{x_i} = F \land h_i = T  \\
+ 0 & \text{ o.w }
+\end{cases}
+$$
+It can be implemented with Heavyside function as follows:
+$$
+\begin{array}{left}
+\frac{\partial{h(\alpha,h)}}{\partial{\alpha_j}} &=&  H(x_j)H(y_{-i})
+\end{array}
+$$
+
+
+We obtain the partial derivatives by observing the Truth Table to get $\frac{\partial{h(\alpha,h)}}{\partial{\tilde{x}_i}}$ as follows:
+
+
+| $\beta_i$ | $\tilde{x}_i$ | $h_{-j}$ | $h$ | $h(\neg \tilde{x}_i)$ | $\delta h$ | $\delta \tilde{x}_i$ | $h'$ |
+|-----|-----|-----|-----| -----| -----|-----|-----|
+T | T | T/F/0 | $h_{-i}$ | F |  F/0/0 | F | T/0/0 |
+T | F | T/F/0 | F | T/F/T | 0/0/0   | F | 0 | 
+F | T | T/F/0 | $h_{-i}$ | $h_{-i}$ |  0 | T | 0 |
+F | F | T/F/0 | $h_{-i}$ | $h_{-i}$ | 0   | T | 0 | 
+
+Therefore,
+
+$$
+\frac{\partial{h(\beta,\tilde{x})}}{\partial{\beta_i}} = 
+\begin{cases}
+ F & \text{ if } \beta_i = T \land \tilde{x}_i = T \land h_{-i} = T  \\
+ 0 & \text{ o.w }
+\end{cases}
+$$
+It can be implemented with Heavyside function as follows:
+$$
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_j}} &=&  -H(\beta_i)H(\tilde{x}_i)H(h_{-i})
+\end{array}
+$$
+
+
+
+
+
+## $\sqcup$ SOR: Select and OR Block 
+
+### Logic: Select and OR the inputs
+
+
+We want to realize a module which takes m-inputs, selects some of the m-inputs, and OR's them.
+$$
+\begin{array}{left}
+y(\alpha, h) &=& \sqcup_{j=1}^{m} \alpha_j \odot h_j
+\end{array}
+$$
+For convenience, we write them recursively, to ease up the derivation, $y = \sqcup(\alpha_j \odot h_j, y_{-j})$, where $y_{-j} = \sqcup_{k=1, \neq j  }^{m} \alpha_k \odot h_k$. We can see that $y = y_{-j} \text { if } \alpha_j = F$
+
+
+$$
+y(\alpha, h) = 
+\begin{cases}
+\lor(h_{j}, y_{-j}) & \text{ if }  \alpha_j = T \land y_{-j} \in \{T,F\} \\
+h_{j} & \text { if } \alpha_j = T \land y_{-j} = 0 \\
+y_{-j} & \text { if } \alpha_j = F
+\end{cases}
+$$
+
+This looks much complicated than what it really is trying to say. Rewriting it to get,
+$$
+y(\alpha, h) = 
+\begin{cases}
+ 0 & \text{ if } \alpha_j = F \,\, \forall j \\
+ \lor_k h_{k} & \text{ for }  k \in \{ j \text{ s.t } \alpha_j = T\}
+\end{cases}
+$$
+
+### Forward Method
+
+It can be obtained with Heavyside function as follows:
+$$
+y(\alpha, h) = H\left(\sum_{i=1}^m 0.5(\alpha_j+1) - \epsilon \right) \left( 2 H\left(\sum_{j=1}^m 0.25(h_j+1)(\alpha_i+1) - \epsilon \right)-1 \right) 
+$$
+
+### Backward Method: Local Gradients
+
+We obtain the partial derivatives by observing the Truth Table to get $\frac{\partial{y(\alpha,h)}}{\partial{h_i}}$ as follows:
+
+
+| $\alpha_j$ | $h_j$ | $y_{-j}$ | $y$ | $y(\neg h_j)$ | $\delta y$ | $\delta h_j$ | $y'$ |
+|-----|-----|-----|-----| -----| -----|-----|-----|
+T| T | T/F/0 | T | T/F/F |  0/F/F | F | 0/T/T | 
+T| F | T/F/0 | T/F/F | T |  0/T/T | T | 0/T/T | 
+F| T | T/F/0 | T/F/0 | T/F/0 | 0  | F | 0 |
+F| F | T/F/0 | T/F/0 | T/F/0 | 0  | F | 0 | 
+
+
+Therefore,
+
+$$
+\frac{\partial{y(\alpha,h)}}{\partial{h_i}} =
+\begin{cases}
+ T  & \text{ if } \alpha_j = T\, \land \, y_{-j} = F/0 \\
+0 & \text{ o.w } \\
+\end{cases}
+$$
+
+It can be implemented with Heavyside function as follows:
+$$
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_j}} &=&  H( \alpha_j)H(-y_{-j} + \epsilon)
+\end{array}
+$$
+where $\epsilon$ is a small positive constant.
+
+
+
+We obtain the partial derivatives by observing the Truth Table to get $\frac{\partial{y(\alpha,h)}}{\partial{\alpha_i}}$ as follows:
+
+
+| $\alpha_j$ | $h_j$ | $y_{-j}$ | $y$ | $y(\neg \alpha_j)$ | $\delta y$ | $\delta \alpha_j$ | $y'$ |
+|-----|-----|-----|-----| -----| -----|-----|-----|
+T| T | T/F/0 | T | $y_{-j}$ | 0  | F | 0 | 
+T| F | T/F/0 | T/F/F | $y_{-j}$ | 0  | F | 0 | 
+F| T | T/F/0 | $y_{-j}$ | T |  0/T/0 | T | 0/T/0 |
+F| F | T/F/0 | $y_{-j}$ |  T/F/F| 0/0/0  | T | 0 | 
+
+
+Therefore,
+
+$$
+\frac{\partial{y(\alpha,h)}}{\partial{\alpha_j}} =
+\begin{cases}
+T & \text{ if } \alpha_j = F\, \land \, y_{-j} = F \, \land  \, h_j = T \\
+0 & \text{ o.w } \\
+\end{cases}
+$$
+
+It can be implemented with Heavyside function as follows:
+$$
+\begin{array}{left}
+\frac{\partial{y(\alpha,h)}}{\partial{h_i}} &=&  H(\alpha_j)H(-y_{-j})H(h_{j}) 
+\end{array}
+$$
+where $\epsilon$ is a small positive constant.
+
+
+Finally, we can put it all together
+
+## Sparse BNN Layer
+
+A Sparse BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter $H$ that controls the layer complexity, resulting in a total of $H(2N+K)$ learnable Boolean weights.
+
+$$
+\begin{array}{left}
+y_{k} &=& \sqcup_{j=1}^{m} \alpha_{j}^{k} \odot  h_j \, & \text{: SOR}\\
+h_j &=& \sqcap_{i=1}^{n}  \beta_i^j  \odot \tilde{x}_i^j \, & \text{: SAND} \\
+\tilde{x}_i^j  &=& w_i^j \oplus x_i \, & \text{: Flip}
+\end{array}
+$$
+where $n=1,\dots,N$, $j=1,\dots,H$ $k=1,\dots,K$.
+
+
+**Caution**
+
+Note that  all weights and inputs will be strictly in $\mathcal{B}, i.e., $$w_i^j, \beta_i^j, \alpha_j, x_i \in {-1,1}$ and only gradients can be in $\{-1,0,1\}$.
