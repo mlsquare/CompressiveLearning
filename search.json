@@ -7,7 +7,7 @@
     "text": "Boolean Variation\nBOLD: Boolean Logic Deep Learning introduced a mathematical theory to caculuate graidents on Boolean Variables. Below are some necessary info to realize the truth tables, define a Boolean Deep Learning model, and train the network using Backprop. See the paper for details. The following are taken from the paper.",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -18,7 +18,7 @@
     "text": "Definition\n\nThree-value and Mixed logic\n\nDefine \\(\\mathcal{M} \\equiv \\mathcal{B} \\cup \\{0\\}\\) with logic connectives defined according to those of Boolean logic as follows.\n\nFirst, the negation is: \\(\\neg True = False\\), \\(\\neg False = True\\), and \\(\\neg 0 = 0\\).\nSecond, let \\(\\mathcal{L}\\) be a logic connective, denote by \\(\\mathcal{L}_{\\mathcal{M}}\\) and \\(\\mathcal{L}_{\\mathcal{B}}\\) when it is in \\(\\mathcal{M}\\) and in \\(\\mathcal{B}\\), respectively, then \\(\\mathcal{L}_{\\mathcal{Mb}}(a,b) = \\mathcal{L}_{\\mathcal{Bb}}(a,b)\\) for \\(a, b \\in \\mathcal{B}\\) and \\(\\mathcal{L}_{\\mathcal{M}}(a,b) = 0\\) otherwise.\n\nDenote by \\(\\mathcal{L}\\) a logic set (e.g., \\(\\mathcal{B}\\) or \\(\\mathcal{M}\\)), \\(\\mathcal{R}\\) the real set, \\(\\mathcal{Z}\\) the set of integers, \\(\\mathcal{N}\\) a numeric set (e.g., \\(\\mathcal{R}\\) or \\(\\mathcal{Z}\\)), and \\(\\mathcal{D}\\) a certain set of \\(\\mathcal{L}\\) or \\(\\mathcal{N}\\).\nFor \\(x \\in \\mathcal{N}\\), its logic value denoted by \\(x_{logic}\\) is given as \\(x_{logic} = True \\Leftrightarrow x &gt; 0\\), \\(x_{logic} = False \\Leftrightarrow x &lt; 0\\), and \\(x_{logic} = 0 \\Leftrightarrow x = 0\\).\nThe magnitude of a variable \\(x\\), denoted \\(|x|\\), is defined as its usual absolute value if \\(x \\in \\mathcal{N}\\). And for \\(x \\in \\mathcal{L}\\): \\(|x| = 0\\) if \\(x = 0\\), and \\(|x| = 1\\) otherwise.\nFor \\(\\mathcal{L}\\) a logic connective of \\(\\mathcal{L}\\) and variables \\(a\\), \\(b\\), operation \\(c = \\mathcal{L}(a, b)\\) is defined such that \\(|c| = |a||b|\\) and \\(c_{logic} = \\mathcal{L}(a_{logic}, b_{logic})\\).\n\n\n\nCalculus\n\nA variable x is (extended) Boolean variable with the following encoding \\(x \\in \\{-1,0,1\\}\\) where \\(-1\\) represents logical \\(False\\), \\(+1\\) represents logical \\(True\\), and \\(0\\) represents \\(Ignore\\). We can call this extended Boolean domain.\nOrder relations \\(&lt;\\) and \\(&gt;\\) in \\(\\mathcal{B}\\) are defined as follows: \\(False &lt; True\\), and \\(True &gt; False\\).\nFor \\(a, b \\in \\mathcal{B}\\), the variation from \\(a\\) to \\(b\\), denoted \\(\\delta(a \\to b)\\), is defined as: \\(\\delta(a \\to b) \\equiv True\\) if \\(b &gt; a\\), \\(\\equiv 0\\) if \\(b = a\\), and \\(\\equiv False\\) if \\(b &lt; a\\).\nFor \\(f \\in \\mathcal{F}(\\mathcal{B}, \\mathcal{D})\\), \\(\\forall x \\in \\mathcal{B}\\), write \\(\\delta f(x \\to \\neg x) := \\delta(f(x) \\to f(\\neg x))\\). The variation of \\(f\\) w.r.t \\(x\\), denoted \\(f'(x)\\), is defined as: \\(f'(x) \\equiv \\text{xnor}(\\delta(x \\to \\neg x), \\delta f(x \\to \\neg x))\\).\n\nFor simplicity, we will write \\(\\delta f\\) to denote \\(\\delta f(x \\to \\neg x)\\). Similarly, \\(\\delta x\\) to denote \\(\\delta (x \\to \\neg x)\\)\nFor details see, Section 3.2 of BOLD: Boolean Logic Deep Learning\n\n\nAND Gate\n\nTruth Table\nl \\(AND(x_1,x_2) \\equiv 0\\) if any of the inputs are 0, by definition.\n\n\nDerivative\nRecall: 1. \\(\\delta(a \\to b) \\equiv True\\) if \\(b &gt; a\\), \\(\\equiv 0\\) if \\(b = a\\), and \\(\\equiv False\\) if \\(b &lt; a\\). 2. \\(f'(x) \\equiv \\text{xnor}(\\delta(x \\to \\neg x), \\delta f(x \\to \\neg x))\\).\nThe Truth Table for \\(f(x) = f_a(x) = AND(x,a)\\) is:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(a\\)\n\\(x\\)\n\\(\\neg x\\)\n\\(\\delta x\\)\n\\(f(x)\\)\n\\(f(\\neg x)\\)\n\\(\\delta f\\)\n\\(f'\\)\n\n\n\n\nT\nT\nF\nF\nT\nF\nF\nT\n\n\nT\nF\nT\nT\nF\nT\nT\nT\n\n\nF\nT\nF\nF\nF\nF\n0\n0\n\n\nF\nF\nT\nT\nF\nF\n0\n0\n\n\n\nTherefore, \\(f'_{a}(x) = \\text{T} \\text{ iff } a=T, 0 \\text{ o.w}\\)\n\n\n\nOR Gate\n\nTruth Table\n\n\n\n\\(x_1\\)\n\\(x_2\\)\n\\(y_{OR}\\)\n\n\n\n\nT\nT\nT\n\n\nT\nF\nT\n\n\nF\nT\nT\n\n\nF\nF\nF\n\n\n\n\\(AND(x_1,x_2) \\equiv 0\\) if any of the inputs are 0, by definition.\n\n\nDerivative\n\\(f'_{a}(x) = \\text{F} \\text{ iff } a=F, 0 \\text{ o.w}\\)\n\n\n\nXOR Gate\n\nTruth Table\n\n\n\n\\(x_1\\)\n\\(x_2\\)\n\\(y_{XOR}\\)\n\n\n\n\nT\nT\nF\n\n\nT\nF\nT\n\n\nF\nT\nT\n\n\nF\nF\nF\n\n\n\n\\(XOR(x_1,x_2) \\equiv 0\\) if any of the inputs are 0, by definition.\n\n\nDerivative\n\\(f'_{a}(x) = \\neg a\\)",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -29,7 +29,7 @@
     "text": "AND Gate\n\n# check AND gate. Logic and Derivative\n\ndef test_2ary(gate='AND'):\n    A = [-1,1,0]\n    X = [-1,1,0]\n    data = []\n    for element in itertools.product(*[A,X]):\n        a,x = element\n        xb = Bool(x)\n        ab = Bool(a)\n        if gate == 'AND':\n            z = ab*xb\n        elif gate == 'OR':\n            z = ab+xb\n        else:\n            z = ab^xb\n        \n        z.backward()\n        data.append({\n                'a': a,\n                'x': x,\n                'f': z.data,\n                'f\\'': xb.grad\n            })\n\n    df = pd.DataFrame(data)\n    return df\ndf = test_2ary()\nprint(df)\n\n   a  x  f  f'\n0 -1 -1 -1   0\n1 -1  1 -1   0\n2 -1  0  0   0\n3  1 -1 -1   1\n4  1  1  1   1\n5  1  0  0   0\n6  0 -1  0   0\n7  0  1  0   0\n8  0  0  0   0\n\n\nCan see that \\(f'_a(x)\\) is \\(1\\) only when \\(a=1\\), o.w it is 0.",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -40,7 +40,7 @@
     "text": "OR Gate\n\n# check AND gate. Logic and Derivative\ndf = test_2ary(gate='OR')\nprint(df)\n\n   a  x  f  f'\n0 -1 -1 -1  -1\n1 -1  1  1  -1\n2 -1  0  0   0\n3  1 -1  1   0\n4  1  1  1   0\n5  1  0  0   0\n6  0 -1  0   0\n7  0  1  0   0\n8  0  0  0   0\n\n\nCan see that \\(f'_a(x)\\) is \\(-1\\) only when \\(a=-1\\), o.w it is 0.",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -51,7 +51,7 @@
     "text": "XOR Gate\n\n# check AND gate. Logic and Derivative\ndf = test_2ary(gate='XOR')\nprint(df)\n\n   a  x  f  f'\n0 -1 -1 -1   1\n1 -1  1  1   1\n2 -1  0  0   0\n3  1 -1  1  -1\n4  1  1 -1  -1\n5  1  0  0   0\n6  0 -1  0   0\n7  0  1  0   0\n8  0  0  0   0\n\n\nCan see that \\(f'_a(x)\\) is \\(\\neg a\\) and is 0 when a is 0.",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -62,7 +62,7 @@
     "text": "Compositions\nChain Rule\nFor \\(\\mathcal{B} \\overset{f}{\\to} \\mathcal{B} \\overset{g}{\\to} \\mathcal{D}\\): \\((g \\circ f)'(x) = \\text{xnor}(g'(f(x)), f'(x))\\), \\(\\forall x \\in \\mathcal{B}\\).\nMultivariate Chain Rule\n\nFor \\(x = (x_1, \\ldots, x_n) \\in \\mathcal{B}^n\\), denote \\(x_{\\neg i} := (x_1, \\ldots, x_{i-1}, \\neg x_i, x_{i+1}, \\ldots, x_n)\\) for \\(n \\ge 1\\) and \\(1 \\leq i \\leq n\\).\nFor \\(f \\in \\mathcal{F}(\\mathcal{B}^n, \\mathcal{B})\\), the (partial) variation of \\(f\\) wrt \\(x_i\\), denoted \\(f'_{i}(x)\\) or \\(\\delta f(x)/\\delta x_i\\), is defined as: \\(f'_{i}(x) \\equiv \\delta f(x)/\\delta x_i \\equiv xnor(\\delta(x_i \\to \\neg x_i), \\delta f(x \\to x_{\\neg i}))\\).\nLet \\(f \\in \\mathcal{F}(\\mathcal{B}^n, \\mathcal{B})\\), \\(n \\geq 1\\), and \\(g \\in \\mathcal{F}(\\mathcal{B}, \\mathcal{B})\\). For \\(1 \\le i \\le n\\),\n\n\\[(g \\circ f)'_i(x) = \\text{xnor}(g'(f(x)), f'_i(x)), \\quad \\forall x \\in \\mathcal{B}^n\\]\n\n\ndef test_Kary(expression = \"x1*x2\", K=2):\n    T = [-1, 1, 0]\n   \n    # Create the Cartesian product of T repeated K times\n    cartesian_product = list(itertools.product(T, repeat=K))\n   \n    # Generate variable names based on the index\n    variable_names = [f'x{i+1}' for i in range(K)]\n\n   \n    data = []\n    # Print the result with variable names and evaluate the expression\n    for product in cartesian_product:\n        # Create a dictionary of variable names and their corresponding values\n        variables = {variable_names[i]: Bool(product[i]) for i in range(K)}\n        \n        # Evaluate the expression using the variables\n        result = eval(expression, {}, variables)\n        result.backward()\n\n        tmp = variables\n        tmp['f: '+ expression] = result.data\n        tmp['f\\'(x1)'] = variables['x1'].grad\n\n        data.append(tmp)\n    \n    df = pd.DataFrame(data)\n    return df\n\nexpression = \"x1 * x2\"\nK = 2\ndf = test_Kary(expression=expression, K=K)\nprint(df)\n\n                x1               x2  f: x1 * x2  f'(x1)\n0  data:-1, grad:0  data:-1, grad:0          -1       0\n1  data:-1, grad:1   data:1, grad:0          -1       1\n2  data:-1, grad:0   data:0, grad:0           0       0\n3   data:1, grad:0  data:-1, grad:1          -1       0\n4   data:1, grad:1   data:1, grad:1           1       1\n5   data:1, grad:0   data:0, grad:0           0       0\n6   data:0, grad:0  data:-1, grad:0           0       0\n7   data:0, grad:0   data:1, grad:0           0       0\n8   data:0, grad:0   data:0, grad:0           0       0\n\n\n\nexpression = \"x1^x2\"\nK = 2\ndf = test_Kary(expression=expression, K=K)\nprint(df)\n\n                 x1                x2  f: x1^x2  f'(x1)\n0   data:-1, grad:1   data:-1, grad:1        -1       1\n1  data:-1, grad:-1    data:1, grad:1         1      -1\n2   data:-1, grad:0    data:0, grad:0         0       0\n3    data:1, grad:1  data:-1, grad:-1         1       1\n4   data:1, grad:-1   data:1, grad:-1        -1      -1\n5    data:1, grad:0    data:0, grad:0         0       0\n6    data:0, grad:0   data:-1, grad:0         0       0\n7    data:0, grad:0    data:1, grad:0         0       0\n8    data:0, grad:0    data:0, grad:0         0       0\n\n\nCan see \\(f_a'(x) = \\neg a\\) and zero whenever any element is 0\nPermutation Invariance\nabc = cbc a+b+c = c+a+b\n\nK = 3\nexpression = \"x1 * x2 * x3\"\ndf1= test_Kary(expression=expression, K=K)\nexpression = \"x3 * x2 * x1\"\ndf2= test_Kary(expression=expression, K=K)\n\n\nprint(np.all(df1[df1.columns[-1]]==df1[df1.columns[-1]]))\nprint(np.all(df1[df1.columns[-2]]==df2[df2.columns[-2]]))\n\nexpression = \"x1 + x2 + x3\"\ndf1= test_Kary(expression=expression, K=K)\n\nexpression = \"x3 + x2 + x1\"\ndf2= test_Kary(expression=expression, K=K)\n\nprint(np.all(df1[df1.columns[-1]]==df1[df1.columns[-1]]))\nprint(np.all(df1[df1.columns[-2]]==df2[df2.columns[-2]]))\n\nTrue\nTrue\nTrue\nTrue\n\n\n\n# check composition\na = Bool(-1);b = Bool(1);c=Bool(1)\nz = b^a+c\nz.backward()\nprint('xor(a,b)\\n', z,a,b,c)\n\nxor(a,b)\n data:-1, grad:1 data:-1, grad:0 data:1, grad:-1 data:1, grad:1\n\n\n\n# check composition\nfrom engine import Bool\nfrom utils import draw_dot\n\n\ny = Bool(-1);\nx1 = Bool(1); x2 = Bool(1)\nw1 = Bool(-1); w2 = Bool(-1); \n\nh1 = x1^w1\nh2 = x2^w2\n\nz = h1*h2\nL = z^y\n\nL.backward()\n\ndraw_dot(L)",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -160,7 +160,7 @@
     "href": "bnn_layer.html#sum-of-product-networks",
     "title": "BNN Layer",
     "section": "",
-    "text": "\\(x_1\\)\n\\(x_2\\)\n\\(x_3\\)\n\\(y_1\\)\n\\(y_2\\)\n\\(y_3\\)\n\n\n\n\nF\nF\nF\nT\nF\nF\n\n\nF\nF\nT\nT\nT\nF\n\n\nF\nT\nF\nF\nT\nF\n\n\nF\nT\nT\nF\nF\nT\n\n\nT\nF\nF\nF\nT\nF\n\n\nT\nF\nT\nF\nF\nF\n\n\nT\nT\nF\nF\nF\nF\n\n\nT\nT\nT\nF\nT\nT\n\n\n\n\n\n\n\n\n\n\n\n\\(\\alpha_j\\)\n\\(h_j\\)\n\\(\\alpha_j \\odot h_j\\)\n\n\n\n\nT\nT\nT\n\n\nT\nF\nF\n\n\nF\nT\n0\n\n\nF\nF\n0\n\n\n\n\n\n\n\n\\(a\\)\n\\(x\\)\n\\(\\uplus(x,a)\\)\n\n\n\n\nT\nT\nT\n\n\nT\nF\nT\n\n\nF\nT\nT\n\n\nF\nF\nF\n\n\n0\nT\nT\n\n\n0\nF\nF\n\n\n0\n0\n0\n\n\nT\n0\nT\n\n\nF\n0\nF",
+    "text": "\\(x_1\\)\n\\(x_2\\)\n\\(x_3\\)\n\\(y_1\\)\n\\(y_2\\)\n\\(y_3\\)\nProd Terms\n\n\n\n\nF\nF\nF\nT\nF\nF\n\\(h_1 = \\neg x_1 \\neg x_2 \\neg x_3\\)\n\n\nF\nF\nT\nT\nT\nF\n\\(h_2 = \\neg x_1 \\neg x_2 x_3\\)\n\n\nF\nT\nF\nF\nT\nF\n\\(h_3 = \\neg x_1 x_2 \\neg x_3\\)\n\n\nF\nT\nT\nF\nF\nT\n\\(h_4 = \\neg x_1 x_2  x_3\\)\n\n\nT\nF\nF\nF\nT\nF\n\\(h_5 = x_1 \\neg x_2 \\neg x_3\\)\n\n\nT\nF\nT\nF\nF\nF\n\\(h_6 = x_1 \\neg x_2 x_3\\)\n\n\nT\nT\nF\nF\nF\nF\n\\(h_7 = x_1 x_2 \\neg x_3\\)\n\n\nT\nT\nT\nF\nT\nT\n\\(h_8 =  x_1 x_2  x_3\\)\n\n\n\n\n\n\n\n\n\n\n\n\\(\\alpha_j\\)\n\\(h_j\\)\n\\(\\alpha_j \\odot h_j\\)\n\n\n\n\nT\nT\nT\n\n\nT\nF\nF\n\n\nF\nT\n0\n\n\nF\nF\n0\n\n\n\n\n\n\n\n\\(a\\)\n\\(x\\)\n\\(\\uplus(x,a)\\)\n\n\n\n\nT\nT\nT\n\n\nT\nF\nT\n\n\nF\nT\nT\n\n\nF\nF\nF\n\n\n0\nT\nT\n\n\n0\nF\nF\n\n\n0\n0\n0\n\n\nT\n0\nT\n\n\nF\n0\nF",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>BNN Layer</span>"
     ]
@@ -190,9 +190,69 @@
     "href": "bnn_layer.html#bnn-layer",
     "title": "BNN Layer",
     "section": "BNN Layer",
-    "text": "BNN Layer\nA BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter \\(H\\) that controls the layer complexity, resulting in a total of \\(H(N+K)\\) learnable Boolean weights.\n\\[\n\\begin{array}{left}\ny_{k} &=& \\uplus_{j=1}^{m} \\alpha_{j}^{k} \\odot \\left( h_j \\equiv \\land_{i=1}^{n} x_i \\oplus w_i^j \\right)\n\\end{array}\n\\] where \\(n=1,\\dots,N\\), \\(j=1,\\dots,H\\) \\(k=1,\\dots,K\\).",
+    "text": "BNN Layer\nA BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter \\(H\\) that controls the layer complexity, resulting in a total of \\(H(N+K)\\) learnable Boolean weights.\n\\[\n\\begin{array}{left}\ny_{k} &=& \\uplus_{j=1}^{m} \\alpha_{j}^{k} \\odot \\left( h_j \\equiv \\land_{i=1}^{n} x_i \\oplus w_i^j \\right)\n\\end{array}\n\\] where \\(n=1,\\dots,N\\), \\(j=1,\\dots,H\\) \\(k=1,\\dots,K\\).\nWe can revisit the example again and see that the following weights will realize the respective Truth Values. To model \\(y_1 = h_1 \\lor h_2\\), we need\n\\[\n\\begin{array}{left}\n\\alpha_{j}^1 &=& T \\text{ for } j = 1,2 \\text{  and } F \\text{ o.w}\\\\\nw_{i}^1 &=& T \\text{ for } j \\in {1,2,3} \\text{ corresponding to }  h_1  \\\\\nw_{i}^2 &=& T  \\text{ for } j \\in {1,2}  \\text{  and } F \\text{ o.w corresponding to } h_2\n\\end{array}\n\\]",
     "crumbs": [
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>BNN Layer</span>"
+    ]
+  },
+  {
+    "objectID": "sparse_bnn_layer.html",
+    "href": "sparse_bnn_layer.html",
+    "title": "Sparse BNN Layer",
+    "section": "",
+    "text": "\\(\\oplus\\) Flip Block",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Sparse BNN Layer</span>"
+    ]
+  },
+  {
+    "objectID": "sparse_bnn_layer.html#oplus-flip-block",
+    "href": "sparse_bnn_layer.html#oplus-flip-block",
+    "title": "Sparse BNN Layer",
+    "section": "",
+    "text": "Logic: Flip the inputs\n\\[\nx \\oplus w =\n\\begin{cases}\n  \\neg x & \\text{ if } w = T \\\\\nx & \\text{  o.w }\n\\end{cases}\n\\] where \\(x,w \\in \\{-1 \\equiv F,1 \\equiv T\\}\\). In effect, we are using XOR gate to complement the inputs, which is essential to create the product terms and using the SelectOR gate (defined later) to select the prod terms and OR them.\n\n\nForward Method\nWe can compute 2-ary Flipper as follows: \\[\n\\begin{array}{left}\nx \\oplus w &=& -w x\n\\end{array}\n\\]\n\n\nBackward Method: Local Gradients\nIn the network, XOR is used to flip the input based on a weight, so it will be a 2-ary. \\[\n\\begin{array}{left}\n\\tilde{x_i} &=& x_i \\oplus w_i \\\\\n\\frac{\\partial \\tilde{x_i}}{\\partial x_i} &=& \\neg w_i \\\\\n\\frac{\\partial \\tilde{x_i}}{\\partial w_i} &=& \\neg x_i\n\\end{array}\n\\] To compute negation, we flip the sign since \\(w,x \\in \\{-1,1\\}\\).",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Sparse BNN Layer</span>"
+    ]
+  },
+  {
+    "objectID": "sparse_bnn_layer.html#odot-select-block",
+    "href": "sparse_bnn_layer.html#odot-select-block",
+    "title": "Sparse BNN Layer",
+    "section": "\\(\\odot\\) Select Block",
+    "text": "\\(\\odot\\) Select Block\n\nLogic: Select a variable, Ignore otherwise\nThe Truth Table for the Select gate is\n\n\n\n\\(\\beta\\)\n\\(x\\)\n\\(\\beta \\odot x\\)\n\n\n\n\nT\nT\nT\n\n\nT\nF\nF\n\n\nF\nT\n0\n\n\nF\nF\n0\n\n\n\nWe will embed them into AND and OR gates, and derive their respective Truth Tables and Gradients. We will not use the Select gate in isolation.",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Sparse BNN Layer</span>"
+    ]
+  },
+  {
+    "objectID": "sparse_bnn_layer.html#sqcap-sand-select-and-and-block",
+    "href": "sparse_bnn_layer.html#sqcap-sand-select-and-and-block",
+    "title": "Sparse BNN Layer",
+    "section": "\\(\\sqcap\\) SAND: Select and AND Block",
+    "text": "\\(\\sqcap\\) SAND: Select and AND Block\n\nLogic: Select and AND the inputs\nWe want to realize a module which takes n-inputs (some of which are flipped), selects some of the n-inputs, and AND’s them. \\[\n\\begin{array}{left}\nh(\\beta, \\tilde{x}) = \\sqcap_{i=1}^{n} \\beta_i \\odot \\tilde{x}_i\n\\end{array}\n\\]\nFor convenience, we write them recursively, to ease up the derivation, \\(h = \\sqcap (\\beta_i \\odot \\tilde{x}_i, h_{-i})\\), where \\(h_{-i} = \\sqcap_{k=1, \\neq i  }^{n} \\beta_k \\odot \\tilde{x}_k\\). \\[\nh(\\beta, \\tilde{x}) =\n\\begin{cases}\n\\land(\\tilde{x}_{i}, h_{-i}) & \\text{ if }  \\beta_i = T \\land h_i \\in \\{T,F\\} \\\\\n\\tilde{x}_{i} & \\text { if } \\beta_i = T \\text{ and }  h_{-i} = 0 \\\\\nh_{-i} & \\text { if } \\beta_i = F\n\\end{cases}\n\\] This looks much complicated than what it really is trying to say. Rewriting it to get, \\[\nh(\\beta, \\tilde{x}) =\n\\begin{cases}\n0 & \\text{ if } \\beta_i = F \\,\\, \\forall i \\\\\n\\land_k \\tilde{x}_{k} & \\text{ for }  k \\in \\{ i \\text{ s.t } \\beta_i = T\\}\n\\end{cases}\n\\]\n\n\nForward Method\nIt can be obtained with Heavyside function as follows: \\[\nh(\\beta, \\tilde{x}) = H\\left(\\sum_{i=1}^n 0.5(\\beta_i+1) - \\epsilon \\right) \\left(2H\\left(\\sum_{i=1}^n 0.25(\\tilde{x}_i-1)(\\beta_i+1) + \\epsilon \\right)-1 \\right)\n\\]\n\n\nBackward Method: Local Gradients\nWe obtain the partial derivatives by observing the Truth Table to get \\(\\frac{\\partial{y(\\alpha,h)}}{\\partial{\\alpha_i}}\\) as follows:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\beta_i\\)\n\\(\\tilde{x}_i\\)\n\\(h_{-j}\\)\n\\(h\\)\n\\(h(\\neg \\beta_i)\\)\n\\(\\delta h\\)\n\\(\\delta \\alpha_i\\)\n\\(h'\\)\n\n\n\n\nT\nT\nT/F/0\n\\(h_{-i}\\)\n\\(h_{-i}\\)\n0\nF\n0\n\n\nT\nF\nT/F/0\nF\n\\(h_{-i}\\)\nT/0/0\nF\nF/0/0\n\n\nF\nT\nT/F/0\n\\(h_{-i}\\)\n\\(h_{-i}\\)\n0\nT\n0\n\n\nF\nF\nT/F/0\n\\(h_{-i}\\)\nF\nF/0/0\nT\nF/0/0\n\n\n\nTherefore,\n\\[\n\\frac{\\partial{h(\\beta,\\tilde{x})}}{\\partial{\\beta_i}} =\n\\begin{cases}\n  F & \\text{  when } \\tilde{x_i} = F \\land h_i = T  \\\\\n0 & \\text{ o.w }\n\\end{cases}\n\\] It can be implemented with Heavyside function as follows: \\[\n\\begin{array}{left}\n\\frac{\\partial{h(\\alpha,h)}}{\\partial{\\alpha_j}} &=&  H(x_j)H(y_{-i})\n\\end{array}\n\\]\nWe obtain the partial derivatives by observing the Truth Table to get \\(\\frac{\\partial{h(\\alpha,h)}}{\\partial{\\tilde{x}_i}}\\) as follows:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\beta_i\\)\n\\(\\tilde{x}_i\\)\n\\(h_{-j}\\)\n\\(h\\)\n\\(h(\\neg \\tilde{x}_i)\\)\n\\(\\delta h\\)\n\\(\\delta \\tilde{x}_i\\)\n\\(h'\\)\n\n\n\n\nT\nT\nT/F/0\n\\(h_{-i}\\)\nF\nF/0/0\nF\nT/0/0\n\n\nT\nF\nT/F/0\nF\nT/F/T\n0/0/0\nF\n0\n\n\nF\nT\nT/F/0\n\\(h_{-i}\\)\n\\(h_{-i}\\)\n0\nT\n0\n\n\nF\nF\nT/F/0\n\\(h_{-i}\\)\n\\(h_{-i}\\)\n0\nT\n0\n\n\n\nTherefore,\n\\[\n\\frac{\\partial{h(\\beta,\\tilde{x})}}{\\partial{\\beta_i}} =\n\\begin{cases}\nF & \\text{ if } \\beta_i = T \\land \\tilde{x}_i = T \\land h_{-i} = T  \\\\\n0 & \\text{ o.w }\n\\end{cases}\n\\] It can be implemented with Heavyside function as follows: \\[\n\\begin{array}{left}\n\\frac{\\partial{y(\\alpha,h)}}{\\partial{h_j}} &=&  -H(\\beta_i)H(\\tilde{x}_i)H(h_{-i})\n\\end{array}\n\\]",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Sparse BNN Layer</span>"
+    ]
+  },
+  {
+    "objectID": "sparse_bnn_layer.html#sqcup-sor-select-and-or-block",
+    "href": "sparse_bnn_layer.html#sqcup-sor-select-and-or-block",
+    "title": "Sparse BNN Layer",
+    "section": "\\(\\sqcup\\) SOR: Select and OR Block",
+    "text": "\\(\\sqcup\\) SOR: Select and OR Block\n\nLogic: Select and OR the inputs\nWe want to realize a module which takes m-inputs, selects some of the m-inputs, and OR’s them. \\[\n\\begin{array}{left}\ny(\\alpha, h) &=& \\sqcup_{j=1}^{m} \\alpha_j \\odot h_j\n\\end{array}\n\\] For convenience, we write them recursively, to ease up the derivation, \\(y = \\sqcup(\\alpha_j \\odot h_j, y_{-j})\\), where \\(y_{-j} = \\sqcup_{k=1, \\neq j  }^{m} \\alpha_k \\odot h_k\\). We can see that \\(y = y_{-j} \\text { if } \\alpha_j = F\\)\n\\[\ny(\\alpha, h) =\n\\begin{cases}\n\\lor(h_{j}, y_{-j}) & \\text{ if }  \\alpha_j = T \\land y_{-j} \\in \\{T,F\\} \\\\\nh_{j} & \\text { if } \\alpha_j = T \\land y_{-j} = 0 \\\\\ny_{-j} & \\text { if } \\alpha_j = F\n\\end{cases}\n\\]\nThis looks much complicated than what it really is trying to say. Rewriting it to get, \\[\ny(\\alpha, h) =\n\\begin{cases}\n0 & \\text{ if } \\alpha_j = F \\,\\, \\forall j \\\\\n\\lor_k h_{k} & \\text{ for }  k \\in \\{ j \\text{ s.t } \\alpha_j = T\\}\n\\end{cases}\n\\]\n\n\nForward Method\nIt can be obtained with Heavyside function as follows: \\[\ny(\\alpha, h) = H\\left(\\sum_{i=1}^m 0.5(\\alpha_j+1) - \\epsilon \\right) \\left( 2 H\\left(\\sum_{j=1}^m 0.25(h_j+1)(\\alpha_i+1) - \\epsilon \\right)-1 \\right)\n\\]\n\n\nBackward Method: Local Gradients\nWe obtain the partial derivatives by observing the Truth Table to get \\(\\frac{\\partial{y(\\alpha,h)}}{\\partial{h_i}}\\) as follows:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\alpha_j\\)\n\\(h_j\\)\n\\(y_{-j}\\)\n\\(y\\)\n\\(y(\\neg h_j)\\)\n\\(\\delta y\\)\n\\(\\delta h_j\\)\n\\(y'\\)\n\n\n\n\nT\nT\nT/F/0\nT\nT/F/F\n0/F/F\nF\n0/T/T\n\n\nT\nF\nT/F/0\nT/F/F\nT\n0/T/T\nT\n0/T/T\n\n\nF\nT\nT/F/0\nT/F/0\nT/F/0\n0\nF\n0\n\n\nF\nF\nT/F/0\nT/F/0\nT/F/0\n0\nF\n0\n\n\n\nTherefore,\n\\[\n\\frac{\\partial{y(\\alpha,h)}}{\\partial{h_i}} =\n\\begin{cases}\nT  & \\text{ if } \\alpha_j = T\\, \\land \\, y_{-j} = F/0 \\\\\n0 & \\text{ o.w } \\\\\n\\end{cases}\n\\]\nIt can be implemented with Heavyside function as follows: \\[\n\\begin{array}{left}\n\\frac{\\partial{y(\\alpha,h)}}{\\partial{h_j}} &=&  H( \\alpha_j)H(-y_{-j} + \\epsilon)\n\\end{array}\n\\] where \\(\\epsilon\\) is a small positive constant.\nWe obtain the partial derivatives by observing the Truth Table to get \\(\\frac{\\partial{y(\\alpha,h)}}{\\partial{\\alpha_i}}\\) as follows:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(\\alpha_j\\)\n\\(h_j\\)\n\\(y_{-j}\\)\n\\(y\\)\n\\(y(\\neg \\alpha_j)\\)\n\\(\\delta y\\)\n\\(\\delta \\alpha_j\\)\n\\(y'\\)\n\n\n\n\nT\nT\nT/F/0\nT\n\\(y_{-j}\\)\n0\nF\n0\n\n\nT\nF\nT/F/0\nT/F/F\n\\(y_{-j}\\)\n0\nF\n0\n\n\nF\nT\nT/F/0\n\\(y_{-j}\\)\nT\n0/T/0\nT\n0/T/0\n\n\nF\nF\nT/F/0\n\\(y_{-j}\\)\nT/F/F\n0/0/0\nT\n0\n\n\n\nTherefore,\n\\[\n\\frac{\\partial{y(\\alpha,h)}}{\\partial{\\alpha_j}} =\n\\begin{cases}\nT & \\text{ if } \\alpha_j = F\\, \\land \\, y_{-j} = F \\, \\land  \\, h_j = T \\\\\n0 & \\text{ o.w } \\\\\n\\end{cases}\n\\]\nIt can be implemented with Heavyside function as follows: \\[\n\\begin{array}{left}\n\\frac{\\partial{y(\\alpha,h)}}{\\partial{h_i}} &=&  H(\\alpha_j)H(-y_{-j})H(h_{j})\n\\end{array}\n\\] where \\(\\epsilon\\) is a small positive constant.\nFinally, we can put it all together",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Sparse BNN Layer</span>"
+    ]
+  },
+  {
+    "objectID": "sparse_bnn_layer.html#sparse-bnn-layer",
+    "href": "sparse_bnn_layer.html#sparse-bnn-layer",
+    "title": "Sparse BNN Layer",
+    "section": "Sparse BNN Layer",
+    "text": "Sparse BNN Layer\nA Sparse BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter \\(H\\) that controls the layer complexity, resulting in a total of \\(H(2N+K)\\) learnable Boolean weights.\n\\[\n\\begin{array}{left}\ny_{k} &=& \\sqcup_{j=1}^{m} \\alpha_{j}^{k} \\odot  h_j \\, & \\text{: SOR}\\\\\nh_j &=& \\sqcap_{i=1}^{n}  \\beta_i^j  \\odot \\tilde{x}_i^j \\, & \\text{: SAND} \\\\\n\\tilde{x}_i^j  &=& w_i^j \\oplus x_i \\, & \\text{: Flip}\n\\end{array}\n\\] where \\(n=1,\\dots,N\\), \\(j=1,\\dots,H\\) \\(k=1,\\dots,K\\).\nCaution\nNote that all weights and inputs will be strictly in $, i.e., $\\(w_i^j, \\beta_i^j, \\alpha_j, x_i \\in {-1,1}\\) and only gradients can be in \\(\\{-1,0,1\\}\\).",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Sparse BNN Layer</span>"
     ]
   }
 ]
