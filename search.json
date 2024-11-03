@@ -7,7 +7,7 @@
     "text": "Boolean Variation\nBOLD: Boolean Logic Deep Learning introduced a mathematical theory to caculuate graidents on Boolean Variables. Below are some necessary info to realize the truth tables, define a Boolean Deep Learning model, and train the network using Backprop. See the paper for details. The following are taken from the paper.",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -18,7 +18,7 @@
     "text": "Definition\n\nThree-value and Mixed logic\n\nDefine \\(\\mathcal{M} \\equiv \\mathcal{B} \\cup \\{0\\}\\) with logic connectives defined according to those of Boolean logic as follows.\n\nFirst, the negation is: \\(\\neg True = False\\), \\(\\neg False = True\\), and \\(\\neg 0 = 0\\).\nSecond, let \\(\\mathcal{L}\\) be a logic connective, denote by \\(\\mathcal{L}_{\\mathcal{M}}\\) and \\(\\mathcal{L}_{\\mathcal{B}}\\) when it is in \\(\\mathcal{M}\\) and in \\(\\mathcal{B}\\), respectively, then \\(\\mathcal{L}_{\\mathcal{Mb}}(a,b) = \\mathcal{L}_{\\mathcal{Bb}}(a,b)\\) for \\(a, b \\in \\mathcal{B}\\) and \\(\\mathcal{L}_{\\mathcal{M}}(a,b) = 0\\) otherwise.\n\nDenote by \\(\\mathcal{L}\\) a logic set (e.g., \\(\\mathcal{B}\\) or \\(\\mathcal{M}\\)), \\(\\mathcal{R}\\) the real set, \\(\\mathcal{Z}\\) the set of integers, \\(\\mathcal{N}\\) a numeric set (e.g., \\(\\mathcal{R}\\) or \\(\\mathcal{Z}\\)), and \\(\\mathcal{D}\\) a certain set of \\(\\mathcal{L}\\) or \\(\\mathcal{N}\\).\nFor \\(x \\in \\mathcal{N}\\), its logic value denoted by \\(x_{logic}\\) is given as \\(x_{logic} = True \\Leftrightarrow x &gt; 0\\), \\(x_{logic} = False \\Leftrightarrow x &lt; 0\\), and \\(x_{logic} = 0 \\Leftrightarrow x = 0\\).\nThe magnitude of a variable \\(x\\), denoted \\(|x|\\), is defined as its usual absolute value if \\(x \\in \\mathcal{N}\\). And for \\(x \\in \\mathcal{L}\\): \\(|x| = 0\\) if \\(x = 0\\), and \\(|x| = 1\\) otherwise.\nFor \\(\\mathcal{L}\\) a logic connective of \\(\\mathcal{L}\\) and variables \\(a\\), \\(b\\), operation \\(c = \\mathcal{L}(a, b)\\) is defined such that \\(|c| = |a||b|\\) and \\(c_{logic} = \\mathcal{L}(a_{logic}, b_{logic})\\).\n\n\n\nCalculus\n\nA variable x is (extended) Boolean variable with the following encoding \\(x \\in \\{-1,0,1\\}\\) where \\(-1\\) represents logical \\(False\\), \\(+1\\) represents logical \\(True\\), and \\(0\\) represents \\(Ignore\\). We can call this extended Boolean domain.\nOrder relations \\(&lt;\\) and \\(&gt;\\) in \\(\\mathcal{B}\\) are defined as follows: \\(False &lt; True\\), and \\(True &gt; False\\).\nFor \\(a, b \\in \\mathcal{B}\\), the variation from \\(a\\) to \\(b\\), denoted \\(\\delta(a \\to b)\\), is defined as: \\(\\delta(a \\to b) \\equiv True\\) if \\(b &gt; a\\), \\(\\equiv 0\\) if \\(b = a\\), and \\(\\equiv False\\) if \\(b &lt; a\\).\nFor \\(f \\in \\mathcal{F}(\\mathcal{B}, \\mathcal{D})\\), \\(\\forall x \\in \\mathcal{B}\\), write \\(\\delta f(x \\to \\neg x) := \\delta(f(x) \\to f(\\neg x))\\). The variation of \\(f\\) w.r.t \\(x\\), denoted \\(f'(x)\\), is defined as: \\(f'(x) \\equiv \\text{xnor}(\\delta(x \\to \\neg x), \\delta f(x \\to \\neg x))\\).\n\nFor simplicity, we will write \\(\\delta f\\) to denote \\(\\delta f(x \\to \\neg x)\\). Similarly, \\(\\delta x\\) to denote \\(\\delta (x \\to \\neg x)\\)\nFor details see, Section 3.2 of BOLD: Boolean Logic Deep Learning\n\n\nAND Gate\n\nTruth Table\nl \\(AND(x_1,x_2) \\equiv 0\\) if any of the inputs are 0, by definition.\n\n\nDerivative\nRecall: 1. \\(\\delta(a \\to b) \\equiv True\\) if \\(b &gt; a\\), \\(\\equiv 0\\) if \\(b = a\\), and \\(\\equiv False\\) if \\(b &lt; a\\). 2. \\(f'(x) \\equiv \\text{xnor}(\\delta(x \\to \\neg x), \\delta f(x \\to \\neg x))\\).\nThe Truth Table for \\(f(x) = f_a(x) = AND(x,a)\\) is:\n\n\n\n\n\n\n\n\n\n\n\n\n\n\\(a\\)\n\\(x\\)\n\\(\\neg x\\)\n\\(\\delta x\\)\n\\(f(x)\\)\n\\(f(\\neg x)\\)\n\\(\\delta f\\)\n\\(f'\\)\n\n\n\n\nT\nT\nF\nF\nT\nF\nF\nT\n\n\nT\nF\nT\nT\nF\nT\nT\nT\n\n\nF\nT\nF\nF\nF\nF\n0\n0\n\n\nF\nF\nT\nT\nF\nF\n0\n0\n\n\n\nTherefore, \\(f'_{a}(x) = \\text{T} \\text{ iff } a=T, 0 \\text{ o.w}\\)\n\n\n\nOR Gate\n\nTruth Table\n\n\n\n\\(x_1\\)\n\\(x_2\\)\n\\(y_{OR}\\)\n\n\n\n\nT\nT\nT\n\n\nT\nF\nT\n\n\nF\nT\nT\n\n\nF\nF\nF\n\n\n\n\\(AND(x_1,x_2) \\equiv 0\\) if any of the inputs are 0, by definition.\n\n\nDerivative\n\\(f'_{a}(x) = \\text{F} \\text{ iff } a=F, 0 \\text{ o.w}\\)\n\n\n\nXOR Gate\n\nTruth Table\n\n\n\n\\(x_1\\)\n\\(x_2\\)\n\\(y_{XOR}\\)\n\n\n\n\nT\nT\nF\n\n\nT\nF\nT\n\n\nF\nT\nT\n\n\nF\nF\nF\n\n\n\n\\(XOR(x_1,x_2) \\equiv 0\\) if any of the inputs are 0, by definition.\n\n\nDerivative\n\\(f'_{a}(x) = \\neg a\\)",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -29,7 +29,7 @@
     "text": "AND Gate\n\n# check AND gate. Logic and Derivative\n\ndef test_2ary(gate='AND'):\n    A = [-1,1,0]\n    X = [-1,1,0]\n    data = []\n    for element in itertools.product(*[A,X]):\n        a,x = element\n        xb = Bool(x)\n        ab = Bool(a)\n        if gate == 'AND':\n            z = ab*xb\n        elif gate == 'OR':\n            z = ab+xb\n        else:\n            z = ab^xb\n        \n        z.backward()\n        data.append({\n                'a': a,\n                'x': x,\n                'f': z.data,\n                'f\\'': xb.grad\n            })\n\n    df = pd.DataFrame(data)\n    return df\ndf = test_2ary()\nprint(df)\n\n   a  x  f  f'\n0 -1 -1 -1   0\n1 -1  1 -1   0\n2 -1  0  0   0\n3  1 -1 -1   1\n4  1  1  1   1\n5  1  0  0   0\n6  0 -1  0   0\n7  0  1  0   0\n8  0  0  0   0\n\n\nCan see that \\(f'_a(x)\\) is \\(1\\) only when \\(a=1\\), o.w it is 0.",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -40,7 +40,7 @@
     "text": "OR Gate\n\n# check AND gate. Logic and Derivative\ndf = test_2ary(gate='OR')\nprint(df)\n\n   a  x  f  f'\n0 -1 -1 -1  -1\n1 -1  1  1  -1\n2 -1  0  0   0\n3  1 -1  1   0\n4  1  1  1   0\n5  1  0  0   0\n6  0 -1  0   0\n7  0  1  0   0\n8  0  0  0   0\n\n\nCan see that \\(f'_a(x)\\) is \\(-1\\) only when \\(a=-1\\), o.w it is 0.",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -51,7 +51,7 @@
     "text": "XOR Gate\n\n# check AND gate. Logic and Derivative\ndf = test_2ary(gate='XOR')\nprint(df)\n\n   a  x  f  f'\n0 -1 -1 -1   1\n1 -1  1  1   1\n2 -1  0  0   0\n3  1 -1  1  -1\n4  1  1 -1  -1\n5  1  0  0   0\n6  0 -1  0   0\n7  0  1  0   0\n8  0  0  0   0\n\n\nCan see that \\(f'_a(x)\\) is \\(\\neg a\\) and is 0 when a is 0.",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -62,7 +62,7 @@
     "text": "Compositions\nChain Rule\nFor \\(\\mathcal{B} \\overset{f}{\\to} \\mathcal{B} \\overset{g}{\\to} \\mathcal{D}\\): \\((g \\circ f)'(x) = \\text{xnor}(g'(f(x)), f'(x))\\), \\(\\forall x \\in \\mathcal{B}\\).\nMultivariate Chain Rule\n\nFor \\(x = (x_1, \\ldots, x_n) \\in \\mathcal{B}^n\\), denote \\(x_{\\neg i} := (x_1, \\ldots, x_{i-1}, \\neg x_i, x_{i+1}, \\ldots, x_n)\\) for \\(n \\ge 1\\) and \\(1 \\leq i \\leq n\\).\nFor \\(f \\in \\mathcal{F}(\\mathcal{B}^n, \\mathcal{B})\\), the (partial) variation of \\(f\\) wrt \\(x_i\\), denoted \\(f'_{i}(x)\\) or \\(\\delta f(x)/\\delta x_i\\), is defined as: \\(f'_{i}(x) \\equiv \\delta f(x)/\\delta x_i \\equiv xnor(\\delta(x_i \\to \\neg x_i), \\delta f(x \\to x_{\\neg i}))\\).\nLet \\(f \\in \\mathcal{F}(\\mathcal{B}^n, \\mathcal{B})\\), \\(n \\geq 1\\), and \\(g \\in \\mathcal{F}(\\mathcal{B}, \\mathcal{B})\\). For \\(1 \\le i \\le n\\),\n\n\\[(g \\circ f)'_i(x) = \\text{xnor}(g'(f(x)), f'_i(x)), \\quad \\forall x \\in \\mathcal{B}^n\\]\n\n\ndef test_Kary(expression = \"x1*x2\", K=2):\n    T = [-1, 1, 0]\n   \n    # Create the Cartesian product of T repeated K times\n    cartesian_product = list(itertools.product(T, repeat=K))\n   \n    # Generate variable names based on the index\n    variable_names = [f'x{i+1}' for i in range(K)]\n\n   \n    data = []\n    # Print the result with variable names and evaluate the expression\n    for product in cartesian_product:\n        # Create a dictionary of variable names and their corresponding values\n        variables = {variable_names[i]: Bool(product[i]) for i in range(K)}\n        \n        # Evaluate the expression using the variables\n        result = eval(expression, {}, variables)\n        result.backward()\n\n        tmp = variables\n        tmp['f: '+ expression] = result.data\n        tmp['f\\'(x1)'] = variables['x1'].grad\n\n        data.append(tmp)\n    \n    df = pd.DataFrame(data)\n    return df\n\nexpression = \"x1 * x2\"\nK = 2\ndf = test_Kary(expression=expression, K=K)\nprint(df)\n\n                x1               x2  f: x1 * x2  f'(x1)\n0  data:-1, grad:0  data:-1, grad:0          -1       0\n1  data:-1, grad:1   data:1, grad:0          -1       1\n2  data:-1, grad:0   data:0, grad:0           0       0\n3   data:1, grad:0  data:-1, grad:1          -1       0\n4   data:1, grad:1   data:1, grad:1           1       1\n5   data:1, grad:0   data:0, grad:0           0       0\n6   data:0, grad:0  data:-1, grad:0           0       0\n7   data:0, grad:0   data:1, grad:0           0       0\n8   data:0, grad:0   data:0, grad:0           0       0\n\n\n\nexpression = \"x1^x2\"\nK = 2\ndf = test_Kary(expression=expression, K=K)\nprint(df)\n\n                 x1                x2  f: x1^x2  f'(x1)\n0   data:-1, grad:1   data:-1, grad:1        -1       1\n1  data:-1, grad:-1    data:1, grad:1         1      -1\n2   data:-1, grad:0    data:0, grad:0         0       0\n3    data:1, grad:1  data:-1, grad:-1         1       1\n4   data:1, grad:-1   data:1, grad:-1        -1      -1\n5    data:1, grad:0    data:0, grad:0         0       0\n6    data:0, grad:0   data:-1, grad:0         0       0\n7    data:0, grad:0    data:1, grad:0         0       0\n8    data:0, grad:0    data:0, grad:0         0       0\n\n\nCan see \\(f_a'(x) = \\neg a\\) and zero whenever any element is 0\nPermutation Invariance\nabc = cbc a+b+c = c+a+b\n\nK = 3\nexpression = \"x1 * x2 * x3\"\ndf1= test_Kary(expression=expression, K=K)\nexpression = \"x3 * x2 * x1\"\ndf2= test_Kary(expression=expression, K=K)\n\n\nprint(np.all(df1[df1.columns[-1]]==df1[df1.columns[-1]]))\nprint(np.all(df1[df1.columns[-2]]==df2[df2.columns[-2]]))\n\nexpression = \"x1 + x2 + x3\"\ndf1= test_Kary(expression=expression, K=K)\n\nexpression = \"x3 + x2 + x1\"\ndf2= test_Kary(expression=expression, K=K)\n\nprint(np.all(df1[df1.columns[-1]]==df1[df1.columns[-1]]))\nprint(np.all(df1[df1.columns[-2]]==df2[df2.columns[-2]]))\n\nTrue\nTrue\nTrue\nTrue\n\n\n\n# check composition\na = Bool(-1);b = Bool(1);c=Bool(1)\nz = b^a+c\nz.backward()\nprint('xor(a,b)\\n', z,a,b,c)\n\nxor(a,b)\n data:-1, grad:1 data:-1, grad:0 data:1, grad:-1 data:1, grad:1\n\n\n\n# check composition\nfrom engine import Bool\nfrom utils import draw_dot\n\n\ny = Bool(-1);\nx1 = Bool(1); x2 = Bool(1)\nw1 = Bool(-1); w2 = Bool(-1); \n\nh1 = x1^w1\nh2 = x2^w2\n\nz = h1*h2\nL = z^y\n\nL.backward()\n\ndraw_dot(L)",
     "crumbs": [
       "Notebooks",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Boolean Variation</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Boolean Variation</span>"
     ]
   },
   {
@@ -253,6 +253,56 @@
     "text": "Sparse BNN Layer\nA Sparse BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter \\(H\\) that controls the layer complexity, resulting in a total of \\(H(2N+K)\\) learnable Boolean weights.\n\\[\n\\begin{array}{left}\ny_{k} &=& \\sqcup_{j=1}^{m} \\alpha_{j}^{k} \\odot  h_j \\, & \\text{: SOR}\\\\\nh_j &=& \\sqcap_{i=1}^{n}  \\beta_i^j  \\odot \\tilde{x}_i^j \\, & \\text{: SAND} \\\\\n\\tilde{x}_i^j  &=& w_i^j \\oplus x_i \\, & \\text{: Flip}\n\\end{array}\n\\] where \\(n=1,\\dots,N\\), \\(j=1,\\dots,H\\) \\(k=1,\\dots,K\\).\nCaution\nNote that all weights and inputs will be strictly in $, i.e., $\\(w_i^j, \\beta_i^j, \\alpha_j, x_i \\in {-1,1}\\) and only gradients can be in \\(\\{-1,0,1\\}\\).",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Sparse BNN Layer</span>"
+    ]
+  },
+  {
+    "objectID": "interfaces.html",
+    "href": "interfaces.html",
+    "title": "Interfaces",
+    "section": "",
+    "text": "Pure BNN\nFirst consider the case where BNN is all there is. No upstream or downstream blocks.\nWe need codings that convert analog to digital and digital (binary) to analog but these converters act like pre- and post-processors (i.e., they are not part of the training jobs).",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Interfaces</span>"
+    ]
+  },
+  {
+    "objectID": "interfaces.html#pure-bnn",
+    "href": "interfaces.html#pure-bnn",
+    "title": "Interfaces",
+    "section": "",
+    "text": "Bool-in, Bool-out:\nAny boolean truth tables and digital circuits. Example - parity checker!\nReal-in, Bool-out:\nMost binary classification problems fall under this category. One Hello world example is the Iris Flower classification problem. Take the features measured on a Flower and identify the Flower class. Here, we need to convert \\(x \\in \\mathcal{R}^n\\) to \\(\\{-1,1\\}^p\\) for some \\(p\\), and chain BNN layers. Binary Classification labels can be coded as \\(\\{-1,1\\}\\). By extension, multi-label or multi-class can be handled as multi-valued Truth Tables. We need to convert the real inputs to Boolean valued inputs.\nReal-in, Real-out:\nA more complicated problem is when the outputs are real valued. Consider a regression problem with real valued output. We need to code real-valued signal and realize this as a multi-valued Truth table.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Interfaces</span>"
+    ]
+  },
+  {
+    "objectID": "interfaces.html#mixed-bnn",
+    "href": "interfaces.html#mixed-bnn",
+    "title": "Interfaces",
+    "section": "mixed BNN",
+    "text": "mixed BNN\n\nReal-in, Bool-out:\nHere, a BNN Layer is appended to DNN. The DNN layers are trainable which produce real valued outputs. An example could be to train an image classifier based on ResNet head, which also needs to be trained. How do we design the interface (A/D converter) that flows the gradients from BNN to the DNN?\nReal-in, Real-out:\nHere, a BNN layer is sandwiched between two DNN layers (or modules). The BNN receives a real valued input and has to pass a continuous valued signal for the downstream DNN layer. What would the D/A converter look like?",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Interfaces</span>"
+    ]
+  },
+  {
+    "objectID": "interfaces.html#converters-not-trainable",
+    "href": "interfaces.html#converters-not-trainable",
+    "title": "Interfaces",
+    "section": "Converters (not trainable)",
+    "text": "Converters (not trainable)\nThe A/D and D/A converters pre-process and post-process the data, and therefore can be considered as not part of the BNN.\n\nADC Coder:\n\nQuantile Binning\nConsider all inputs to be an n-dimensional real valued input. For every dimension, compute the CDF, divide it into bins of equal width, map the input feature to the bin it points to. The bins are one-hot coded. See sklearn’s KBinsDiscretizer\n\n\n\nDAC Coder:\n\nBit Plane Coding\nQuantize the output to the precision needed. Do a bit-plane coding. Note that errors on MSBs are much costlier than the LSBs. Further, we are not interesting in compressing the bit-planes - just use the bit-planes to code a quantized real-valued signal so that BNN can be learnt on them.\nAfter predicting the bit-planes, de-quantize.",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Interfaces</span>"
+    ]
+  },
+  {
+    "objectID": "interfaces.html#adapters-trainable",
+    "href": "interfaces.html#adapters-trainable",
+    "title": "Interfaces",
+    "section": "Adapters (trainable)",
+    "text": "Adapters (trainable)\nThe A/D and D/A adapters must allow BNN Layer to be added before/after a DNN layer, and enable training end-to-end.\n\nADC Layer:\n\nRandom Binning Features\nSee paper.\n\n\nCompressive Sensing:\nMap real input \\(x_{n \\times 1}\\) to \\(b^{in}_{m \\times 1} = \\text{sign}(\\Phi x)\\), with \\(\\Phi \\sim N(0,1)\\). It is possible to have \\(\\Phi\\) from \\(\\{0,1\\}\\) as well. See 1-bit Compressive Sensing paper\nForward Pass\ntbd\nBackward Pass\ntbd\n\n\n\nDAC Layer:\n\nCompressive Sensing:\nProblem: Given a signs alone, recover a real-valued sparse signal, given the sensing matrix. That is, Recover \\(y_{k \\times 1} \\in \\mathcal{R}^k\\) from \\(b^{out}_{m \\times 1} \\in \\{-1,1\\}^m\\) given a sensing matrix \\(\\Phi\\) which is hypothesized to have generated the measurements \\(y =  \\Phi b\\).\nSee the papers\n\nRobust 1-Bit Compressive Sensing via Binary Stable Embeddings of Sparse Vectors\nOne-bit Compressed Sensing: Provable Support and Vector Recovery\nAre Straight-Through gradients and Soft-Thresholding all you need for Sparse Training?\nLearning Fast Approximations of Sparse Coding\n\nForward Pass\ntbd\nBackward Pass\ntbd",
+    "crumbs": [
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Interfaces</span>"
     ]
   }
 ]

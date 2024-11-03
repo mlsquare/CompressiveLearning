@@ -8,7 +8,7 @@
 
 <meta name="author" content="mlsquare">
 
-<title>Compressive Learning</title>
+<title>Interfaces – Compressive Learning</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -31,8 +31,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./bold.html" rel="next">
-<link href="./preface.html" rel="prev">
+<link href="./bolt/notebooks/dev.html" rel="next">
+<link href="./sparse_bnn_layer.html" rel="prev">
 <link href="./logo.jpg" rel="icon" type="image/jpeg">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -71,10 +71,39 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
-<body class="nav-sidebar floating fullcontent">
+<body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
   <header id="quarto-header" class="headroom fixed-top">
@@ -83,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-title">Compressive Learning</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./interfaces.html"><span class="chapter-title">Interfaces</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -123,7 +152,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Compressive Learning</span></a>
+  <a href="./index.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Compressive Learning</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -143,7 +172,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./interfaces.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Interfaces</span></a>
+  <a href="./interfaces.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Interfaces</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -167,14 +196,32 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#pure-bnn" id="toc-pure-bnn" class="nav-link active" data-scroll-target="#pure-bnn">Pure BNN</a></li>
+  <li><a href="#mixed-bnn" id="toc-mixed-bnn" class="nav-link" data-scroll-target="#mixed-bnn">mixed BNN</a></li>
+  <li><a href="#converters-not-trainable" id="toc-converters-not-trainable" class="nav-link" data-scroll-target="#converters-not-trainable">Converters (not trainable)</a>
+  <ul class="collapse">
+  <li><a href="#adc-coder" id="toc-adc-coder" class="nav-link" data-scroll-target="#adc-coder">ADC Coder:</a></li>
+  <li><a href="#dac-coder" id="toc-dac-coder" class="nav-link" data-scroll-target="#dac-coder">DAC Coder:</a></li>
+  </ul></li>
+  <li><a href="#adapters-trainable" id="toc-adapters-trainable" class="nav-link" data-scroll-target="#adapters-trainable">Adapters (trainable)</a>
+  <ul class="collapse">
+  <li><a href="#adc-layer" id="toc-adc-layer" class="nav-link" data-scroll-target="#adc-layer">ADC Layer:</a></li>
+  <li><a href="#dac-layer" id="toc-dac-layer" class="nav-link" data-scroll-target="#dac-layer">DAC Layer:</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/interfaces.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+    </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Compressive Learning</h1>
-<p class="subtitle lead">Train models in bit space</p>
+<h1 class="title"><span class="chapter-title">Interfaces</span></h1>
 </div>
 
 
@@ -191,11 +238,93 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><img src="logo.jpg" title="Compressive Learning" class="quarto-cover-image img-fluid"></p>
-<p>Methods and tools for Compressive Learning.</p>
-<p>Check <a href="https://github.com/mlsquare/boolgrad">BoolGrad</a>, a proof-of-concept implementation of BackProp on Boolean Network, based on <a href="https://arxiv.org/abs/2405.16339">BOLD</a> paper, and <a href="https://github.com/karpathy/micrograd">micrograd</a> from Andrej Karpathy. It is a work in progress and lot of testing is needed.</p>
+<p>For a strictly Boolean-in and Boolean-out type functions, the <a href="./bnn_layer.html">BNN layer</a> or the <a href="./sparse_bnn_layer.html">Sparse BNN Layer</a> are supposed to work. For example, learning a parity checker which takes n Boolean inputs and outputs a single Boolean value. But that is somewhat restrictive in a way, if we want wider adoption BNNs. The BNN layer as a replacement for an MLP needs different <em>adapters</em> depending on the type of modeling it is involved in.</p>
+<p>Obviously, BNN only works on Bool variables (which we can all pure p-BNN). But it also matters whether the upstream and downstream blocks are to be co-trained or not (which we can call mixed or m-BNN). It changes the game. We need an ability convert reals to Bools and vice-versa.</p>
+<p>Terms used to refer to the interfaces:</p>
+<ul>
+<li>Analog to Digital = A/D = Analog to Digital Converter = ADC</li>
+<li>Digital to Analog = D/A = Digital to Analog Converter = DAC</li>
+</ul>
+<section id="pure-bnn" class="level2">
+<h2 class="anchored" data-anchor-id="pure-bnn">Pure BNN</h2>
+<p>First consider the case where BNN is all there is. No upstream or downstream blocks.</p>
+<ul>
+<li><p>Bool-in, Bool-out:</p>
+<p>Any boolean truth tables and digital circuits. Example - parity checker!</p></li>
+<li><p>Real-in, Bool-out:</p>
+<p>Most binary classification problems fall under this category. One <em>Hello world</em> example is the Iris Flower classification problem. Take the features measured on a Flower and identify the Flower class. Here, we need to convert <span class="math inline">\(x \in \mathcal{R}^n\)</span> to <span class="math inline">\(\{-1,1\}^p\)</span> for some <span class="math inline">\(p\)</span>, and chain BNN layers. Binary Classification labels can be coded as <span class="math inline">\(\{-1,1\}\)</span>. By extension, multi-label or multi-class can be handled as multi-valued Truth Tables. <em>We need to convert the real inputs to Boolean valued inputs.</em></p></li>
+<li><p>Real-in, Real-out:</p>
+<p>A more complicated problem is when the outputs are real valued. Consider a regression problem with real valued output. We need to code real-valued signal and realize this as a multi-valued Truth table.</p></li>
+</ul>
+<p>We need codings that convert analog to digital and digital (binary) to analog but these converters act like pre- and post-processors (i.e., they are not part of the training jobs).</p>
+</section>
+<section id="mixed-bnn" class="level2">
+<h2 class="anchored" data-anchor-id="mixed-bnn">mixed BNN</h2>
+<ul>
+<li><p>Real-in, Bool-out:</p>
+<p>Here, a BNN Layer is appended to DNN. The DNN layers are trainable which produce real valued outputs. An example could be to train an image classifier based on ResNet head, which also needs to be trained. How do we design the interface (A/D converter) that flows the gradients from BNN to the DNN?</p></li>
+<li><p>Real-in, Real-out:</p>
+<p>Here, a BNN layer is sandwiched between two DNN layers (or modules). The BNN receives a real valued input and has to pass a continuous valued signal for the downstream DNN layer. What would the D/A converter look like?</p></li>
+</ul>
+</section>
+<section id="converters-not-trainable" class="level2">
+<h2 class="anchored" data-anchor-id="converters-not-trainable">Converters (not trainable)</h2>
+<p>The A/D and D/A converters pre-process and post-process the data, and therefore can be considered as not part of the BNN.</p>
+<section id="adc-coder" class="level3">
+<h3 class="anchored" data-anchor-id="adc-coder">ADC Coder:</h3>
+<section id="quantile-binning" class="level4">
+<h4 class="anchored" data-anchor-id="quantile-binning">Quantile Binning</h4>
+<p>Consider all inputs to be an n-dimensional real valued input. For every dimension, compute the CDF, divide it into bins of equal width, map the input feature to the bin it points to. The bins are one-hot coded. See sklearn’s <a href="https://scikit-learn.org/1.5/modules/generated/sklearn.preprocessing.KBinsDiscretizer.html">KBinsDiscretizer</a></p>
+</section>
+</section>
+<section id="dac-coder" class="level3">
+<h3 class="anchored" data-anchor-id="dac-coder">DAC Coder:</h3>
+<section id="bit-plane-coding" class="level4">
+<h4 class="anchored" data-anchor-id="bit-plane-coding">Bit Plane Coding</h4>
+<p>Quantize the output to the precision needed. Do a bit-plane coding. Note that errors on MSBs are much costlier than the LSBs. Further, we are not interesting in compressing the bit-planes - just use the bit-planes to code a quantized real-valued signal so that BNN can be learnt on them.</p>
+<p>After predicting the bit-planes, de-quantize.</p>
+</section>
+</section>
+</section>
+<section id="adapters-trainable" class="level2">
+<h2 class="anchored" data-anchor-id="adapters-trainable">Adapters (trainable)</h2>
+<p>The A/D and D/A adapters must allow BNN Layer to be added before/after a DNN layer, and enable training end-to-end.</p>
+<section id="adc-layer" class="level3">
+<h3 class="anchored" data-anchor-id="adc-layer">ADC Layer:</h3>
+<section id="random-binning-features" class="level4">
+<h4 class="anchored" data-anchor-id="random-binning-features">Random Binning Features</h4>
+<p>See <a href="https://people.eecs.berkeley.edu/~brecht/papers/07.rah.rec.nips.pdf">paper</a>.</p>
+</section>
+<section id="compressive-sensing" class="level4">
+<h4 class="anchored" data-anchor-id="compressive-sensing">Compressive Sensing:</h4>
+<p>Map real input <span class="math inline">\(x_{n \times 1}\)</span> to <span class="math inline">\(b^{in}_{m \times 1} = \text{sign}(\Phi x)\)</span>, with <span class="math inline">\(\Phi \sim N(0,1)\)</span>. It is possible to have <span class="math inline">\(\Phi\)</span> from <span class="math inline">\(\{0,1\}\)</span> as well. See 1-bit Compressive Sensing <a href="https://arxiv.org/abs/1104.3160">paper</a></p>
+<p><strong>Forward Pass</strong></p>
+<p>tbd</p>
+<p><strong>Backward Pass</strong></p>
+<p>tbd</p>
+</section>
+</section>
+<section id="dac-layer" class="level3">
+<h3 class="anchored" data-anchor-id="dac-layer">DAC Layer:</h3>
+<section id="compressive-sensing-1" class="level4">
+<h4 class="anchored" data-anchor-id="compressive-sensing-1">Compressive Sensing:</h4>
+<p>Problem: Given a signs alone, recover a real-valued sparse signal, given the sensing matrix. That is, Recover <span class="math inline">\(y_{k \times 1} \in \mathcal{R}^k\)</span> from <span class="math inline">\(b^{out}_{m \times 1} \in \{-1,1\}^m\)</span> given a sensing matrix <span class="math inline">\(\Phi\)</span> which is hypothesized to have generated the measurements <span class="math inline">\(y =  \Phi b\)</span>.</p>
+<p>See the papers</p>
+<ol type="1">
+<li><a href="https://arxiv.org/abs/1104.3160">Robust 1-Bit Compressive Sensing via Binary Stable Embeddings of Sparse Vectors</a></li>
+<li><a href="https://proceedings.mlr.press/v28/gopi13.pdf">One-bit Compressed Sensing: Provable Support and Vector Recovery</a></li>
+<li><a href="https://arxiv.org/abs/2212.01076">Are Straight-Through gradients and Soft-Thresholding all you need for Sparse Training?</a></li>
+<li><a href="https://icml.cc/Conferences/2010/papers/449.pdf">Learning Fast Approximations of Sparse Coding</a></li>
+</ol>
+<p><strong>Forward Pass</strong></p>
+<p>tbd</p>
+<p><strong>Backward Pass</strong></p>
+<p>tbd</p>
 
 
+</section>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -620,12 +749,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./preface.html" class="pagination-link" aria-label="Motivation">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Motivation</span></span>
+      <a href="./sparse_bnn_layer.html" class="pagination-link" aria-label="Sparse BNN Layer">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">Sparse BNN Layer</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./bold.html" class="pagination-link" aria-label="Boolean Variation">
+      <a href="./bolt/notebooks/dev.html" class="pagination-link" aria-label="Boolean Variation">
         <span class="nav-page-text"><span class="chapter-title">Boolean Variation</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
@@ -638,7 +767,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
+    <div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/interfaces.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div>
     <div class="nav-footer-right">
 <p>This material was built with <a href="https://quarto.org/">Quarto</a> with <a href="https://github.com/hadley/r4ds">r4ds</a> theme.</p>
 </div>
