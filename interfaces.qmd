@@ -1,0 +1,110 @@
+# Interfaces
+
+For a strictly Boolean-in and Boolean-out type functions, the [BNN layer](./bnn_layer.qmd) or the [Sparse BNN Layer](./sparse_bnn_layer.qmd) are supposed to work. For example, learning a parity checker which takes n Boolean inputs and outputs a single Boolean value. But that is somewhat restrictive in a way, if we want wider adoption BNNs. The BNN layer as a replacement for an MLP needs different _adapters_ depending on the type of modeling it is involved in. 
+
+Obviously, BNN only works on Bool variables (which we can all pure p-BNN). But it also matters whether the upstream and downstream blocks are to be co-trained or not (which we can call mixed or m-BNN). It changes the game. We need an ability convert reals to Bools and vice-versa.
+
+
+Terms used to refer to the interfaces:
+
+- Analog to Digital = A/D = Analog to Digital Converter = ADC
+- Digital to Analog = D/A = Digital to Analog Converter = DAC
+
+
+## Pure BNN
+
+First consider the case where BNN is all there is. No upstream or downstream blocks.
+
+- Bool-in, Bool-out: 
+
+    Any boolean truth tables and digital circuits. Example - parity checker!
+
+- Real-in, Bool-out: 
+
+     Most binary classification problems fall under this category. One _Hello world_ example is the Iris Flower classification problem. Take the features measured on a Flower and identify the Flower class. Here, we need to convert $x \in \mathcal{R}^n$ to $\{-1,1\}^p$ for some $p$, and chain BNN layers. Binary Classification labels can be coded as $\{-1,1\}$. By extension, multi-label or multi-class can be handled as multi-valued Truth Tables. _We need to convert the real inputs to Boolean valued inputs._
+
+- Real-in, Real-out: 
+
+    A more complicated problem is when the outputs are real valued. Consider a regression problem with real valued output. We need to code real-valued signal and realize this as a multi-valued Truth table.
+
+We need codings that convert analog to digital and digital (binary) to analog but these converters act like pre- and post-processors (i.e., they are not part of the training jobs).
+
+
+
+## mixed BNN
+
+- Real-in, Bool-out: 
+
+    Here, a BNN Layer is appended to DNN. The DNN layers are trainable which produce real valued outputs. An example could be to train an image classifier based on ResNet head, which also needs to be trained. How do we design the interface (A/D converter) that flows the gradients from BNN to the DNN?
+
+- Real-in, Real-out: 
+
+    Here, a BNN layer is sandwiched between two DNN layers (or modules). The BNN receives a real valued input and has to pass a continuous valued signal for the downstream DNN layer. What would the D/A converter look like?
+
+ 
+
+## Converters (not trainable)
+
+The A/D and D/A converters pre-process and post-process the data, and therefore can be considered as not part of the BNN. 
+
+### ADC Coder:
+
+#### Quantile Binning
+
+Consider all inputs to be an n-dimensional real valued input. For every dimension, compute the CDF, divide it into bins of equal width, map the input feature to the bin it points to. The bins are one-hot coded. See sklearn's [KBinsDiscretizer](https://scikit-learn.org/1.5/modules/generated/sklearn.preprocessing.KBinsDiscretizer.html)
+
+### DAC Coder:
+
+#### Bit Plane Coding
+
+Quantize the output to the precision needed. Do a bit-plane coding. Note that errors on MSBs are much costlier than the LSBs. Further, we are not interesting in compressing the bit-planes - just use the bit-planes to code a quantized real-valued signal so that BNN can be learnt on them.
+
+After predicting the bit-planes, de-quantize.
+
+
+## Adapters (trainable)
+
+The A/D and D/A adapters must allow BNN Layer to be added before/after a DNN layer, and enable training end-to-end.
+
+### ADC Layer:
+
+#### Random Binning Features
+
+See  [paper](https://people.eecs.berkeley.edu/~brecht/papers/07.rah.rec.nips.pdf). 
+
+####  Compressive Sensing: 
+
+Map real input  $x_{n \times 1}$ to $b^{in}_{m \times 1} = \text{sign}(\Phi x)$, with $\Phi \sim N(0,1)$. It is possible to have $\Phi$ from $\{0,1\}$ as well. See 1-bit Compressive Sensing [paper](https://arxiv.org/abs/1104.3160)
+
+**Forward Pass**
+
+tbd
+
+**Backward Pass**
+
+tbd
+
+### DAC Layer:
+
+####  Compressive Sensing:
+
+Problem: 
+Given a signs alone, recover a real-valued sparse signal, given the sensing matrix. That is,
+Recover $y_{k \times 1} \in \mathcal{R}^k$ from $b^{out}_{m \times 1} \in \{-1,1\}^m$ given a sensing matrix $\Phi$ which is hypothesized to have generated the measurements $y =  \Phi b$.
+
+See the papers
+
+1. [Robust 1-Bit Compressive Sensing via Binary Stable Embeddings of Sparse Vectors](https://arxiv.org/abs/1104.3160)
+2. [One-bit Compressed Sensing: Provable Support and Vector Recovery](https://proceedings.mlr.press/v28/gopi13.pdf)
+3. [Are Straight-Through gradients and Soft-Thresholding all you need for Sparse Training?](https://arxiv.org/abs/2212.01076)
+4. [Learning Fast Approximations of Sparse Coding](https://icml.cc/Conferences/2010/papers/449.pdf)
+
+**Forward Pass**
+
+tbd
+
+**Backward Pass**
+
+tbd
+
+
