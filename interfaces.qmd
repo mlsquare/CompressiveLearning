@@ -31,7 +31,7 @@ We need codings that convert analog to digital and digital (binary) to analog bu
 
 
 
-## mixed BNN
+## Mixed BNN
 
 - Real-in, Bool-out: 
 
@@ -74,15 +74,59 @@ See  [paper](https://people.eecs.berkeley.edu/~brecht/papers/07.rah.rec.nips.pdf
 
 ####  Compressive Sensing: 
 
-Map real input  $x_{n \times 1}$ to $b^{in}_{m \times 1} = \text{sign}(\Phi x)$, with $\Phi \sim N(0,1)$. It is possible to have $\Phi$ from $\{0,1\}$ as well. See 1-bit Compressive Sensing [paper](https://arxiv.org/abs/1104.3160)
+Map real input  $x_{n \times 1}$ to $b^{in}_{m \times 1} = \text{sign}(\Phi x)$, with $\Phi \sim N(0,1)$. It is possible to have $\Phi$ from $\{0,1\}$ as well.
+
+A related idea is to consider $b = \text{sign}(\tau u^Tx ) \text{ s.t } ||u|| = 1, \tau \in (0,1)$.  Here, we can interpret $u$ as the directional vector, and $\tau$ is the scaling factor that measures the Half-space depth. When combined, they can be used to estimate depth quantiles, a generalized notion of quantiles, extended to multivariarte case.  Depth Quantiles, Directional Quantiles, Tukey's Half-spaces are related to Half-spaces fundamental in ML (in SVMs, we refer to them as the separating Hyperplanes, and max-margin algo finds them). 
+
+See
+
+- 1-bit Compressive Sensing [paper](https://arxiv.org/abs/1104.3160)
+- [Quantile Tomography: USsing Quantiles with multivariate data](https://arxiv.org/abs/0805.0056)
+- [Multivariate quantiles and multiple-output regression quantiles: From L1 optimization to half-space depth](https://arxiv.org/abs/1002.4486).
+
 
 **Forward Pass**
 
-tbd
+Input: $x_{n \times 1} \in \mathcal{R}^n$, a real-valued n-dim vector.
+Output: $b_{m \times 1} \in \{-1,1\}^m$, a discrete  valued m-dim vector. Typically $m >> n$.
+
+Let $\Phi_{m \times n}$ be a known (non-trainable) matrix. The forward pass is: $b = \text{sign}(\Phi x)$
+
+Choice of $\Phi$
+
+1. $\Phi \sim N(0,1)$ - every element is drawn from standard normal distribution.
+2. $\Phi$ - is designed according to 1-bit CS theory suggested [here]([One-bit Compressed Sensing: Provable Support 
+and Vector Recovery](https://proceedings.mlr.press/v28/gopi13.pdf))
+3. $\Phi$ s.t $\Phi^T \Phi = \text{Diag}(\tau)$ and elements of $\tau$ can be sampled from $U(0,1)$ or spaced at uniform intervals. 
 
 **Backward Pass**
 
-tbd
+For the forward pass of the form $b = \text{sign}(\Phi x)$
+
+Option-1: With Straight Through Estimator (STE), replacing the non-differential function with Identity, the local derivative is:
+$$
+\frac{\partial{b}}{\partial{x}} = 
+\begin{cases}
+\Phi & \text{ if } |x| < 1 \\
+0 & \text{ o.w }
+\end{cases}
+$$
+
+Option-2: We implement a smooth approximation of the $\text{sign}$ function, with a scheduler that controls the approximation (smoothness) over the course of the training. Consider, 
+$\text{sign}(x) = \lim_{\alpha \to \infty} \text{tanh}(\alpha x)$
+
+$$
+\frac{\partial{b}}{\partial{x}} = 
+\begin{cases}
+\alpha\text{sech}^2(\alpha\Phi) & \text{ if } |x| < 1 \\
+0 & \text{ o.w }
+\end{cases}
+$$
+
+Obviously, $\alpha$ can not be too large. During the course of the training, it can follow a scheduling regime. It being constant is one of the choices for example. If $\alpha$ is fixed, and we use $\text{tanh}$ function in `torch`, we do not need to code any custom `backprop` functions.
+
+
+
 
 ### DAC Layer:
 
@@ -90,7 +134,7 @@ tbd
 
 Problem: 
 Given a signs alone, recover a real-valued sparse signal, given the sensing matrix. That is,
-Recover $y_{k \times 1} \in \mathcal{R}^k$ from $b^{out}_{m \times 1} \in \{-1,1\}^m$ given a sensing matrix $\Phi$ which is hypothesized to have generated the measurements $y =  \Phi b$.
+Recover $y_{k \times 1} \in \mathcal{R}^k$ from $b^{out}_{m \times 1} \in \{-1,1\}^m$ given a sensing matrix $\Phi$ which is hypothesized to have generated the measurements $b =  \Phi y$.
 
 See the papers
 
@@ -98,13 +142,68 @@ See the papers
 2. [One-bit Compressed Sensing: Provable Support and Vector Recovery](https://proceedings.mlr.press/v28/gopi13.pdf)
 3. [Are Straight-Through gradients and Soft-Thresholding all you need for Sparse Training?](https://arxiv.org/abs/2212.01076)
 4. [Learning Fast Approximations of Sparse Coding](https://icml.cc/Conferences/2010/papers/449.pdf)
+5. [Revisiting FISTA for Lasso: Acceleration Strategies Over The Regularization Path](https://www.esann.org/sites/default/files/proceedings/legacy/es2018-81.pdf)
 
 **Forward Pass**
 
-tbd
+At the heart, recovering sparse signal $y$ from an observed binary signal $b$ is exactly the linear regression with $l_1$ penalty, and it can be solved by iterative optimization techniques like projected coordinate descent, ISTA, FISTA, among others. We can interpret each time step of the  the optimization process as a layer in the Deep Learning. The number of steps in the optimization correspond to the depth of the unrolling. 
+
+We want to write the optimization step for solving $b = \Phi y$, subject some constraints on the sparsity of the recovered signal. We consider the FISTA steps. See [this](https://www-users.cse.umn.edu/~boley/publications/papers/fistaPaperP.pdf) for reference. We are seeking a solution to 
+
+$$
+\min_{y \in \mathcal{R}^k } = \frac{1}{2} || \Phi y - b || + \lambda ||y||_{1}
+$$
+which is precisely the lasso linear regression. The projected gradient descent provides an estimate to the solution, outlined below. 
+
+
+1. Initialize: $y_{0}, y_{-1}=0, \eta_0,=1$. Input $L, \lambda$. For $t=1,2,..,T$ Run T steps.
+2. $\eta_{t} = \frac{1}{2}\left(1+ \sqrt{1+4 \eta_{t-1}^2} \right)$
+3. $w_{t} = y_{t-1} + \frac{\eta_{t-1}-1}{\eta_{t}}(y_{t-1}-y_{t-2})$ 
+4. $y_{t} = S_{\lambda/L}( w_t - \frac{1}{L} \left( [\Phi^T \Phi] w_t + \frac{1}{L}\Phi^T b \right) )$
+5. Assign $y = y_T$ as the output to be connected to downstream layer.
+
+Here $S_{\gamma}$ is the soft-thresholding operator defined as $S_{\gamma}(x) = \text{sign}(x) \text{ReLU}(|x|-\gamma)$ and $L$ is an estimate of the Lipschitz constant.
+
+
 
 **Backward Pass**
 
-tbd
+In the Forward Pass, except for the $S_{\gamma}$ -- all are differentiable operators. Below are some options.
+
+Option-1: We can define a smooth version of $S_{\gamma}$ as follows:
+$$
+S_{\gamma} = 
+\begin{cases}
+x-\gamma(1-\epsilon) & \text{ if } x \ge \gamma \\
+\epsilon x & \text{ if  }  -\gamma < x < \gamma \\
+x-\gamma(1-\epsilon) & \text{ if } x \le \gamma \\
+\end{cases}
+$$
+We can see it exactly fits when $\epsilon=0$. Its gradients can now be defined:
+$$
+\frac{\partial S_{\gamma}}{\partial x} = 
+\begin{cases}
+1 & \text{ if } x \ge \gamma \\
+\epsilon  & \text{ if  }  -\gamma < x < \gamma \\
+1 & \text{ if } x \le \gamma \\
+\end{cases}
+$$
+
+
+Option-2: Like before, replace $\text{sign}$ function with its smooth version. For example,  $S_{\gamma}(x) = \text{tanh}(x) \text{ReLU}(|x|-\gamma)$. (check if $|x$| returns `grad` in `Torch`).
+
+Option-3: Replace the soft-thresholding with identify, and pass the gradients.
+
+Note: If the sensing matrix $\Phi$ is carefully chosen (Unitary, for example), the FISTA becomes lot simpler, and some terms can be cached, the key recurrence expression simplifies to
+$$
+\begin{array}{left}
+y_{t} &=& S_{\lambda/L}( w_t - \frac{1}{L} \left( [\Phi^T \Phi] w_t + \frac{1}{L}\Phi^T b \right) )
+& \approx & S_{\lambda/L}(\tilde{w}_t)
+\end{array}
+$$
+where $\tilde{w}_t = \tilde{a} w_t + \tilde{b}$, with $\tilde{a} = (1-1/L), \tilde{b}= \frac{1}{L}\Phi^T b$ that are constant through the steps.
+
+
+
 
 
