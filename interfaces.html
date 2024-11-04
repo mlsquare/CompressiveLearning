@@ -238,8 +238,8 @@ window.Quarto = {
 </header>
 
 
-<p>For a strictly Boolean-in and Boolean-out type functions, the <a href="./bnn_layer.html">BNN layer</a> or the <a href="./sparse_bnn_layer.html">Sparse BNN Layer</a> are supposed to work. For example, learning a parity checker which takes n Boolean inputs and outputs a single Boolean value. But that is somewhat restrictive in a way, if we want wider adoption BNNs. The BNN layer as a replacement for an MLP needs different <em>adapters</em> depending on the type of modeling it is involved in.</p>
-<p>Obviously, BNN only works on Bool variables (which we can all pure p-BNN). But it also matters whether the upstream and downstream blocks are to be co-trained or not (which we can call mixed or m-BNN). It changes the game. We need an ability convert reals to Bools and vice-versa.</p>
+<p>For a strictly Boolean-in and Boolean-out type functions, the <a href="./bnn_layer.html">BNN layer</a> or the <a href="./sparse_bnn_layer.html">Sparse BNN Layer</a> are supposed to work. For example, learning a parity checker which takes <span class="math inline">\(n\)</span> Boolean inputs and outputs a single Boolean value. But that is somewhat restrictive in a way, if we want wider adoption of BNNs. The BNN layer as a replacement for an MLP needs different <em>adapters</em> depending on the type of modeling it is involved in.</p>
+<p>Obviously, BNN only works on Bool variables (which we can all Pure BNN). But what if we want to embed BNN layer in DNN and co-train mixed precision layers (which we can call mixed BNN), together in an end-to-end fashion. It changes the game. We need an ability convert reals to Bools and vice-versa.</p>
 <p>Terms used to refer to the interfaces:</p>
 <ul>
 <li>Analog to Digital = A/D = Analog to Digital Converter = ADC</li>
@@ -256,15 +256,15 @@ window.Quarto = {
 <li><p>Real-in, Real-out:</p>
 <p>A more complicated problem is when the outputs are real valued. Consider a regression problem with real valued output. We need to code real-valued signal and realize this as a multi-valued Truth table.</p></li>
 </ul>
-<p>We need codings that convert analog to digital and digital (binary) to analog but these converters act like pre- and post-processors (i.e., they are not part of the training jobs).</p>
+<p>We need codings that convert analog to digital and digital (binary) to analog but these converters act like pre- and post-processors (i.e., they are not part of the trainable layers).</p>
 </section>
 <section id="mixed-bnn" class="level2">
 <h2 class="anchored" data-anchor-id="mixed-bnn">Mixed BNN</h2>
 <ul>
 <li><p>Real-in, Bool-out:</p>
-<p>Here, a BNN Layer is appended to DNN. The DNN layers are trainable which produce real valued outputs. An example could be to train an image classifier based on ResNet head, which also needs to be trained. How do we design the interface (A/D converter) that flows the gradients from BNN to the DNN?</p></li>
+<p>Here, a BNN Layer is appended to DNN. The DNN layers are trainable which produce real valued outputs. An example could be to train an image classifier based on ResNet head, which also needs to be trained. How do we design the interface (A/D converter) that flows the gradients from BNN to a Conv Layer, for example?</p></li>
 <li><p>Real-in, Real-out:</p>
-<p>Here, a BNN layer is sandwiched between two DNN layers (or modules). The BNN receives a real valued input and has to pass a continuous valued signal for the downstream DNN layer. What would the D/A converter look like?</p></li>
+<p>Here, a BNN layer is sandwiched between two DNN layers (or modules). The BNN receives a real valued input and has to pass a continuous valued signal for the downstream DNN layer. For example, we want to fine-tune an LLM with LoRA (like Bit LoRA) - What would the D/A converter look like?</p></li>
 </ul>
 </section>
 <section id="converters-not-trainable" class="level2">
@@ -338,7 +338,7 @@ window.Quarto = {
 <h3 class="anchored" data-anchor-id="dac-layer">DAC Layer:</h3>
 <section id="compressive-sensing-1" class="level4">
 <h4 class="anchored" data-anchor-id="compressive-sensing-1">Compressive Sensing:</h4>
-<p>Problem: Given a signs alone, recover a real-valued sparse signal, given the sensing matrix. That is, Recover <span class="math inline">\(y_{k \times 1} \in \mathcal{R}^k\)</span> from <span class="math inline">\(b^{out}_{m \times 1} \in \{-1,1\}^m\)</span> given a sensing matrix <span class="math inline">\(\Phi\)</span> which is hypothesized to have generated the measurements <span class="math inline">\(b =  \Phi y\)</span>.</p>
+<p>Problem: Given a signs <span class="math inline">\(+/-1\)</span> vector alone and the sensing matrix, recover a real-valued sparse signal. That is, recover <span class="math inline">\(y_{k \times 1} \in \mathcal{R}^k\)</span> from <span class="math inline">\(b^{out}_{m \times 1} \in \{-1,1\}^m\)</span> given a sensing matrix <span class="math inline">\(\Phi\)</span> which is hypothesized to have generated the measurements <span class="math inline">\(b =  \Phi y\)</span>.</p>
 <p>See the papers</p>
 <ol type="1">
 <li><a href="https://arxiv.org/abs/1104.3160">Robust 1-Bit Compressive Sensing via Binary Stable Embeddings of Sparse Vectors</a></li>
@@ -351,10 +351,10 @@ window.Quarto = {
 <p>At the heart, recovering sparse signal <span class="math inline">\(y\)</span> from an observed binary signal <span class="math inline">\(b\)</span> is exactly the linear regression with <span class="math inline">\(l_1\)</span> penalty, and it can be solved by iterative optimization techniques like projected coordinate descent, ISTA, FISTA, among others. We can interpret each time step of the the optimization process as a layer in the Deep Learning. The number of steps in the optimization correspond to the depth of the unrolling.</p>
 <p>We want to write the optimization step for solving <span class="math inline">\(b = \Phi y\)</span>, subject some constraints on the sparsity of the recovered signal. We consider the FISTA steps. See <a href="https://www-users.cse.umn.edu/~boley/publications/papers/fistaPaperP.pdf">this</a> for reference. We are seeking a solution to</p>
 <p><span class="math display">\[
-\min_{y \in \mathcal{R}^k } = \frac{1}{2} || \Phi y - b || + \lambda ||y||_{1}
+\min_{y \in \mathcal{R}^k } \, \, \frac{1}{2} || \Phi y - b || + \lambda ||y||_{1}
 \]</span> which is precisely the lasso linear regression. The projected gradient descent provides an estimate to the solution, outlined below.</p>
 <ol type="1">
-<li>Initialize: <span class="math inline">\(y_{0}, y_{-1}=0, \eta_0,=1\)</span>. Input <span class="math inline">\(L, \lambda\)</span>. For <span class="math inline">\(t=1,2,..,T\)</span> Run T steps.</li>
+<li>Initialize: <span class="math inline">\(y_{0}, y_{-1}=0, \eta_0=1\)</span>. Input <span class="math inline">\(L, \lambda\)</span>. For <span class="math inline">\(t=1,2,..,T\)</span> Run T steps.</li>
 <li><span class="math inline">\(\eta_{t} = \frac{1}{2}\left(1+ \sqrt{1+4 \eta_{t-1}^2} \right)\)</span></li>
 <li><span class="math inline">\(w_{t} = y_{t-1} + \frac{\eta_{t-1}-1}{\eta_{t}}(y_{t-1}-y_{t-2})\)</span></li>
 <li><span class="math inline">\(y_{t} = S_{\lambda/L}( w_t - \frac{1}{L} \left( [\Phi^T \Phi] w_t + \frac{1}{L}\Phi^T b \right) )\)</span></li>
