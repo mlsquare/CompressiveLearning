@@ -202,7 +202,7 @@ window.Quarto = {
    
   <ul>
   <li><a href="#pure-bnn" id="toc-pure-bnn" class="nav-link active" data-scroll-target="#pure-bnn">Pure BNN</a></li>
-  <li><a href="#mixed-bnn" id="toc-mixed-bnn" class="nav-link" data-scroll-target="#mixed-bnn">mixed BNN</a></li>
+  <li><a href="#mixed-bnn" id="toc-mixed-bnn" class="nav-link" data-scroll-target="#mixed-bnn">Mixed BNN</a></li>
   <li><a href="#converters-not-trainable" id="toc-converters-not-trainable" class="nav-link" data-scroll-target="#converters-not-trainable">Converters (not trainable)</a>
   <ul class="collapse">
   <li><a href="#adc-coder" id="toc-adc-coder" class="nav-link" data-scroll-target="#adc-coder">ADC Coder:</a></li>
@@ -259,7 +259,7 @@ window.Quarto = {
 <p>We need codings that convert analog to digital and digital (binary) to analog but these converters act like pre- and post-processors (i.e., they are not part of the training jobs).</p>
 </section>
 <section id="mixed-bnn" class="level2">
-<h2 class="anchored" data-anchor-id="mixed-bnn">mixed BNN</h2>
+<h2 class="anchored" data-anchor-id="mixed-bnn">Mixed BNN</h2>
 <ul>
 <li><p>Real-in, Bool-out:</p>
 <p>Here, a BNN Layer is appended to DNN. The DNN layers are trainable which produce real valued outputs. An example could be to train an image classifier based on ResNet head, which also needs to be trained. How do we design the interface (A/D converter) that flows the gradients from BNN to the DNN?</p></li>
@@ -297,29 +297,95 @@ window.Quarto = {
 </section>
 <section id="compressive-sensing" class="level4">
 <h4 class="anchored" data-anchor-id="compressive-sensing">Compressive Sensing:</h4>
-<p>Map real input <span class="math inline">\(x_{n \times 1}\)</span> to <span class="math inline">\(b^{in}_{m \times 1} = \text{sign}(\Phi x)\)</span>, with <span class="math inline">\(\Phi \sim N(0,1)\)</span>. It is possible to have <span class="math inline">\(\Phi\)</span> from <span class="math inline">\(\{0,1\}\)</span> as well. See 1-bit Compressive Sensing <a href="https://arxiv.org/abs/1104.3160">paper</a></p>
+<p>Map real input <span class="math inline">\(x_{n \times 1}\)</span> to <span class="math inline">\(b^{in}_{m \times 1} = \text{sign}(\Phi x)\)</span>, with <span class="math inline">\(\Phi \sim N(0,1)\)</span>. It is possible to have <span class="math inline">\(\Phi\)</span> from <span class="math inline">\(\{0,1\}\)</span> as well.</p>
+<p>A related idea is to consider <span class="math inline">\(b = \text{sign}(\tau u^Tx ) \text{ s.t } ||u|| = 1, \tau \in (0,1)\)</span>. Here, we can interpret <span class="math inline">\(u\)</span> as the directional vector, and <span class="math inline">\(\tau\)</span> is the scaling factor that measures the Half-space depth. When combined, they can be used to estimate depth quantiles, a generalized notion of quantiles, extended to multivariarte case. Depth Quantiles, Directional Quantiles, Tukey’s Half-spaces are related to Half-spaces fundamental in ML (in SVMs, we refer to them as the separating Hyperplanes, and max-margin algo finds them).</p>
+<p>See</p>
+<ul>
+<li>1-bit Compressive Sensing <a href="https://arxiv.org/abs/1104.3160">paper</a></li>
+<li><a href="https://arxiv.org/abs/0805.0056">Quantile Tomography: USsing Quantiles with multivariate data</a></li>
+<li><a href="https://arxiv.org/abs/1002.4486">Multivariate quantiles and multiple-output regression quantiles: From L1 optimization to half-space depth</a>.</li>
+</ul>
 <p><strong>Forward Pass</strong></p>
-<p>tbd</p>
+<p>Input: <span class="math inline">\(x_{n \times 1} \in \mathcal{R}^n\)</span>, a real-valued n-dim vector. Output: <span class="math inline">\(b_{m \times 1} \in \{-1,1\}^m\)</span>, a discrete valued m-dim vector. Typically <span class="math inline">\(m &gt;&gt; n\)</span>.</p>
+<p>Let <span class="math inline">\(\Phi_{m \times n}\)</span> be a known (non-trainable) matrix. The forward pass is: <span class="math inline">\(b = \text{sign}(\Phi x)\)</span></p>
+<p>Choice of <span class="math inline">\(\Phi\)</span></p>
+<ol type="1">
+<li><span class="math inline">\(\Phi \sim N(0,1)\)</span> - every element is drawn from standard normal distribution.</li>
+<li><span class="math inline">\(\Phi\)</span> - is designed according to 1-bit CS theory suggested <a href="[One-bit Compressed Sensing: Provable Support and Vector Recovery](https://proceedings.mlr.press/v28/gopi13.pdf)">here</a></li>
+<li><span class="math inline">\(\Phi\)</span> s.t <span class="math inline">\(\Phi^T \Phi = \text{Diag}(\tau)\)</span> and elements of <span class="math inline">\(\tau\)</span> can be sampled from <span class="math inline">\(U(0,1)\)</span> or spaced at uniform intervals.</li>
+</ol>
 <p><strong>Backward Pass</strong></p>
-<p>tbd</p>
+<p>For the forward pass of the form <span class="math inline">\(b = \text{sign}(\Phi x)\)</span></p>
+<p>Option-1: With Straight Through Estimator (STE), replacing the non-differential function with Identity, the local derivative is: <span class="math display">\[
+\frac{\partial{b}}{\partial{x}} =
+\begin{cases}
+\Phi &amp; \text{ if } |x| &lt; 1 \\
+0 &amp; \text{ o.w }
+\end{cases}
+\]</span></p>
+<p>Option-2: We implement a smooth approximation of the <span class="math inline">\(\text{sign}\)</span> function, with a scheduler that controls the approximation (smoothness) over the course of the training. Consider, <span class="math inline">\(\text{sign}(x) = \lim_{\alpha \to \infty} \text{tanh}(\alpha x)\)</span></p>
+<p><span class="math display">\[
+\frac{\partial{b}}{\partial{x}} =
+\begin{cases}
+\alpha\text{sech}^2(\alpha\Phi) &amp; \text{ if } |x| &lt; 1 \\
+0 &amp; \text{ o.w }
+\end{cases}
+\]</span></p>
+<p>Obviously, <span class="math inline">\(\alpha\)</span> can not be too large. During the course of the training, it can follow a scheduling regime. It being constant is one of the choices for example. If <span class="math inline">\(\alpha\)</span> is fixed, and we use <span class="math inline">\(\text{tanh}\)</span> function in <code>torch</code>, we do not need to code any custom <code>backprop</code> functions.</p>
 </section>
 </section>
 <section id="dac-layer" class="level3">
 <h3 class="anchored" data-anchor-id="dac-layer">DAC Layer:</h3>
 <section id="compressive-sensing-1" class="level4">
 <h4 class="anchored" data-anchor-id="compressive-sensing-1">Compressive Sensing:</h4>
-<p>Problem: Given a signs alone, recover a real-valued sparse signal, given the sensing matrix. That is, Recover <span class="math inline">\(y_{k \times 1} \in \mathcal{R}^k\)</span> from <span class="math inline">\(b^{out}_{m \times 1} \in \{-1,1\}^m\)</span> given a sensing matrix <span class="math inline">\(\Phi\)</span> which is hypothesized to have generated the measurements <span class="math inline">\(y =  \Phi b\)</span>.</p>
+<p>Problem: Given a signs alone, recover a real-valued sparse signal, given the sensing matrix. That is, Recover <span class="math inline">\(y_{k \times 1} \in \mathcal{R}^k\)</span> from <span class="math inline">\(b^{out}_{m \times 1} \in \{-1,1\}^m\)</span> given a sensing matrix <span class="math inline">\(\Phi\)</span> which is hypothesized to have generated the measurements <span class="math inline">\(b =  \Phi y\)</span>.</p>
 <p>See the papers</p>
 <ol type="1">
 <li><a href="https://arxiv.org/abs/1104.3160">Robust 1-Bit Compressive Sensing via Binary Stable Embeddings of Sparse Vectors</a></li>
 <li><a href="https://proceedings.mlr.press/v28/gopi13.pdf">One-bit Compressed Sensing: Provable Support and Vector Recovery</a></li>
 <li><a href="https://arxiv.org/abs/2212.01076">Are Straight-Through gradients and Soft-Thresholding all you need for Sparse Training?</a></li>
 <li><a href="https://icml.cc/Conferences/2010/papers/449.pdf">Learning Fast Approximations of Sparse Coding</a></li>
+<li><a href="https://www.esann.org/sites/default/files/proceedings/legacy/es2018-81.pdf">Revisiting FISTA for Lasso: Acceleration Strategies Over The Regularization Path</a></li>
 </ol>
 <p><strong>Forward Pass</strong></p>
-<p>tbd</p>
+<p>At the heart, recovering sparse signal <span class="math inline">\(y\)</span> from an observed binary signal <span class="math inline">\(b\)</span> is exactly the linear regression with <span class="math inline">\(l_1\)</span> penalty, and it can be solved by iterative optimization techniques like projected coordinate descent, ISTA, FISTA, among others. We can interpret each time step of the the optimization process as a layer in the Deep Learning. The number of steps in the optimization correspond to the depth of the unrolling.</p>
+<p>We want to write the optimization step for solving <span class="math inline">\(b = \Phi y\)</span>, subject some constraints on the sparsity of the recovered signal. We consider the FISTA steps. See <a href="https://www-users.cse.umn.edu/~boley/publications/papers/fistaPaperP.pdf">this</a> for reference. We are seeking a solution to</p>
+<p><span class="math display">\[
+\min_{y \in \mathcal{R}^k } = \frac{1}{2} || \Phi y - b || + \lambda ||y||_{1}
+\]</span> which is precisely the lasso linear regression. The projected gradient descent provides an estimate to the solution, outlined below.</p>
+<ol type="1">
+<li>Initialize: <span class="math inline">\(y_{0}, y_{-1}=0, \eta_0,=1\)</span>. Input <span class="math inline">\(L, \lambda\)</span>. For <span class="math inline">\(t=1,2,..,T\)</span> Run T steps.</li>
+<li><span class="math inline">\(\eta_{t} = \frac{1}{2}\left(1+ \sqrt{1+4 \eta_{t-1}^2} \right)\)</span></li>
+<li><span class="math inline">\(w_{t} = y_{t-1} + \frac{\eta_{t-1}-1}{\eta_{t}}(y_{t-1}-y_{t-2})\)</span></li>
+<li><span class="math inline">\(y_{t} = S_{\lambda/L}( w_t - \frac{1}{L} \left( [\Phi^T \Phi] w_t + \frac{1}{L}\Phi^T b \right) )\)</span></li>
+<li>Assign <span class="math inline">\(y = y_T\)</span> as the output to be connected to downstream layer.</li>
+</ol>
+<p>Here <span class="math inline">\(S_{\gamma}\)</span> is the soft-thresholding operator defined as <span class="math inline">\(S_{\gamma}(x) = \text{sign}(x) \text{ReLU}(|x|-\gamma)\)</span> and <span class="math inline">\(L\)</span> is an estimate of the Lipschitz constant.</p>
 <p><strong>Backward Pass</strong></p>
-<p>tbd</p>
+<p>In the Forward Pass, except for the <span class="math inline">\(S_{\gamma}\)</span> – all are differentiable operators. Below are some options.</p>
+<p>Option-1: We can define a smooth version of <span class="math inline">\(S_{\gamma}\)</span> as follows: <span class="math display">\[
+S_{\gamma} =
+\begin{cases}
+x-\gamma(1-\epsilon) &amp; \text{ if } x \ge \gamma \\
+\epsilon x &amp; \text{ if  }  -\gamma &lt; x &lt; \gamma \\
+x-\gamma(1-\epsilon) &amp; \text{ if } x \le \gamma \\
+\end{cases}
+\]</span> We can see it exactly fits when <span class="math inline">\(\epsilon=0\)</span>. Its gradients can now be defined: <span class="math display">\[
+\frac{\partial S_{\gamma}}{\partial x} =
+\begin{cases}
+1 &amp; \text{ if } x \ge \gamma \\
+\epsilon  &amp; \text{ if  }  -\gamma &lt; x &lt; \gamma \\
+1 &amp; \text{ if } x \le \gamma \\
+\end{cases}
+\]</span></p>
+<p>Option-2: Like before, replace <span class="math inline">\(\text{sign}\)</span> function with its smooth version. For example, <span class="math inline">\(S_{\gamma}(x) = \text{tanh}(x) \text{ReLU}(|x|-\gamma)\)</span>. (check if <span class="math inline">\(|x\)</span>| returns <code>grad</code> in <code>Torch</code>).</p>
+<p>Option-3: Replace the soft-thresholding with identify, and pass the gradients.</p>
+<p>Note: If the sensing matrix <span class="math inline">\(\Phi\)</span> is carefully chosen (Unitary, for example), the FISTA becomes lot simpler, and some terms can be cached, the key recurrence expression simplifies to <span class="math display">\[
+\begin{array}{left}
+y_{t} &amp;=&amp; S_{\lambda/L}( w_t - \frac{1}{L} \left( [\Phi^T \Phi] w_t + \frac{1}{L}\Phi^T b \right) )
+&amp; \approx &amp; S_{\lambda/L}(\tilde{w}_t)
+\end{array}
+\]</span> where <span class="math inline">\(\tilde{w}_t = \tilde{a} w_t + \tilde{b}\)</span>, with <span class="math inline">\(\tilde{a} = (1-1/L), \tilde{b}= \frac{1}{L}\Phi^T b\)</span> that are constant through the steps.</p>
 
 
 </section>
