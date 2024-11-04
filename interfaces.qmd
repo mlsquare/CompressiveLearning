@@ -1,8 +1,8 @@
 # Interfaces
 
-For a strictly Boolean-in and Boolean-out type functions, the [BNN layer](./bnn_layer.qmd) or the [Sparse BNN Layer](./sparse_bnn_layer.qmd) are supposed to work. For example, learning a parity checker which takes n Boolean inputs and outputs a single Boolean value. But that is somewhat restrictive in a way, if we want wider adoption BNNs. The BNN layer as a replacement for an MLP needs different _adapters_ depending on the type of modeling it is involved in. 
+For a strictly Boolean-in and Boolean-out type functions, the [BNN layer](./bnn_layer.qmd) or the [Sparse BNN Layer](./sparse_bnn_layer.qmd) are supposed to work. For example, learning a parity checker which takes $n$ Boolean inputs and outputs a single Boolean value. But that is somewhat restrictive in a way, if we want wider adoption of BNNs. The BNN layer as a replacement for an MLP needs different _adapters_ depending on the type of modeling it is involved in. 
 
-Obviously, BNN only works on Bool variables (which we can all pure p-BNN). But it also matters whether the upstream and downstream blocks are to be co-trained or not (which we can call mixed or m-BNN). It changes the game. We need an ability convert reals to Bools and vice-versa.
+Obviously, BNN only works on Bool variables (which we can all Pure BNN). But what if we want to embed BNN layer in DNN and co-train mixed precision layers (which we can call mixed BNN), together in an end-to-end fashion. It changes the game. We need an ability convert reals to Bools and vice-versa.
 
 
 Terms used to refer to the interfaces:
@@ -27,7 +27,7 @@ First consider the case where BNN is all there is. No upstream or downstream blo
 
     A more complicated problem is when the outputs are real valued. Consider a regression problem with real valued output. We need to code real-valued signal and realize this as a multi-valued Truth table.
 
-We need codings that convert analog to digital and digital (binary) to analog but these converters act like pre- and post-processors (i.e., they are not part of the training jobs).
+We need codings that convert analog to digital and digital (binary) to analog but these converters act like pre- and post-processors (i.e., they are not part of the trainable layers).
 
 
 
@@ -35,11 +35,11 @@ We need codings that convert analog to digital and digital (binary) to analog bu
 
 - Real-in, Bool-out: 
 
-    Here, a BNN Layer is appended to DNN. The DNN layers are trainable which produce real valued outputs. An example could be to train an image classifier based on ResNet head, which also needs to be trained. How do we design the interface (A/D converter) that flows the gradients from BNN to the DNN?
+    Here, a BNN Layer is appended to DNN. The DNN layers are trainable which produce real valued outputs. An example could be to train an image classifier based on ResNet head, which also needs to be trained. How do we design the interface (A/D converter) that flows the gradients from BNN to a Conv Layer, for example?
 
 - Real-in, Real-out: 
 
-    Here, a BNN layer is sandwiched between two DNN layers (or modules). The BNN receives a real valued input and has to pass a continuous valued signal for the downstream DNN layer. What would the D/A converter look like?
+    Here, a BNN layer is sandwiched between two DNN layers (or modules). The BNN receives a real valued input and has to pass a continuous valued signal for the downstream DNN layer. For example, we want to fine-tune an LLM with LoRA (like Bit LoRA) - What would the D/A converter look like?
 
  
 
@@ -133,8 +133,8 @@ Obviously, $\alpha$ can not be too large. During the course of the training, it 
 ####  Compressive Sensing:
 
 Problem: 
-Given a signs alone, recover a real-valued sparse signal, given the sensing matrix. That is,
-Recover $y_{k \times 1} \in \mathcal{R}^k$ from $b^{out}_{m \times 1} \in \{-1,1\}^m$ given a sensing matrix $\Phi$ which is hypothesized to have generated the measurements $b =  \Phi y$.
+Given a signs $+/-1$ vector alone and the sensing matrix, recover a real-valued sparse signal. That is,
+recover $y_{k \times 1} \in \mathcal{R}^k$ from $b^{out}_{m \times 1} \in \{-1,1\}^m$ given a sensing matrix $\Phi$ which is hypothesized to have generated the measurements $b =  \Phi y$.
 
 See the papers
 
@@ -151,12 +151,12 @@ At the heart, recovering sparse signal $y$ from an observed binary signal $b$ is
 We want to write the optimization step for solving $b = \Phi y$, subject some constraints on the sparsity of the recovered signal. We consider the FISTA steps. See [this](https://www-users.cse.umn.edu/~boley/publications/papers/fistaPaperP.pdf) for reference. We are seeking a solution to 
 
 $$
-\min_{y \in \mathcal{R}^k } = \frac{1}{2} || \Phi y - b || + \lambda ||y||_{1}
+\min_{y \in \mathcal{R}^k } \, \, \frac{1}{2} || \Phi y - b || + \lambda ||y||_{1}
 $$
 which is precisely the lasso linear regression. The projected gradient descent provides an estimate to the solution, outlined below. 
 
 
-1. Initialize: $y_{0}, y_{-1}=0, \eta_0,=1$. Input $L, \lambda$. For $t=1,2,..,T$ Run T steps.
+1. Initialize: $y_{0}, y_{-1}=0, \eta_0=1$. Input $L, \lambda$. For $t=1,2,..,T$ Run T steps.
 2. $\eta_{t} = \frac{1}{2}\left(1+ \sqrt{1+4 \eta_{t-1}^2} \right)$
 3. $w_{t} = y_{t-1} + \frac{\eta_{t-1}-1}{\eta_{t}}(y_{t-1}-y_{t-2})$ 
 4. $y_{t} = S_{\lambda/L}( w_t - \frac{1}{L} \left( [\Phi^T \Phi] w_t + \frac{1}{L}\Phi^T b \right) )$
