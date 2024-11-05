@@ -1,0 +1,51 @@
+# Tasks
+
+## Implementation
+
+1. ADC Adapters (as `nn.modules`)
+    - Compressive Sensing Random Projections via sub-Gussian, Bernouli, Gaussian random matrices
+2. DAC Adapters (as `nn.modules`) with STE, Smooth $\text{sign}$ and soft thresholding operators
+    - Lasso via FISTA 
+    - L2-SVM
+    - L1-SVM
+    - 1bit-CS via L1-SVM followed by GraDeS
+3. Optimization
+    - Genetic Algorithm (GA):  using toolbox like PyGAD - complete training a Pure-BNN
+    - Torch optmizers via STE or Smooth Heavyside function
+    - Mixed: Iterate between GA and Torch (AdamW for eg)
+4. Networks
+    - Flip-er
+    - SAND-er
+    - SOR-er
+    - BNN layer (with Flipper | Sander | Sorer)
+
+## Benchmarks
+
+1. Datasets
+    - [GLUE](https://github.com/nyu-mll/GLUE-baselines), used in BiBERT
+    - [SQuAD2.0](https://rajpurkar.github.io/SQuAD-explorer/) used in BiBERT
+    - [TableBench](https://arxiv.org/html/2408.09174v1), [code]()
+    - TabZilla [code/data](https://github.com/naszilla/tabzilla) - tabular data benchmarks (datasets and results)
+
+2. Models
+    - Huawei [code](https://github.com/huawei-noah/Pretrained-Language-Model), and paper BinaryBERT: Pushing the Limit of BERT Quantization[](https://arxiv.org/abs/2012.15701)
+    - [BiBERT](https://arxiv.org/abs/2203.06390), [code](https://github.com/htqin/BiBERT)
+    - [TinyBERT](https://arxiv.org/abs/1909.10351)
+    - [PB-LLM](https://arxiv.org/abs/2310.00034), [code](https://github.com/hahnyuan/PB-LLM). This paper looks comprehensive with many models implemented (BNN, XNOR, ReCU, Bi-Real, FDA) and benchmarked against several datasets
+    - [The Era of 1-bit LLMs](https://arxiv.org/abs/2402.17764), [code](https://github.com/microsoft/BitNet) and [BitNet](https://arxiv.org/abs/2310.11453), [Bit LoRA](https://towardsdatascience.com/bit-lora-as-an-application-of-bitnet-and-1-58-bit-neural-network-technologies-17ee80bf79f9) blog
+    - LLaMA 8bit and 4bit LoRA [code](https://github.com/serp-ai/LLaMA-8bit-LoRA)
+
+3. Benchmark/ Survey
+    - Binary Neural Networks Survey [paper](https://arxiv.org/abs/2004.03333)
+
+4. Metrics: Performance, FLOPs, Memory
+
+5. Methods
+    - GPTQ, SmoothQuant, Absmax (referred in BitNet)
+    - [QLoRA](https://arxiv.org/abs/2305.14314)
+
+## Tasks by Modalities:
+1. Tabular: Regression
+2. Tabular: Binary Classification
+3. NLP:  SST-2, MRPC, RTE and QQP
+4. LLMs: (from PB-LLMS paper)- Common Sense Reasoning on ARC-Easy, ARC-Challenge, BoolQ, HellaSwag, PIQA, OBQA

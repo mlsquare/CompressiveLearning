@@ -212,7 +212,7 @@ $$
 b = \text{sign}(\Phi y)
 $$
 
-### FISTA:
+### A1: FISTA:
 
 [Details](https://www-users.cse.umn.edu/~boley/publications/papers/fistaPaperP.pdf)
 
@@ -234,12 +234,12 @@ Here $S_{\gamma}$ is the soft-thresholding operator defined as $S_{\gamma}(x) = 
 
 Notice that here we have not enforced the constraint that $b$ is strictly in $\{-1,1\}$. But solution obtained could be a could hueristic and can be applied in together with other decoders. 
 
-### Rich B-1: 
+### A2: Rich B-1: 
 
 [Details](https://arxiv.org/abs/1104.3160)
 Section 4.1
 
-### Rich B-2:
+### A3: Rich B-2:
 
 [Details](https://boufounos.com/Publications/Boufounos_Baraniuk_CISS08.pdf)
 
@@ -267,7 +267,7 @@ Algorithm 1, Sec 3.C
 
 FISTA is good starting point (initialization)
 
-### Gopi et al:
+### A4: Gopi et al:
 
 Section 5, Algo 6, [Details](https://proceedings.mlr.press/v28/gopi13.html)
 
@@ -296,7 +296,13 @@ which basically is saying, the non-zero terms in $y$ should not be more than $\t
 Algorithm 5 from the paper is a two-stage process. 
 
 1. Recover $z$ as a solution to $b =A_2 z$. Standard LP solver (an SVM formulation should work)
-    - [pegasos](https://home.ttic.edu/~nati/Publications/PegasosMPB.pdf) algo for SVMs.
+    - [pegasos](https://home.ttic.edu/~nati/Publications/PegasosMPB.pdf) algo for SVMs via subgradients.
+    - Objective: $\min_{z \in \mathcal{R}^h} \frac{\lambda}{2} ||z||_2 + \sum_i \text{ReLU}(1-b_i\langle [A_2]_i,z \rangle)$
+    - Loop:
+        - $\eta_t = \frac{1}{\lambda t}$. Other learning rates are possible. Can accelerate this with momentum.
+        - $z^i_{t} = (1-\eta_t) z^i_{t-1} + \eta_t H(1-b_i\langle [A_2]_i,z_t^i\rangle) b_i $z^i_t
+    - The [L1-SVM](https://arxiv.org/pdf/1901.01585) is a better candidate here, provided a PGD update is available. 
+    - One could also use A3.
 2. Given $z$, recover $y$ as a solution to $z =A_1 y$, which is a standard CS technique. FISTA should work here or [GraDeS](https://icml.cc/Conferences/2009/papers/115.pdf).
     - $y_t = H_{\tilde{k}}(y_{t-1} + \frac{1}{\gamma}A_1^T(z-A_1 y_{t-1}))$
     - Here $\gamma  = 1+\delta_{2s}$, an isometry constant ($\delta_{2s} < 1/3$). $A_1$ is standard CS sensing matrix and $H_{\tilde{k}}$ retains at most $\tilde{k}$ non-zero coordinates and sets others to 0 (an adaptive hard thresholding operator). 

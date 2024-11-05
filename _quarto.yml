@@ -35,6 +35,7 @@ book:
   - bnn_layer.qmd
   - sparse_bnn_layer.qmd
   - interfaces.qmd
+  - tasks.qmd
   - part: Notebooks
     chapters:
       - ./bolt/notebooks/dev.ipynb
