@@ -212,6 +212,12 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#adc-layer" id="toc-adc-layer" class="nav-link" data-scroll-target="#adc-layer">ADC Layer:</a></li>
   <li><a href="#dac-layer" id="toc-dac-layer" class="nav-link" data-scroll-target="#dac-layer">DAC Layer:</a></li>
+  <li><a href="#compressive-sensing-2" id="toc-compressive-sensing-2" class="nav-link" data-scroll-target="#compressive-sensing-2">Compressive Sensing</a></li>
+  <li><a href="#fista" id="toc-fista" class="nav-link" data-scroll-target="#fista">FISTA:</a></li>
+  <li><a href="#rich-b-1" id="toc-rich-b-1" class="nav-link" data-scroll-target="#rich-b-1">Rich B-1:</a></li>
+  <li><a href="#rich-b-2" id="toc-rich-b-2" class="nav-link" data-scroll-target="#rich-b-2">Rich B-2:</a></li>
+  <li><a href="#gopi-et-al" id="toc-gopi-et-al" class="nav-link" data-scroll-target="#gopi-et-al">Gopi et al:</a></li>
+  <li><a href="#zeng-et-al" id="toc-zeng-et-al" class="nav-link" data-scroll-target="#zeng-et-al">Zeng et al:</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/interfaces.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -386,9 +392,97 @@ y_{t} &amp;=&amp; S_{\lambda/L}( w_t - \frac{1}{L} \left( [\Phi^T \Phi] w_t + \f
 &amp; \approx &amp; S_{\lambda/L}(\tilde{w}_t)
 \end{array}
 \]</span> where <span class="math inline">\(\tilde{w}_t = \tilde{a} w_t + \tilde{b}\)</span>, with <span class="math inline">\(\tilde{a} = (1-1/L), \tilde{b}= \frac{1}{L}\Phi^T b\)</span> that are constant through the steps.</p>
-
-
 </section>
+</section>
+<section id="compressive-sensing-2" class="level3">
+<h3 class="anchored" data-anchor-id="compressive-sensing-2">Compressive Sensing</h3>
+<p>We assume a measurement model of the form</p>
+<p><span class="math display">\[
+b = \text{sign}(\Phi y)
+\]</span></p>
+</section>
+<section id="fista" class="level3">
+<h3 class="anchored" data-anchor-id="fista">FISTA:</h3>
+<p><a href="https://www-users.cse.umn.edu/~boley/publications/papers/fistaPaperP.pdf">Details</a></p>
+<p><strong>Objective</strong> <span class="math display">\[
+\min_{y \in \mathcal{R}^k } \, \, \frac{1}{2} || \Phi y - b || + \lambda ||y||_{1}
+\]</span> which is precisely the lasso linear regression. The projected gradient descent provides an estimate to the solution, outlined below.</p>
+<p><strong>Optimization Loop</strong></p>
+<ol type="1">
+<li>Initialize: <span class="math inline">\(y_{0}, y_{-1}=0, \eta_0=1\)</span>. Input <span class="math inline">\(L, \lambda\)</span>. For <span class="math inline">\(t=1,2,..,T\)</span> Run T steps.</li>
+<li><span class="math inline">\(\eta_{t} = \frac{1}{2}\left(1+ \sqrt{1+4 \eta_{t-1}^2} \right)\)</span></li>
+<li><span class="math inline">\(w_{t} = y_{t-1} + \frac{\eta_{t-1}-1}{\eta_{t}}(y_{t-1}-y_{t-2})\)</span></li>
+<li><span class="math inline">\(y_{t} = S_{\lambda/L}( w_t - \frac{1}{L} \left( [\Phi^T \Phi] w_t + \frac{1}{L}\Phi^T b \right) )\)</span></li>
+<li>Assign <span class="math inline">\(y = y_T\)</span> as the output to be connected to downstream layer.</li>
+</ol>
+<p>Here <span class="math inline">\(S_{\gamma}\)</span> is the soft-thresholding operator defined as <span class="math inline">\(S_{\gamma}(x) = \text{sign}(x) \text{ReLU}(|x|-\gamma)\)</span> and <span class="math inline">\(L\)</span> is an estimate of the Lipschitz constant.</p>
+<p>Notice that here we have not enforced the constraint that <span class="math inline">\(b\)</span> is strictly in <span class="math inline">\(\{-1,1\}\)</span>. But solution obtained could be a could hueristic and can be applied in together with other decoders.</p>
+</section>
+<section id="rich-b-1" class="level3">
+<h3 class="anchored" data-anchor-id="rich-b-1">Rich B-1:</h3>
+<p><a href="https://arxiv.org/abs/1104.3160">Details</a> Section 4.1</p>
+</section>
+<section id="rich-b-2" class="level3">
+<h3 class="anchored" data-anchor-id="rich-b-2">Rich B-2:</h3>
+<p><a href="https://boufounos.com/Publications/Boufounos_Baraniuk_CISS08.pdf">Details</a></p>
+<p><strong>Objective</strong></p>
+<p><span class="math display">\[
+\begin{array}{left}
+\min_{y \in \mathcal{R}^k} &amp;&amp; ||y||_{1}  \, \, + \lambda \sum_i f\left( b_i \Phi y_i \right) \\
+&amp;&amp; \text{ s.t } ||y||_2 = 1
+\end{array}
+\]</span> Here, some additional constraints are imposed. The solution must be sparse (1st term), it must obey the sign constraints (2nd term), and it needs to have unit norm (to fix identifiability w.r.t scale). <span class="math inline">\(f(.)\)</span> is chosen as <span class="math inline">\(0.5x^2 \text{ReLU}(-x)\)</span>.</p>
+<p><strong>Optimization Loop</strong></p>
+<p>Algorithm 1, Sec 3.C</p>
+<ol type="1">
+<li>Initialize: <span class="math inline">\(y_{0}\)</span> s.t <span class="math inline">\(||y_0||_2 = 1\)</span>. Input <span class="math inline">\(\eta\)</span> step size. Define <span class="math inline">\(B = \text{Diag}(b), \bar{f} = \sum_{i}f(y_i)\)</span>. For <span class="math inline">\(t=1,2,..,T\)</span>. Run T steps.</li>
+<li><span class="math inline">\(\bar{f}_t = (B\Phi)^T \bar{f}'(B \Phi y_{t-1})\)</span></li>
+<li><span class="math inline">\(\tilde{f}_t = \bar{f}_t - &lt;\bar{f}_t, y_{t-1}&gt; y_{t-1}\)</span></li>
+<li><span class="math inline">\(h=y_{t-1} - \eta \tilde{f}_t\)</span></li>
+<li>Shrink coordinate-wise: <span class="math inline">\(u_i = S_{\frac{\eta}{\lambda}}(h_i)\)</span></li>
+<li>Normalize: <span class="math inline">\(y_{t+1} = \frac{u}{||u||_2}\)</span></li>
+<li>Assign <span class="math inline">\(y = y_T\)</span> as the output to be connected to downstream layer.</li>
+</ol>
+<p>FISTA is good starting point (initialization)</p>
+</section>
+<section id="gopi-et-al" class="level3">
+<h3 class="anchored" data-anchor-id="gopi-et-al">Gopi et al:</h3>
+<p>Section 5, Algo 6, <a href="https://proceedings.mlr.press/v28/gopi13.html">Details</a></p>
+<p>We assume a measurement model of the form</p>
+<ol type="1">
+<li><span class="math inline">\(b = \text{sign}(\Phi y)\)</span>, where <span class="math inline">\(\Phi = A_2 A_1\)</span>.</li>
+<li>The sensing matrix <span class="math inline">\(A_1\)</span> can be standard CS matrix (eg. drawn from any sub Gaussian such as symmetric, bounded uniform distribution or even a Bernoulli).</li>
+<li><span class="math inline">\(A_2\)</span> can be drawn from standard Gaussian.</li>
+</ol>
+<p><strong>Objective</strong></p>
+<p>Given <span class="math inline">\(b = \text{sign}(\Phi y)\)</span>, where <span class="math inline">\(\Phi = A_2 A_1\)</span>. Find <span class="math inline">\(y \in \mathcal{R}^k\)</span> s.t</p>
+<p><span class="math display">\[
+\begin{array}{left}
+&amp;&amp; ||y||_{0} \le \tilde{k} \\
+&amp;&amp; ||y||_2 = 1 \\
+&amp;&amp; ||y* - \hat{y}|| &lt; \epsilon
+\end{array}
+\]</span></p>
+<p>which basically is saying, the non-zero terms in <span class="math inline">\(y\)</span> should not be more than <span class="math inline">\(\tilde{k}\)</span> (pre-specified number), it should have unit norm, and the approximation error has to be no more than <span class="math inline">\(\epsilon\)</span>.</p>
+<p><strong>Optimization Loop</strong></p>
+<p>Algorithm 5 from the paper is a two-stage process.</p>
+<ol type="1">
+<li>Recover <span class="math inline">\(z\)</span> as a solution to <span class="math inline">\(b =A_2 z\)</span>. Standard LP solver (an SVM formulation should work)
+<ul>
+<li><a href="https://home.ttic.edu/~nati/Publications/PegasosMPB.pdf">pegasos</a> algo for SVMs.</li>
+</ul></li>
+<li>Given <span class="math inline">\(z\)</span>, recover <span class="math inline">\(y\)</span> as a solution to <span class="math inline">\(z =A_1 y\)</span>, which is a standard CS technique. FISTA should work here or <a href="https://icml.cc/Conferences/2009/papers/115.pdf">GraDeS</a>.
+<ul>
+<li><span class="math inline">\(y_t = H_{\tilde{k}}(y_{t-1} + \frac{1}{\gamma}A_1^T(z-A_1 y_{t-1}))\)</span></li>
+<li>Here <span class="math inline">\(\gamma  = 1+\delta_{2s}\)</span>, an isometry constant (<span class="math inline">\(\delta_{2s} &lt; 1/3\)</span>). <span class="math inline">\(A_1\)</span> is standard CS sensing matrix and <span class="math inline">\(H_{\tilde{k}}\)</span> retains at most <span class="math inline">\(\tilde{k}\)</span> non-zero coordinates and sets others to 0 (an adaptive hard thresholding operator).</li>
+</ul></li>
+</ol>
+</section>
+<section id="zeng-et-al" class="level3">
+<h3 class="anchored" data-anchor-id="zeng-et-al">Zeng et al:</h3>
+<p><a href="https://arxiv.org/abs/2203.11278">Details</a> Trainable Compressive Sensing, where the sensing matrix need not be known exactly, and they introduced a method called, Deep Unfolding. It could be suitable as a “trainable” Compressive Sensing (DAC) Network.</p>
+
+
 </section>
 </section>
 
