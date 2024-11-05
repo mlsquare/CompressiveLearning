@@ -31,7 +31,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./bolt/notebooks/dev.html" rel="next">
+<link href="./tasks.html" rel="next">
 <link href="./sparse_bnn_layer.html" rel="prev">
 <link href="./logo.jpg" rel="icon" type="image/jpeg">
 <script src="site_libs/quarto-html/quarto.js"></script>
@@ -175,6 +175,11 @@ window.Quarto = {
   <a href="./interfaces.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">Interfaces</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tasks.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Tasks</span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
@@ -213,10 +218,10 @@ window.Quarto = {
   <li><a href="#adc-layer" id="toc-adc-layer" class="nav-link" data-scroll-target="#adc-layer">ADC Layer:</a></li>
   <li><a href="#dac-layer" id="toc-dac-layer" class="nav-link" data-scroll-target="#dac-layer">DAC Layer:</a></li>
   <li><a href="#compressive-sensing-2" id="toc-compressive-sensing-2" class="nav-link" data-scroll-target="#compressive-sensing-2">Compressive Sensing</a></li>
-  <li><a href="#fista" id="toc-fista" class="nav-link" data-scroll-target="#fista">FISTA:</a></li>
-  <li><a href="#rich-b-1" id="toc-rich-b-1" class="nav-link" data-scroll-target="#rich-b-1">Rich B-1:</a></li>
-  <li><a href="#rich-b-2" id="toc-rich-b-2" class="nav-link" data-scroll-target="#rich-b-2">Rich B-2:</a></li>
-  <li><a href="#gopi-et-al" id="toc-gopi-et-al" class="nav-link" data-scroll-target="#gopi-et-al">Gopi et al:</a></li>
+  <li><a href="#a1-fista" id="toc-a1-fista" class="nav-link" data-scroll-target="#a1-fista">A1: FISTA:</a></li>
+  <li><a href="#a2-rich-b-1" id="toc-a2-rich-b-1" class="nav-link" data-scroll-target="#a2-rich-b-1">A2: Rich B-1:</a></li>
+  <li><a href="#a3-rich-b-2" id="toc-a3-rich-b-2" class="nav-link" data-scroll-target="#a3-rich-b-2">A3: Rich B-2:</a></li>
+  <li><a href="#a4-gopi-et-al" id="toc-a4-gopi-et-al" class="nav-link" data-scroll-target="#a4-gopi-et-al">A4: Gopi et al:</a></li>
   <li><a href="#zeng-et-al" id="toc-zeng-et-al" class="nav-link" data-scroll-target="#zeng-et-al">Zeng et al:</a></li>
   </ul></li>
   </ul>
@@ -401,8 +406,8 @@ y_{t} &amp;=&amp; S_{\lambda/L}( w_t - \frac{1}{L} \left( [\Phi^T \Phi] w_t + \f
 b = \text{sign}(\Phi y)
 \]</span></p>
 </section>
-<section id="fista" class="level3">
-<h3 class="anchored" data-anchor-id="fista">FISTA:</h3>
+<section id="a1-fista" class="level3">
+<h3 class="anchored" data-anchor-id="a1-fista">A1: FISTA:</h3>
 <p><a href="https://www-users.cse.umn.edu/~boley/publications/papers/fistaPaperP.pdf">Details</a></p>
 <p><strong>Objective</strong> <span class="math display">\[
 \min_{y \in \mathcal{R}^k } \, \, \frac{1}{2} || \Phi y - b || + \lambda ||y||_{1}
@@ -418,12 +423,12 @@ b = \text{sign}(\Phi y)
 <p>Here <span class="math inline">\(S_{\gamma}\)</span> is the soft-thresholding operator defined as <span class="math inline">\(S_{\gamma}(x) = \text{sign}(x) \text{ReLU}(|x|-\gamma)\)</span> and <span class="math inline">\(L\)</span> is an estimate of the Lipschitz constant.</p>
 <p>Notice that here we have not enforced the constraint that <span class="math inline">\(b\)</span> is strictly in <span class="math inline">\(\{-1,1\}\)</span>. But solution obtained could be a could hueristic and can be applied in together with other decoders.</p>
 </section>
-<section id="rich-b-1" class="level3">
-<h3 class="anchored" data-anchor-id="rich-b-1">Rich B-1:</h3>
+<section id="a2-rich-b-1" class="level3">
+<h3 class="anchored" data-anchor-id="a2-rich-b-1">A2: Rich B-1:</h3>
 <p><a href="https://arxiv.org/abs/1104.3160">Details</a> Section 4.1</p>
 </section>
-<section id="rich-b-2" class="level3">
-<h3 class="anchored" data-anchor-id="rich-b-2">Rich B-2:</h3>
+<section id="a3-rich-b-2" class="level3">
+<h3 class="anchored" data-anchor-id="a3-rich-b-2">A3: Rich B-2:</h3>
 <p><a href="https://boufounos.com/Publications/Boufounos_Baraniuk_CISS08.pdf">Details</a></p>
 <p><strong>Objective</strong></p>
 <p><span class="math display">\[
@@ -445,8 +450,8 @@ b = \text{sign}(\Phi y)
 </ol>
 <p>FISTA is good starting point (initialization)</p>
 </section>
-<section id="gopi-et-al" class="level3">
-<h3 class="anchored" data-anchor-id="gopi-et-al">Gopi et al:</h3>
+<section id="a4-gopi-et-al" class="level3">
+<h3 class="anchored" data-anchor-id="a4-gopi-et-al">A4: Gopi et al:</h3>
 <p>Section 5, Algo 6, <a href="https://proceedings.mlr.press/v28/gopi13.html">Details</a></p>
 <p>We assume a measurement model of the form</p>
 <ol type="1">
@@ -469,7 +474,15 @@ b = \text{sign}(\Phi y)
 <ol type="1">
 <li>Recover <span class="math inline">\(z\)</span> as a solution to <span class="math inline">\(b =A_2 z\)</span>. Standard LP solver (an SVM formulation should work)
 <ul>
-<li><a href="https://home.ttic.edu/~nati/Publications/PegasosMPB.pdf">pegasos</a> algo for SVMs.</li>
+<li><a href="https://home.ttic.edu/~nati/Publications/PegasosMPB.pdf">pegasos</a> algo for SVMs via subgradients.</li>
+<li>Objective: <span class="math inline">\(\min_{z \in \mathcal{R}^h} \frac{\lambda}{2} ||z||_2 + \sum_i \text{ReLU}(1-b_i\langle [A_2]_i,z \rangle)\)</span></li>
+<li>Loop:
+<ul>
+<li><span class="math inline">\(\eta_t = \frac{1}{\lambda t}\)</span>. Other learning rates are possible. Can accelerate this with momentum.</li>
+<li>$z^i_{t} = (1-<em>t) z^i</em>{t-1} + _t H(1-b_i_i,z_t^i) b_i $z^i_t</li>
+</ul></li>
+<li>The <a href="https://arxiv.org/pdf/1901.01585">L1-SVM</a> is a better candidate here, provided a PGD update is available.</li>
+<li>One could also use A3.</li>
 </ul></li>
 <li>Given <span class="math inline">\(z\)</span>, recover <span class="math inline">\(y\)</span> as a solution to <span class="math inline">\(z =A_1 y\)</span>, which is a standard CS technique. FISTA should work here or <a href="https://icml.cc/Conferences/2009/papers/115.pdf">GraDeS</a>.
 <ul>
@@ -914,8 +927,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./bolt/notebooks/dev.html" class="pagination-link" aria-label="Boolean Variation">
-        <span class="nav-page-text"><span class="chapter-title">Boolean Variation</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./tasks.html" class="pagination-link" aria-label="Tasks">
+        <span class="nav-page-text"><span class="chapter-title">Tasks</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
