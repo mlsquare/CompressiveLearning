@@ -191,7 +191,12 @@ window.Quarto = {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./bolt/notebooks/dev.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Boolean Variation</span></a>
+  <a href="./bold/notebooks/dev.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">Boolean Variation</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./colt/notebooks/01-A2D-Random-Projections.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">A2D Encoder</span></a>
   </div>
 </li>
       </ul>
@@ -479,7 +484,7 @@ b = \text{sign}(\Phi y)
 <li>Loop:
 <ul>
 <li><span class="math inline">\(\eta_t = \frac{1}{\lambda t}\)</span>. Other learning rates are possible. Can accelerate this with momentum.</li>
-<li>$z^i_{t} = (1-<em>t) z^i</em>{t-1} + _t H(1-b_i_i,z_t^i) b_i $z^i_t</li>
+<li><span class="math inline">\(z^i_{t} = (1-\eta_t) z^i_{t-1} + \eta_t H(1-b_i \langle [A_2]_i z_t^i \rangle ) b_i z^i_t\)</span></li>
 </ul></li>
 <li>The <a href="https://arxiv.org/pdf/1901.01585">L1-SVM</a> is a better candidate here, provided a PGD update is available.</li>
 <li>One could also use A3.</li>
