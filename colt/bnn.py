@@ -330,7 +330,6 @@ class SparseBNNLayer(nn.Module):
             self.SORGates.append(SOR(self.nhid))
 
     def forward(self,x):
-        print(x.shape)
         h = torch.cat([sand(x) for sand in self.FlipAndSANDGates],-1)
         out = torch.cat([sor(h) for sor in self.SORGates],-1)
         return out
