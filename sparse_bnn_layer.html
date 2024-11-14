@@ -233,6 +233,13 @@ window.Quarto = {
   <li><a href="#forward-method-2" id="toc-forward-method-2" class="nav-link" data-scroll-target="#forward-method-2">Forward Method</a></li>
   <li><a href="#backward-method-local-gradients-2" id="toc-backward-method-local-gradients-2" class="nav-link" data-scroll-target="#backward-method-local-gradients-2">Backward Method: Local Gradients</a></li>
   </ul></li>
+  <li><a href="#uplus-sxor-select-and-xor-block" id="toc-uplus-sxor-select-and-xor-block" class="nav-link" data-scroll-target="#uplus-sxor-select-and-xor-block"><span class="math inline">\(\uplus\)</span> SXOR: Select and XOR Block</a>
+  <ul class="collapse">
+  <li><a href="#logic-select-and-xor-the-inputs" id="toc-logic-select-and-xor-the-inputs" class="nav-link" data-scroll-target="#logic-select-and-xor-the-inputs">Logic: Select and XOR the inputs</a></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"></a></li>
+  <li><a href="#forward-method-3" id="toc-forward-method-3" class="nav-link" data-scroll-target="#forward-method-3">Forward Method</a></li>
+  <li><a href="#backward-method-local-gradients-3" id="toc-backward-method-local-gradients-3" class="nav-link" data-scroll-target="#backward-method-local-gradients-3">Backward Method: Local Gradients</a></li>
+  </ul></li>
   <li><a href="#sparse-bnn-layer" id="toc-sparse-bnn-layer" class="nav-link" data-scroll-target="#sparse-bnn-layer">Sparse BNN Layer</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/sparse_bnn_layer.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -343,7 +350,7 @@ h(\beta, \tilde{x}) = \sqcap_{i=1}^{n} \beta_i \odot \tilde{x}_i
 <p>For convenience, we write them recursively, to ease up the derivation, <span class="math inline">\(h = \sqcap (\beta_i \odot \tilde{x}_i, h_{-i})\)</span>, where <span class="math inline">\(h_{-i} = \sqcap_{k=1, \neq i  }^{n} \beta_k \odot \tilde{x}_k\)</span>. <span class="math display">\[
 h(\beta, \tilde{x}) =
 \begin{cases}
-\land(\tilde{x}_{i}, h_{-i}) &amp; \text{ if }  \beta_i = T \land h_i \in \{T,F\} \\
+\sqcap(\tilde{x}_{i}, h_{-i}) &amp; \text{ if }  \beta_i = T \land h_i \in \{T,F\} \\
 \tilde{x}_{i} &amp; \text { if } \beta_i = T \text{ and }  h_{-i} = 0 \\
 h_{-i} &amp; \text { if } \beta_i = F
 \end{cases}
@@ -439,10 +446,10 @@ h(\beta, \tilde{x}) = H\left(\sum_{i=1}^n 0.5(\beta_i+1) - \epsilon \right) \lef
 \end{cases}
 \]</span> It can be implemented with Heavyside function as follows: <span class="math display">\[
 \begin{array}{left}
-\frac{\partial{h(\alpha,h)}}{\partial{\alpha_j}} &amp;=&amp;  H(x_j)H(y_{-i})
+\frac{\partial{h(\beta,h)}}{\partial{\beta_i}} &amp;=&amp;  H(\tilde{x}_i)H(h_{-i})
 \end{array}
 \]</span></p>
-<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{h(\alpha,h)}}{\partial{\tilde{x}_i}}\)</span> as follows:</p>
+<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{h(\beta,h)}}{\partial{\tilde{x}_i}}\)</span> as follows:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 12%">
@@ -511,14 +518,14 @@ h(\beta, \tilde{x}) = H\left(\sum_{i=1}^n 0.5(\beta_i+1) - \epsilon \right) \lef
 </table>
 <p>Therefore,</p>
 <p><span class="math display">\[
-\frac{\partial{h(\beta,\tilde{x})}}{\partial{\beta_i}} =
+\frac{\partial{h(\beta,\tilde{x})}}{\partial{\tilde{x}_i}} =
 \begin{cases}
 F &amp; \text{ if } \beta_i = T \land \tilde{x}_i = T \land h_{-i} = T  \\
 0 &amp; \text{ o.w }
 \end{cases}
 \]</span> It can be implemented with Heavyside function as follows: <span class="math display">\[
 \begin{array}{left}
-\frac{\partial{y(\alpha,h)}}{\partial{h_j}} &amp;=&amp;  -H(\beta_i)H(\tilde{x}_i)H(h_{-i})
+\frac{\partial{h(\beta,h)}}{\partial{\tilde{x}_i}} &amp;=&amp;  -H(\beta_i)H(\tilde{x}_i)H(h_{-i})
 \end{array}
 \]</span></p>
 </section>
@@ -535,7 +542,7 @@ y(\alpha, h) &amp;=&amp; \sqcup_{j=1}^{m} \alpha_j \odot h_j
 <p><span class="math display">\[
 y(\alpha, h) =
 \begin{cases}
-\lor(h_{j}, y_{-j}) &amp; \text{ if }  \alpha_j = T \land y_{-j} \in \{T,F\} \\
+\sqcup(h_{j}, y_{-j}) &amp; \text{ if }  \alpha_j = T \land y_{-j} \in \{T,F\} \\
 h_{j} &amp; \text { if } \alpha_j = T \land y_{-j} = 0 \\
 y_{-j} &amp; \text { if } \alpha_j = F
 \end{cases}
@@ -551,12 +558,12 @@ y(\alpha, h) =
 <section id="forward-method-2" class="level3">
 <h3 class="anchored" data-anchor-id="forward-method-2">Forward Method</h3>
 <p>It can be obtained with Heavyside function as follows: <span class="math display">\[
-y(\alpha, h) = H\left(\sum_{i=1}^m 0.5(\alpha_j+1) - \epsilon \right) \left( 2 H\left(\sum_{j=1}^m 0.25(h_j+1)(\alpha_i+1) - \epsilon \right)-1 \right)
+y(\alpha, h) = H\left(\sum_{j=1}^m 0.5(\alpha_j+1) - \epsilon \right) \left( 2 H\left(\sum_{j=1}^m 0.25(h_j+1)(\alpha_j+1) - \epsilon \right)-1 \right)
 \]</span></p>
 </section>
 <section id="backward-method-local-gradients-2" class="level3">
 <h3 class="anchored" data-anchor-id="backward-method-local-gradients-2">Backward Method: Local Gradients</h3>
-<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{y(\alpha,h)}}{\partial{h_i}}\)</span> as follows:</p>
+<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{y(\alpha,h)}}{\partial{h_j}}\)</span> as follows:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 12%">
@@ -636,7 +643,7 @@ T  &amp; \text{ if } \alpha_j = T\, \land \, y_{-j} = F/0 \\
 \frac{\partial{y(\alpha,h)}}{\partial{h_j}} &amp;=&amp;  H( \alpha_j)H(-y_{-j} + \epsilon)
 \end{array}
 \]</span> where <span class="math inline">\(\epsilon\)</span> is a small positive constant.</p>
-<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{y(\alpha,h)}}{\partial{\alpha_i}}\)</span> as follows:</p>
+<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{y(\alpha,h)}}{\partial{\alpha_j}}\)</span> as follows:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 12%">
@@ -713,9 +720,208 @@ T &amp; \text{ if } \alpha_j = F\, \land \, y_{-j} = F \, \land  \, h_j = T \\
 \]</span></p>
 <p>It can be implemented with Heavyside function as follows: <span class="math display">\[
 \begin{array}{left}
-\frac{\partial{y(\alpha,h)}}{\partial{h_i}} &amp;=&amp;  H(\alpha_j)H(-y_{-j})H(h_{j})
+\frac{\partial{y(\alpha,h)}}{\partial{h_j}} &amp;=&amp;  H(\alpha_j)H(-y_{-j})H(h_{j})
 \end{array}
 \]</span> where <span class="math inline">\(\epsilon\)</span> is a small positive constant.</p>
+<p>Finally, we can put it all together</p>
+</section>
+</section>
+<section id="uplus-sxor-select-and-xor-block" class="level2">
+<h2 class="anchored" data-anchor-id="uplus-sxor-select-and-xor-block"><span class="math inline">\(\uplus\)</span> SXOR: Select and XOR Block</h2>
+<section id="logic-select-and-xor-the-inputs" class="level3">
+<h3 class="anchored" data-anchor-id="logic-select-and-xor-the-inputs">Logic: Select and XOR the inputs</h3>
+<p>We want to realize a module which takes m-inputs, selects some of the m-inputs, and OR’s them. Such a function models “Linear” Boolean Functions. <span class="math display">\[
+\begin{array}{left}
+y(\gamma, x) &amp;=&amp; \uplus_{i=1}^{m} \gamma_j \odot x_i
+\end{array}
+\]</span> For convenience, we write them recursively, to ease up the derivation, <span class="math inline">\(y = \uplus(\gamma_i \odot x_i, y_{-j})\)</span>, where <span class="math inline">\(y_{-i} = \uplus_{k=1, \neq i  }^{m} \gamma_k \odot x_i\)</span>. We can see that <span class="math inline">\(y = y_{-i} \text { if } \gamma_i = F\)</span></p>
+<p><span class="math display">\[
+y(\gamma, x) =
+\begin{cases}
+\uplus(x_{i}, y_{-j}) &amp; \text{ if }  \gamma_i = T \land y_{-i} \in \{T,F\} \\
+x_{i} &amp; \text { if } \gamma_i = T \land y_{-i} = 0 \\
+y_{-i} &amp; \text { if } \gamma_i = F
+\end{cases}
+\]</span></p>
+<p>This looks much complicated than what it really is trying to say. Rewriting it to get, <span class="math display">\[
+y(\gamma, h) =
+\begin{cases}
+0 &amp; \text{ if } \gamma_i = F \,\, \forall i \\
+\oplus_k x_{k} &amp; \text{ for }  k \in \{ i \text{ s.t } \gamma_i = T\}
+\end{cases}
+\]</span></p>
+</section>
+<section id="section" class="level3">
+<h3 class="anchored" data-anchor-id="section"></h3>
+</section>
+<section id="forward-method-3" class="level3">
+<h3 class="anchored" data-anchor-id="forward-method-3">Forward Method</h3>
+<p>It can be obtained with Heavyside function as follows: <span class="math display">\[
+y(\gamma, h) = H\left(\sum_{i=1}^m 0.5(\gamma_i+1) - \epsilon \right) \left( 2 \text{ mod}\left(\sum_{i=1}^m 0.25(x_i+1)(\gamma_i+1) ,2\right) -1\right)
+\]</span></p>
+</section>
+<section id="backward-method-local-gradients-3" class="level3">
+<h3 class="anchored" data-anchor-id="backward-method-local-gradients-3">Backward Method: Local Gradients</h3>
+<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{y(\gamma,x)}}{\partial{x_i}}\)</span> as follows:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\gamma_i\)</span></th>
+<th><span class="math inline">\(x_i\)</span></th>
+<th><span class="math inline">\(y_{-i}\)</span></th>
+<th><span class="math inline">\(y\)</span></th>
+<th><span class="math inline">\(y(\neg x_i)\)</span></th>
+<th><span class="math inline">\(\delta y\)</span></th>
+<th><span class="math inline">\(\delta x_i\)</span></th>
+<th><span class="math inline">\(y'\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T/F/0</td>
+<td>F/T/T</td>
+<td>T/F/0</td>
+<td>T/F/0</td>
+<td>F</td>
+<td>F/T/0</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T/F/0</td>
+<td>T/F/F</td>
+<td>F/T/0</td>
+<td>F/T/0</td>
+<td>T</td>
+<td>F/T/0</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T/F/0</td>
+<td><span class="math inline">\(y_{-i}\)</span></td>
+<td><span class="math inline">\(y_{-i}\)</span></td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T/F/0</td>
+<td><span class="math inline">\(y_{-i}\)</span></td>
+<td><span class="math inline">\(y_{-i}\)</span></td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\frac{\partial{y(\gamma,y)}}{\partial{x_i}} =
+\begin{cases}
+\neg y_{-i}  &amp; \text{ if } \gamma_i = T \\
+0 &amp; \text{ o.w } \\
+\end{cases}
+\]</span></p>
+<p>It can be implemented with Heavyside function as follows: <span class="math display">\[
+\begin{array}{left}
+\frac{\partial{y(\gamma,x)}}{\partial{x_i}} &amp;=&amp;  H( \gamma_i)H(-y_{-i} + \epsilon)
+\end{array}
+\]</span> where <span class="math inline">\(\epsilon\)</span> is a small positive constant.</p>
+<p>We obtain the partial derivatives by observing the Truth Table to get <span class="math inline">\(\frac{\partial{y(\gamma,x)}}{\partial{\gamma_i}}\)</span> as follows:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+<col style="width: 12%">
+</colgroup>
+<thead>
+<tr class="header">
+<th><span class="math inline">\(\gamma_i\)</span></th>
+<th><span class="math inline">\(x_i\)</span></th>
+<th><span class="math inline">\(y_{-i}\)</span></th>
+<th><span class="math inline">\(y\)</span></th>
+<th><span class="math inline">\(y(\neg \gamma_i)\)</span></th>
+<th><span class="math inline">\(\delta y\)</span></th>
+<th><span class="math inline">\(\delta \gamma_i\)</span></th>
+<th><span class="math inline">\(y'\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>T</td>
+<td>T</td>
+<td>T/F/0</td>
+<td>F/T/T</td>
+<td><span class="math inline">\(y_{-i}\)</span></td>
+<td>T/F/0</td>
+<td>F</td>
+<td>F/T/0</td>
+</tr>
+<tr class="even">
+<td>T</td>
+<td>F</td>
+<td>T/F/0</td>
+<td>T/F/F</td>
+<td><span class="math inline">\(y_{-i}\)</span></td>
+<td>0</td>
+<td>F</td>
+<td>0</td>
+</tr>
+<tr class="odd">
+<td>F</td>
+<td>T</td>
+<td>T/F/0</td>
+<td><span class="math inline">\(y_{-i}\)</span></td>
+<td>F/T/T</td>
+<td>F/T/0</td>
+<td>T</td>
+<td>F/T/0</td>
+</tr>
+<tr class="even">
+<td>F</td>
+<td>F</td>
+<td>T/F/0</td>
+<td><span class="math inline">\(y_{-i}\)</span></td>
+<td>T/F/F</td>
+<td>0</td>
+<td>T</td>
+<td>0</td>
+</tr>
+</tbody>
+</table>
+<p>Therefore,</p>
+<p><span class="math display">\[
+\frac{\partial{y(\gamma,x)}}{\partial{\gamma_i}} =
+\begin{cases}
+-y_{-i} &amp; \text{ if } x_i = T\\
+0 &amp; \text{ o.w } \\
+\end{cases}
+\]</span></p>
+<p>It can be implemented with Heavyside function as follows: <span class="math display">\[
+\begin{array}{left}
+\frac{\partial{y(\gamma,x)}}{\partial{\gamma_i}} &amp;=&amp;  H(x_i)H(-y_{-i})
+\end{array}
+\]</span></p>
 <p>Finally, we can put it all together</p>
 </section>
 </section>
@@ -730,7 +936,7 @@ h_j &amp;=&amp; \sqcap_{i=1}^{n}  \beta_i^j  \odot \tilde{x}_i^j \, &amp; \text{
 \end{array}
 \]</span> where <span class="math inline">\(n=1,\dots,N\)</span>, <span class="math inline">\(j=1,\dots,H\)</span> <span class="math inline">\(k=1,\dots,K\)</span>.</p>
 <p><strong>Caution</strong></p>
-<p>Note that all weights and inputs will be strictly in $, i.e., $<span class="math inline">\(w_i^j, \beta_i^j, \alpha_j, x_i \in {-1,1}\)</span> and only gradients can be in <span class="math inline">\(\{-1,0,1\}\)</span>.</p>
+<p>Note that all weights and inputs will be strictly in <span class="math inline">\(\mathcal{B}\)</span> i.e., <span class="math inline">\(w_i^j, \beta_i^j, \alpha_j, x_i \in \{-1,1\}\)</span> and only gradients can be in <span class="math inline">\(\{-1,0,1\}\)</span>.</p>
 
 
 </section>
