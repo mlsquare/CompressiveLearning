@@ -271,7 +271,17 @@
     "href": "sparse_bnn_layer.html#sparse-bnn-layer",
     "title": "Sparse BNN Layer",
     "section": "Sparse BNN Layer",
-    "text": "Sparse BNN Layer\nA Sparse BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter \\(H\\) that controls the layer complexity, resulting in a total of \\(H(2N+K)\\) learnable Boolean weights.\n\\[\n\\begin{array}{left}\ny_{k} &=& \\sqcup_{j=1}^{m} \\alpha_{j}^{k} \\odot  h_j \\, & \\text{: SOR}\\\\\nh_j &=& \\sqcap_{i=1}^{n}  \\beta_i^j  \\odot \\tilde{x}_i^j \\, & \\text{: SAND} \\\\\n\\tilde{x}_i^j  &=& w_i^j \\oplus x_i \\, & \\text{: Flip}\n\\end{array}\n\\] where \\(n=1,\\dots,N\\), \\(j=1,\\dots,H\\) \\(k=1,\\dots,K\\).\nCaution\nNote that all weights and inputs will be strictly in \\(\\mathcal{B}\\) i.e., \\(w_i^j, \\beta_i^j, \\alpha_j, x_i \\in \\{-1,1\\}\\) and only gradients can be in \\(\\{-1,0,1\\}\\).",
+    "text": "Sparse BNN Layer\nA Sparse BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter \\(H\\) that controls the layer complexity, resulting in a total of \\(H(2N+K)\\) learnable Boolean weights.\n\\[\n\\begin{array}{left}\ny_{k} &=& \\sqcup_{j=1}^{m} \\alpha_{j}^{k} \\odot  h_j \\, & \\text{: SOR}\\\\\nh_j &=& \\sqcap_{i=1}^{n}  \\beta_i^j  \\odot \\tilde{x}_i^j \\, & \\text{: SAND} \\\\\n\\tilde{x}_i^j  &=& w_i^j \\oplus x_i \\, & \\text{: Flip}\n\\end{array}\n\\] where \\(n=1,\\dots,N\\), \\(j=1,\\dots,H\\) \\(k=1,\\dots,K\\).",
+    "crumbs": [
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Sparse BNN Layer</span>"
+    ]
+  },
+  {
+    "objectID": "sparse_bnn_layer.html#sparse-linear-bnn-layer",
+    "href": "sparse_bnn_layer.html#sparse-linear-bnn-layer",
+    "title": "Sparse BNN Layer",
+    "section": "Sparse Linear BNN Layer",
+    "text": "Sparse Linear BNN Layer\nA Sparse Linear BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter \\(K\\) that controls the layer complexity, resulting in a total of \\(2K2N\\) learnable Boolean weights.\n\\[\n\\begin{array}{left}\ny_j &=& \\uplus_{i=1}^{n}  \\gamma_i^j  \\odot \\tilde{x}_i^j \\, & \\text{: SXOR} \\\\\n\\tilde{x}_i^j  &=& w_i^j \\oplus x_i \\, & \\text{: Flip}\n\\end{array}\n\\] where \\(n=1,\\dots,N\\), \\(j=1,\\dots,K\\)\nCaution\nNote that all weights and inputs will be strictly in \\(\\mathcal{B}\\) i.e., \\(w_i^j, \\beta_i^j, \\alpha_j, x_i \\in \\{-1,1\\}\\) and only gradients can be in \\(\\{-1,0,1\\}\\).",
     "crumbs": [
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Sparse BNN Layer</span>"
     ]

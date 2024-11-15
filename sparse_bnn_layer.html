@@ -241,6 +241,7 @@ window.Quarto = {
   <li><a href="#backward-method-local-gradients-3" id="toc-backward-method-local-gradients-3" class="nav-link" data-scroll-target="#backward-method-local-gradients-3">Backward Method: Local Gradients</a></li>
   </ul></li>
   <li><a href="#sparse-bnn-layer" id="toc-sparse-bnn-layer" class="nav-link" data-scroll-target="#sparse-bnn-layer">Sparse BNN Layer</a></li>
+  <li><a href="#sparse-linear-bnn-layer" id="toc-sparse-linear-bnn-layer" class="nav-link" data-scroll-target="#sparse-linear-bnn-layer">Sparse Linear BNN Layer</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/mlsquare/CompressiveLearning/edit/main/sparse_bnn_layer.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/mlsquare/CompressiveLearning/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -935,6 +936,16 @@ h_j &amp;=&amp; \sqcap_{i=1}^{n}  \beta_i^j  \odot \tilde{x}_i^j \, &amp; \text{
 \tilde{x}_i^j  &amp;=&amp; w_i^j \oplus x_i \, &amp; \text{: Flip}
 \end{array}
 \]</span> where <span class="math inline">\(n=1,\dots,N\)</span>, <span class="math inline">\(j=1,\dots,H\)</span> <span class="math inline">\(k=1,\dots,K\)</span>.</p>
+</section>
+<section id="sparse-linear-bnn-layer" class="level2">
+<h2 class="anchored" data-anchor-id="sparse-linear-bnn-layer">Sparse Linear BNN Layer</h2>
+<p>A Sparse <strong>Linear</strong> BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter <span class="math inline">\(K\)</span> that controls the layer complexity, resulting in a total of <span class="math inline">\(2K2N\)</span> learnable Boolean weights.</p>
+<p><span class="math display">\[
+\begin{array}{left}
+y_j &amp;=&amp; \uplus_{i=1}^{n}  \gamma_i^j  \odot \tilde{x}_i^j \, &amp; \text{: SXOR} \\
+\tilde{x}_i^j  &amp;=&amp; w_i^j \oplus x_i \, &amp; \text{: Flip}
+\end{array}
+\]</span> where <span class="math inline">\(n=1,\dots,N\)</span>, <span class="math inline">\(j=1,\dots,K\)</span></p>
 <p><strong>Caution</strong></p>
 <p>Note that all weights and inputs will be strictly in <span class="math inline">\(\mathcal{B}\)</span> i.e., <span class="math inline">\(w_i^j, \beta_i^j, \alpha_j, x_i \in \{-1,1\}\)</span> and only gradients can be in <span class="math inline">\(\{-1,0,1\}\)</span>.</p>
 
