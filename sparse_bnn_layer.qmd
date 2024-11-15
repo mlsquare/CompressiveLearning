@@ -316,6 +316,17 @@ h_j &=& \sqcap_{i=1}^{n}  \beta_i^j  \odot \tilde{x}_i^j \, & \text{: SAND} \\
 \end{array}
 $$ where $n=1,\dots,N$, $j=1,\dots,H$ $k=1,\dots,K$.
 
+## Sparse Linear BNN Layer
+
+A Sparse **Linear** BNN Layer is a Boolean Neural Network that maps an N-dimensional input to an K-dimension output, with a hyper parameter $K$ that controls the layer complexity, resulting in a total of $2K2N$ learnable Boolean weights.
+
+$$
+\begin{array}{left}
+y_j &=& \uplus_{i=1}^{n}  \gamma_i^j  \odot \tilde{x}_i^j \, & \text{: SXOR} \\
+\tilde{x}_i^j  &=& w_i^j \oplus x_i \, & \text{: Flip}
+\end{array}
+$$ where $n=1,\dots,N$, $j=1,\dots,K$
+
 **Caution**
 
 Note that all weights and inputs will be strictly in $\mathcal{B}$ i.e., $w_i^j, \beta_i^j, \alpha_j, x_i \in \{-1,1\}$ and only gradients can be in $\{-1,0,1\}$.
