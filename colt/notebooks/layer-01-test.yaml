@@ -1,0 +1,29 @@
+- header: 
+    num_tables:  3
+    x_dim: 4096
+    y_dim: 4096
+    key_encoder_file_path: 'enc_4kx4k.pth'
+    val_encoder_file_path: 'dec_4kx4k.pth'
+    permutation : identity
+- prop: 0
+  drop: False
+  knn : False
+  key_encoder:
+    dist  : identity
+  val_encoder:
+    dist  : identity
+- prop: 1.0
+  drop: False
+  knn : True
+  key_encoder:
+    embed_dim : 32
+  val_encoder:
+    embed_dim : 128
+- prop: 0.0
+  drop: True
+  knn : True
+  key_encoder:
+    embed_dim : 256
+  val_encoder:
+    embed_dim : 256
+  

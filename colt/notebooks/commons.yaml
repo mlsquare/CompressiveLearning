@@ -1,0 +1,12 @@
+dist: normal
+ortho : True
+normalize   : True
+bias  : False
+scale : 1
+gate  : None
+quantizer : sign
+input_dim : 10
+embed_dim : 11
+rec: 
+  fista:
+    max_iter :  5
